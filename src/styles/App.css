@@ -1,0 +1,434 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  --light-accent: #9ed6ff;
+  --white: #FFFFFF;
+  --gray: #D1D1D1;
+  --dark-gray: #878787;
+  --black: #000000;
+  --accent: #5EBCFF;
+  --red: #E21414;
+  --transparent-accent:rgba(94, 188, 255, 0.2);
+}
+
+a{
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover{
+  text-decoration: underline;
+}
+
+.user-photo{
+  width: 50px;
+  height: 50px;
+  background-color: var(--gray);
+  border-radius: 100px;
+}
+
+.heading-text-2{
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-transform: uppercase; 
+  color: var(--black);
+}
+
+.normal-text{
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal; 
+  color: var(--black);
+}
+
+.red-text{
+  color: var(--red);
+}
+
+.small-text{
+  color: var(--dark-gray);
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+a{
+  color: var(--accent);
+}
+.link-text{
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal; 
+  color: var(--accent);
+}
+body {
+  margin: 0;
+  font-family: Roboto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.main-container{
+  padding: 20px 130px 40px 130px;
+}
+
+.center-content-container{
+  display: flex;
+  justify-content: center;
+}
+
+.content-container{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+}
+
+.header{
+  padding: 20px 130px 0;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--gray);
+}
+
+.header-title{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-navigation{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 50px;
+  
+}
+
+.navigation-item{
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 3px solid var(--white);
+}
+
+.navigation-item:hover path, .navigation-item:hover p{
+  fill: var(--accent);
+  cursor: pointer;
+  color: var(--accent);
+  transition: 0.3s;
+}
+
+
+.navigation-item.selected{
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 3px solid var(--accent);
+}
+
+.button-container{
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.function-button{
+  display: flex;
+  width: 40px;
+  flex-shrink: 0;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--gray);
+  background-color: var(--white);
+  cursor: pointer;
+}
+
+.function-button:hover path{
+  fill: var(--accent);
+  transition: 0.3s;
+}
+.function-button:hover{
+  border-color: var(--accent);
+  transition: 0.3s;
+}
+
+.description-table{
+  border-collapse: separate; /* Объединение границ */
+  border-radius: 10px; /* Закругление углов таблицы */
+  overflow: hidden; /* Скрытие выступающих частей */
+  border-spacing: 0;
+  width: 100%;
+  height: fit-content;
+  border: 1px solid var(--gray);
+}
+
+.description-table td {
+  border-right: 1px solid var(--gray); /* Границы между ячейками */
+  border-bottom: 1px solid var(--gray);
+  padding: 10px; /* Отступ внутри ячеек */
+  margin: 0; /* Убираем отступы */
+}
+
+.description-table td:last-child {
+  border-right: 0;
+  width: 100%;
+}
+
+.description-table tr:last-child td {
+  border-bottom: 0;
+}
+.description-table td:first-child{
+  width: fit-content;
+}
+
+.information-table{
+  border-collapse: separate; /* Объединение границ */
+  border-radius: 10px; /* Закругление углов таблицы */
+  overflow: hidden; /* Скрытие выступающих частей */
+  border-spacing: 0;
+  width: 100%;
+  max-width: 50vw;
+  border: 1px solid var(--gray);
+}
+
+.information-table td, .information-table th {
+  border-right: 1px solid var(--gray); /* Границы между ячейками */
+  border-bottom: 1px solid var(--gray);
+  padding: 10px; /* Отступ внутри ячеек */
+  margin: 0; /* Убираем отступы */
+  text-align: center;
+  font-weight: 400;
+  width: fit-content;
+}
+
+.information-table td:last-child,
+.information-table th:last-child {
+  border-right: 0;
+}
+
+.information-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.calendar-table{
+  border-collapse: separate;
+  border-radius: 10px;
+  overflow: hidden;
+  border-spacing: 0;
+  border: 1px solid var(--gray);
+  flex-shrink: 0;
+  height: fit-content;
+}
+
+.calendar-table td {
+  border-right: 1px solid var(--gray);
+  border-bottom: 1px solid var(--gray);
+  text-align: center;
+  width: 80px;
+}
+
+.calendar-table tbody td{
+  cursor: pointer;
+}
+
+.calendar-table tr:first-child,
+.calendar-table tr:nth-child(2){
+  height: 40px;
+}
+
+.calendar-table thead tr:first-child td div{
+  padding: 0 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.calendar-table .nav-button path{
+  transition: 0.3s;
+}
+.calendar-table .nav-button{
+  cursor: pointer;
+}
+.calendar-table .nav-button:hover path{
+  fill: var(--accent);
+}
+
+.calendar-table td:last-child {
+  border-right: 0;
+}
+
+.calendar-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.calendar-table td:hover .selected-frame{
+  border-color: var(--light-accent);
+}
+
+.calendar-table-item{
+  display: flex;
+  padding: 8px;
+  height: 64px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  background-color: var(--white);
+  border-radius: 10px;
+}
+
+.calendar-table-date{
+  width: 100%;
+  text-align: start;
+  color: var(--dark-gray);
+}
+
+.calendar-table-date.current-month{
+  color: var(--black);
+}
+
+.calendar-table-count-container{
+  background-color: var(--white);
+  width: 24px;
+  height: 24px;
+  border-radius: 20px;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+.busy .calendar-table-item{
+  background-color: var(--transparent-accent);
+}
+.busy .calendar-table-count-container{
+  display: flex;
+}
+
+.selected-frame{
+  border: 3px solid var(--white);
+  padding: 5px;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.selected.selected-frame{
+  border: 3px solid var(--accent);
+}
+
+.two-column-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.calendar-container{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.event-table{
+   border-collapse: separate; /* Объединение границ */
+   border-radius: 10px; /* Закругление углов таблицы */
+   overflow: hidden; /* Скрытие выступающих частей */
+   border-spacing: 0;
+   width: 100%;
+   border: 1px solid var(--gray);
+}
+  
+.event-table td {
+  border-right: 1px solid var(--gray); /* Границы между ячейками */
+  border-bottom: 1px solid var(--gray);
+  padding: 10px; /* Отступ внутри ячеек */
+  margin: 0; /* Убираем отступы */
+}
+  
+.event-table td:last-child {
+  border-right: 0;
+  width: 100%;
+}
+  
+.event-table tr:last-child td {
+  border-bottom: 0;
+}
+.event-table td:first-child{
+  width: fit-content;
+}
+
+.main-input p{
+  padding-left: 10px;
+  margin-bottom: 5px;
+}
+
+.main-input input{
+  height: 40px;
+  padding: 7px 20px;
+  border-radius: 100px;
+  border: 1px solid var(--gray);
+  width: 100%;
+}
+form{
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.input-container{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.horizontal-container{
+  display: flex;
+  gap: 30px;
+  /* flex-wrap: wrap; */
+}
+.vertical-container{
+  display: flex;
+  flex-direction: column;
+  width: min-content;
+  gap: 10px;
+}
+
+.footer{
+  padding-top: 40px;
+  background-color: var(--dark-gray);
+}
+
+.footer p,
+.footer a{
+  color: var(--white);
+}
+
+.event-item{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--gray);
+  border-radius: 15px;
+  padding: 15px 20px;
+  width: 400px;
+}

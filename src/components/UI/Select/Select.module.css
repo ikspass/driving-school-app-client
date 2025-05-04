@@ -1,0 +1,10 @@
+.select{
+  height: 40px;
+  padding: 7px 20px;
+  border-radius: 100px;
+  border: 1px solid var(--gray);
+  appearance: none;
+  width: 100%;
+  background: url('../../../styles/svg/arrow.svg') no-repeat;
+  background-position: calc(100% - 20px);
+}

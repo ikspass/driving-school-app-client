@@ -1,0 +1,20 @@
+.button{
+    background-color: var(--accent);
+    color: var(--white);
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal; 
+    cursor: pointer;
+    width: max-content;
+    align-self: flex-end;
+  }
+  
+  .button:hover{
+    background-color: #9ed6ff;
+    transition: 0.3s;
+  }

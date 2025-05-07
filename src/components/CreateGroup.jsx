@@ -1,14 +1,18 @@
 import Input from "./UI/Input/Input";
 import ButtonBack from "./UI/ButtonBack/ButtonBack";
 import Button from "./UI/Button/Button";
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import { Context } from "..";
+import FilterButtons from "./UI/FilterButtons/FilterButtons";
 
 const CreateGroup = ({create}) => {
     const [number, setNumber] = useState('');
     const [category, setCategory] = useState('');
     const [teacher, setTeacher] = useState('');
     const [success, setSuccess] = useState(false); // State to track success
+
+    const {group} = useContext(Context);
 
     const confirm = async (e) => {
         e.preventDefault();
@@ -32,11 +36,6 @@ const CreateGroup = ({create}) => {
     
     const navigate = useNavigate();
 
-    const handleNavigate = (path) => {
-        navigate(path);
-        console.log('aboba')
-    };
-
     useEffect(() => {
       if (success) {
           // Navigate when the success state changes to true
@@ -46,7 +45,6 @@ const CreateGroup = ({create}) => {
 
     return(
         <div className='content-container'>
-            <ButtonBack onClick={handleNavigate('/')}/>
             <p className="heading-text-2">Создать учебную группу</p>
             <form>
                  <div className="input-container">
@@ -60,11 +58,12 @@ const CreateGroup = ({create}) => {
                         onChange={e => setCategory(e.target.value)}
                         title={"Категория"} 
                     /> 
-                    <Input
-                        value={teacher}
-                        onChange={e => setTeacher(e.target.value)}
-                        title={"Преподаватель"} 
-                    /> 
+                    <FilterButtons 
+                      title='Преподаватель'
+                      filters={group.teachers.map(elem => elem.fullName)}
+                      selected={teacher}
+                      setSelected={setTeacher}
+                    />
                 </div>
                 <Button onClick={confirm}>Сохранить</Button>
             </form>

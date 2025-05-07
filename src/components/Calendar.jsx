@@ -129,7 +129,7 @@ function Calendar({show}) {
     };
 
     return (
-        <table className="calendar-table">
+        <table className="normal-text calendar-table">
             <thead>
                 <tr>
                     <td colSpan="7">

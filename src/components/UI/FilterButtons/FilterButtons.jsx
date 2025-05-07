@@ -1,17 +1,24 @@
-import React from 'react'
-import classes from './FilterButtons.module.css'
+import React from 'react';
+import classes from './FilterButtons.module.css';
 
- function FilterButtons({filters, selected}) {
+const FilterButtons = ({ title, filters, selected, setSelected }) => {
   return (
-    <div style={{display: 'flex', gap: '20px'}}>
-      {filters.map((pin, pinIndex) => 
-        selected == pinIndex ?
-        <div key={pinIndex} className={`${classes.pin} ${classes.selected}`}>{pin}</div>
-        :
-        <div key={pinIndex} className={classes.pin}>{pin}</div>
-      )}
-    </div>
-  )
+    <>
+      <p className="small-text">{title}</p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+        {filters.map((filter, index) => (
+          <div
+            key={index} 
+            className={`normal-text ${classes.pin} ${selected === filter ? classes.selected : ''}`}
+            onClick={() => {
+              setSelected(selected === filter ? null : filter);
+            }}>
+            {filter}
+          </div>
+        ))}
+      </div>
+    </>
+  );
 }
 
 export default FilterButtons;

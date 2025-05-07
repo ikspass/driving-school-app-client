@@ -57,7 +57,7 @@ a:hover{
 .small-text{
   color: var(--dark-gray);
   font-family: Roboto;
-  font-size: 14px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -67,10 +67,12 @@ a{
 }
 .link-text{
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal; 
+  cursor: pointer;
+  width: fit-content;
   color: var(--accent);
 }
 body {
@@ -94,11 +96,26 @@ code {
   justify-content: center;
 }
 
+.content-container-right{
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  width: 100%;
+  gap: 20px;
+}
+
 .content-container{
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: 20px;
+}
+
+.filter-container{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
 }
 
 .header{
@@ -151,6 +168,7 @@ code {
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
+  justify-self: end;
 }
 
 .function-button{
@@ -180,7 +198,7 @@ code {
   border-radius: 10px; /* Закругление углов таблицы */
   overflow: hidden; /* Скрытие выступающих частей */
   border-spacing: 0;
-  width: 100%;
+  width: fit-content;
   height: fit-content;
   border: 1px solid var(--gray);
 }
@@ -190,6 +208,8 @@ code {
   border-bottom: 1px solid var(--gray);
   padding: 10px; /* Отступ внутри ячеек */
   margin: 0; /* Убираем отступы */
+  width: fit-content;
+  max-width: 50vw;
 }
 
 .description-table td:last-child {
@@ -209,7 +229,8 @@ code {
   border-radius: 10px; /* Закругление углов таблицы */
   overflow: hidden; /* Скрытие выступающих частей */
   border-spacing: 0;
-  width: 100%;
+  width: fit-content;
+  min-width: fit-content;
   max-width: 50vw;
   border: 1px solid var(--gray);
 }
@@ -431,4 +452,13 @@ form{
   border-radius: 15px;
   padding: 15px 20px;
   width: 400px;
+}
+
+.image-container{
+  background-color: var(--gray);
+  width: 200px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  height: 240px;
+  justify-content: spa;
 }

@@ -29,6 +29,14 @@ export default function AdminNavigation() {
         <StaffIcon/>
         <p className="normal-text">Преподаватели</p>
       </Link>  
+      <Link to='/login' className="navigation-item">
+        <StaffIcon/>
+        <p className="normal-text">Авторизация</p>
+      </Link>  
+      <Link to='/admin' className="navigation-item">
+        <StaffIcon/>
+        <p className="normal-text">Админ</p>
+      </Link>  
     </>
   )
 }

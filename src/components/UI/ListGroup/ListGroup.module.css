@@ -1,0 +1,29 @@
+.container{
+  border-radius: 10px;
+  width: 200px;
+  overflow: hidden;
+}
+
+.item{
+  padding: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-top: 1px solid var(--gray);
+  border-left: 1px solid var(--gray);
+  border-right: 1px solid var(--gray);
+}
+
+.item:first-child{
+  border-radius: 10px 10px 0 0;
+}
+
+.item:last-child{
+  border-radius: 0 0 10px 10px;
+  border-bottom: 1px solid var(--gray);
+}
+
+.selected{
+  background-color: var(--accent);
+  color: var(--white);
+  font-weight: 600
+}

@@ -2,7 +2,7 @@ import React from 'react'
 import DescriptionTable from "../components/DescriptionTable"
 import InformationTable from '../components/InformationTable'
 import Button from '../components/UI/Button/Button'
-import { GROUP_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
+import { GROUP_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
 
 export default function StudentPage() {
 

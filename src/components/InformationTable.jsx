@@ -5,6 +5,10 @@ import { STUDENT_ROUTE } from '../utils/consts';
 function InformationTable({ columns, data, numbered }) { 
   const navigate = useNavigate();   
 
+  const getValue = (row, key) => {
+    return key.split('.').reduce((acc, part) => acc && acc[part], row);
+  };
+
   return (
     <table className="information-table normal-text">
       <thead>
@@ -23,27 +27,26 @@ function InformationTable({ columns, data, numbered }) {
             {numbered && <td>{infoIndex + 1}</td>}
             {columns.map((column, keyIndex) => (
               <td key={keyIndex}>
-                {Array.isArray(row[column.key]) ? (
-                  row[column.key].map((value, valueIndex) => (
+                {Array.isArray(getValue(row, column.key)) ? (
+                  getValue(row, column.key).map((value, valueIndex) => (
                     <div key={valueIndex}>
-                      {column.isLink ?
-                        <p className='link-text'>
-                          {value}
-                        </p>
-                        :
-                        <p className="normal-text">
-                          {value}
-                        </p>
-                      }
+                      {column.isLink ? (
+                        <p className='link-text'>{value}</p>
+                      ) : (
+                        <p className="normal-text">{value}</p>
+                      )}
                     </div>
                   ))
                 ) : (
                   column.isLink ? (
-                    <p className='link-text' onClick={() => navigate(column.url + '/' + infoIndex)}>
-                      {row[column.key]}
+                    <p className='link-text' onClick={() => {
+                      const navigateTo = column.navigateTo ? column.navigateTo(row) : column.url;
+                      navigate(navigateTo);
+                    }}>
+                      {getValue(row, column.key)}
                     </p>
                   ) : (
-                    <p className='normal-text'>{row[column.key]}</p>
+                    <p className='normal-text'>{getValue(row, column.key)}</p>
                   )
                 )}
               </td>

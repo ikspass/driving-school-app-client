@@ -1,20 +1,30 @@
 import { Context } from "..";
 import { useContext } from 'react'
 import AdminNavigation from "./AdminNavigation";
-import Button from "./UI/Button/Button";
 import UserNavigation from "./UserNavigation";
+import Button from "./UI/Button/Button";
+import { useNavigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import { LOGIN_ROUTE } from "../utils/consts";
 
-function Header() {
+const Header = observer(() => {
 
   const {user} = useContext(Context);
+  const navigate = useNavigate()
 
+  const logOut = () => {
+    user.setUser({});
+    user.setIsAuth(false);
+    localStorage.clear('token');
+    navigate(LOGIN_ROUTE);
+  }
 
   return (
     <div className="header">
       <div className="header-title">
         <p className="heading-text-2">Driving School App</p>
         <div style={{display: 'flex', gap: '30px', alignItems: 'center'}}>
-          <Button>Выйти</Button>
+          <Button onClick={() => logOut()}>Выйти</Button>
           <div className="user-photo"></div>
         </div>
       </div>
@@ -23,6 +33,6 @@ function Header() {
       </div>
     </div>
   );
-}
+})
   
-  export default Header;
+export default Header;

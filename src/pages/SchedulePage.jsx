@@ -3,7 +3,7 @@ import Calendar from '../components/Calendar'
 import Header from '../components/Header'
 import EventsList from '../components/EventsList'
 import Button from '../components/UI/Button/Button'
-import FilterButtons from '../components/UI/FilterButtons/FilterButtons'
+import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons'
 import Input from '../components/UI/Input/Input'
 
 

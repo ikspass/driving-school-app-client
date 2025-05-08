@@ -88,7 +88,10 @@ code {
 }
 
 .main-container{
-  padding: 20px 130px 40px 130px;
+  padding: 20px 0 40px 0;
+  width: 1400px;
+  margin: 0 auto;
+  /* background-color: #5EBCFF; */
 }
 
 .center-content-container{
@@ -163,7 +166,7 @@ code {
 }
 
 .button-container{
-  width: fit-content;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -241,6 +244,7 @@ code {
   padding: 10px; /* Отступ внутри ячеек */
   margin: 0; /* Убираем отступы */
   text-align: center;
+  justify-items: center;
   font-weight: 400;
   width: fit-content;
 }
@@ -411,18 +415,26 @@ code {
   width: 100%;
 }
 form{
-  width: 400px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  /* flex-wrap: wrap; */
 }
 .input-container{
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 400px;
+  flex-shrink: 0;
 }
 
 .horizontal-container{
+  display: flex;
+  gap: 30px;
+  /* flex-wrap: wrap; */
+}
+
+.form-container{
   display: flex;
   gap: 30px;
   /* flex-wrap: wrap; */
@@ -457,8 +469,21 @@ form{
 .image-container{
   background-color: var(--gray);
   width: 200px;
+  border: 1px solid var(--gray);
   border-radius: 10px;
+  overflow: hidden;
+  position: relative;
   flex-shrink: 0;
   height: 240px;
-  justify-content: spa;
+}
+.image-container img{
+  width: 100%;
+  object-fit: cover;
+  height: 100%;
+}
+
+.dashboard{
+  display: flex;
+  /* background-color: var(--light-accent); */
+  flex: 1
 }

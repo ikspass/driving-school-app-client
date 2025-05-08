@@ -12,3 +12,4 @@ export const login = async (idNumber, password) => {
   localStorage.setItem('token', data.token);  
   return jwtDecode(data.token);
 }
+

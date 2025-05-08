@@ -8,9 +8,9 @@
   padding: 10px;
   cursor: pointer;
   transition: 0.3s;
-  border-top: 1px solid var(--gray);
-  border-left: 1px solid var(--gray);
-  border-right: 1px solid var(--gray);
+  border-top: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+  border-right: 1px solid var(--accent);
 }
 
 .item:first-child{
@@ -19,7 +19,7 @@
 
 .item:last-child{
   border-radius: 0 0 10px 10px;
-  border-bottom: 1px solid var(--gray);
+  border-bottom: 1px solid var(--accent);
 }
 
 .selected{

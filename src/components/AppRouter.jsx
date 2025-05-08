@@ -5,11 +5,11 @@ import { Context } from '..';
 
 function AppRouter() {
 
-  const {user} = useContext(Context)
+  const {userStore} = useContext(Context)
   
   return (
     <Routes>
-      {user.isAuth && authRoutes.map(({path, Component}) => 
+      {userStore.isAuth && authRoutes.map(({path, Component}) => 
         <Route key={path} path={path} element={<Component />}/>
       )}
       {publicRoutes.map(({path, Component}) => 

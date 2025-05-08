@@ -1,0 +1,12 @@
+.pin{
+  border-radius: 100px;
+  padding: 7px 14px;
+  border: 1px solid lightgrey;
+  cursor: pointer;
+}
+
+.selected{
+  background-color: #5EBCFF;
+  color: white;
+  border: 1px solid #5EBCFF;
+}

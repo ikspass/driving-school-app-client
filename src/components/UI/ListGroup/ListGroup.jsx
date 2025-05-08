@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
 import classes from './ListGroup.module.css';
-import { useNavigate } from 'react-router-dom';
 
-export default function ListGroup({ items, title }) {
-  const navigate = useNavigate();
+export default function ListGroup({ items, onSelect }) {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
-  const handleItemClick = (index, url) => {
+  const handleItemClick = (index, component) => {
     setSelectedIndex(index); // Устанавливаем индекс выбранного элемента
-    // navigate(url); // Навигация
+    onSelect(component); // Передаем выбранный компонент родителю
   };
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column'}}>
-      <p style={{ marginBottom: '10px' }} className="heading-text-2">{title}</p>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div className={classes.container}>
         {items.map((item, index) => (
           <p
             key={index}
-            onClick={() => handleItemClick(index, item.url)}
+            onClick={() => handleItemClick(index, item.component)}
             className={`normal-text ${classes.item} ${selectedIndex === index ? classes.selected : ''}`}
           >
             {item.value}

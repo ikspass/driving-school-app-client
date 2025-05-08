@@ -1,16 +1,23 @@
 .button{
-    background-color: var(--accent);
-    color: var(--white);
-    border: 0;
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-weight: 600;
-    cursor: pointer;
-    width: max-content;
-    flex-shrink: 0;
-  }
-  
-  .button:hover{
-    background-color: #9ed6ff;
-    transition: 0.3s;
-  }
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  width: max-content;
+  flex-shrink: 0;
+  transition: 0.3s;
+  background-color: var(--accent);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.primary:hover{
+  background-color: var(--light-accent);
+}
+
+.outline{
+  background-color: var(--white);
+  border: 1px solid var(--gray);
+  color: var(--black);
+  font-weight: 400;
+}

@@ -43,7 +43,7 @@ const CreateTeacher = observer(() => {
     formDataUser.append('fullName', fullName)
     formDataUser.append('dateOfBirth', dateOfBirth)
     formDataUser.append('phoneNumber', phoneNumber)
-    formDataUser.append('roleValue', 'student')
+    formDataUser.append('roleValue', 'teacher')
     formDataUser.append('img', file)
 
     if (!qual) {
@@ -58,24 +58,24 @@ const CreateTeacher = observer(() => {
 
         createTeacher({userId: data.id, dateOfEmployment: dateOfEmployment})
         .then(data => {
-          console.log('Студент создан', data);
+          console.log('Преподаватель создан', data);
         })
         .catch(err => {
-            console.error('Ошибка при создании студента:', err);
+            console.error('Ошибка при создании преподавателя:', err);
         });
 
       } else {
         console.error('Не удалось получить id пользователя');
       }
     })
-    .catch(err => console.error('Ошибка при создании преподавателя:', err));
+    .catch(err => console.error('Ошибка при создании пользователя:', err));
   }
 
   const navigate = useNavigate();
 
   return(
     <div className='content-container'>
-      <p className="heading-text-2">Создать учётную запись преподавателя</p>
+      <p className="heading-text-2">Добавить учётную запись преподавателя</p>
       <form>
         <div className="form-container">
           <div className="input-container">
@@ -131,9 +131,7 @@ const CreateTeacher = observer(() => {
           </div>
         </div>
       </form>
-      <div className="button-container">
-        <Button onClick={confirm}>Сохранить</Button>
-      </div>
+      <Button onClick={confirm}>Сохранить</Button>
     </div>
   )
 })

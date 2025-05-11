@@ -6,11 +6,11 @@ export default class UserStore{
 
     this._user = {}
 
-    this._teachers = []
+    // this._teachers = []
 
-    this._instructors = []
+    // this._instructors = []
 
-    this._students = []
+    // this._students = []
 
     this._users = []
 
@@ -24,19 +24,7 @@ export default class UserStore{
   setUser(user){
     this._user = user;
   }
-  
-  setTeachers(teachers){
-    this._teachers = teachers;
-  }
-  
-  setInstructors(instructors){
-    this._instructors = instructors;
-  }
-  
-  setStudents(students){
-    this._students = students;
-  }
-  
+    
   setUsers(users){
     this._users = users;
   }
@@ -50,15 +38,18 @@ export default class UserStore{
   }
 
   get teachers() {
-    return this._teachers;
+    const result = this._users.filter(user => user.role && user.role.value === 'teacher');
+    return result.length > 0 ? result : [];
   }
 
   get instructors() {
-    return this._instructors;
+    const result = this._users.filter(user => user.role && user.role.value === 'instructor');
+    return result.length > 0 ? result : [];
   }
 
   get students() {
-    return this._students;
+    const result = this._users.filter(user => user.role.value === 'student');
+    return result.length > 0 ? result : [];
   }
 
   get users() {

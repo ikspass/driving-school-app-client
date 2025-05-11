@@ -1,16 +1,25 @@
-import React, { useState } from 'react'
-import { createCar } from '../../http/adminAPI';
+import React, { useState, useContext, useEffect } from 'react'
+import { createTransport, fetchCategories } from '../../http/adminAPI';
 import { observer } from 'mobx-react-lite';
 import Input from '../UI/Input/Input';
 import Button from '../UI/Button/Button';
+import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons';
+import { Context } from '../..';
 
-const CreateCar = observer(() => {
+const CreateTransport = observer(() => {
   const [name, setName] = useState('');
   const [sign, setSign] = useState('');
   const [color, setColor] = useState('');
+  const [category, setCategory] = useState('');
+
+  const {schoolStore} = useContext(Context)
+
+  useEffect(() => {
+    fetchCategories().then(data => schoolStore.setCategories(data))
+  }, [])
 
   const confirm = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     if (!name || !sign || !color) {
       alert("Пожалуйста, заполните все поля!");
@@ -18,7 +27,7 @@ const CreateCar = observer(() => {
     }
 
     try {
-      const data = await createCar({name: name, sign: sign, color: color});
+      const data = await createTransport({name: name, sign: sign, color: color, categoryValue: category.value});
       console.log(data);
     } catch (error) {
         console.error("Ошибка при создании автомобиля:", error);
@@ -28,7 +37,7 @@ const CreateCar = observer(() => {
   return (
     <>
       <div className='content-container'>
-            <p className="heading-text-2">Создать автомобиль</p>
+            <p className="heading-text-2">Добавить автомобиль</p>
             <form>
                  <div className="input-container">
                     <Input
@@ -46,6 +55,12 @@ const CreateCar = observer(() => {
                         onChange={e => setColor(e.target.value)}
                         title={"Цвет"}  
                     /> 
+                    <SingleFilterButtons
+                      title='Категория'
+                      filters={schoolStore.categories.map(elem => ({id: elem.id, value: elem.value}))}
+                      selected={category}
+                      setSelected={setCategory}
+                    />
                 </div>
                 <Button onClick={confirm}>Сохранить</Button>
             </form>
@@ -54,4 +69,4 @@ const CreateCar = observer(() => {
   )
 })
 
-export default CreateCar;
+export default CreateTransport;

@@ -6,7 +6,7 @@ import SingleFilterButtons from "../UI/SingleFilterButtons/SingleFilterButtons"
 import { createGroup, fetchCategories, fetchTeachers } from "../../http/adminAPI";
 import { observer } from "mobx-react-lite";
 
-const CreateGroup = observer(({create}) => {
+const CreateGroup = observer(({onClose}) => {
     const [name, setName] = useState('');
     const [category, setCategory] = useState('');
     const [groupTeacher, setGroupTeacher] = useState('');
@@ -17,7 +17,7 @@ const CreateGroup = observer(({create}) => {
 
     useEffect(() => {
       fetchCategories().then(data => schoolStore.setCategories(data))
-      fetchTeachers().then(data => userStore.setTeachers(data))
+      fetchTeachers().then(data => userStore.setUsers(data))
     }, [])
 
     const confirm = async (e) => {
@@ -34,11 +34,12 @@ const CreateGroup = observer(({create}) => {
         } catch (error) {
             console.error("Ошибка при создании группы:", error);
         }
+        onClose();
     }
 
     return(
         <div className='content-container'>
-            <p className="heading-text-2">Создать учебную группу</p>
+            <p className="heading-text-2">Добавить учебную группу</p>
             <form>
                  <div className="input-container">
                     <Input

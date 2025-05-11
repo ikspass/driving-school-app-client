@@ -42,7 +42,7 @@ const CreateInstructor = observer(() => {
     formDataUser.append('fullName', fullName)
     formDataUser.append('dateOfBirth', dateOfBirth)
     formDataUser.append('phoneNumber', phoneNumber)
-    formDataUser.append('roleValue', 'student')
+    formDataUser.append('roleValue', 'instructor')
     formDataUser.append('img', file)
 
     if (!categories) {
@@ -57,7 +57,7 @@ const CreateInstructor = observer(() => {
 
         createInstructor({userId: data.id, dateOfEmployment: dateOfEmployment})
         .then(data => {
-          console.log('Студент создан', data);
+          console.log('Инструктор создан', data);
         })
         .catch(err => {
             console.error('Ошибка при создании инструктора:', err);
@@ -72,7 +72,7 @@ const CreateInstructor = observer(() => {
 
   return(
     <div className='content-container'>
-      <p className="heading-text-2">Создать учётную запись инструктора</p>
+      <p className="heading-text-2">Добавить учётную запись инструктора</p>
       <form>
         <div className="form-container">
           <div className="input-container">
@@ -128,9 +128,7 @@ const CreateInstructor = observer(() => {
           </div>
         </div>  
       </form>
-      <div className='button-container'>
-        <Button onClick={confirm}>Сохранить</Button>
-      </div>
+      <Button onClick={confirm}>Сохранить</Button>
     </div>
   )
 })

@@ -1,6 +1,9 @@
+import { observer } from "mobx-react-lite";
+
 const CalendarDate = ({props}) => {
     const dateClass = 'calendar-table-date' + (props.isCurrentMonth ? ' current-month' : '');
     const frameClass = 'selected-frame' + (props.eventsCount > 0 ? ' busy' : '') + (props.selected === true ? ' selected' : '');
+
     return (
         <div className={frameClass} onClick={props.onClick}>
             <div className="calendar-table-item">

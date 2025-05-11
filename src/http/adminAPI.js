@@ -11,10 +11,6 @@ export const fetchUsers = async () => {
   return data;
 }
 
-// export const fetchUserByIdNumber = async (idNumber) => {
-//   const {data} = await $authHost.get(`users/idNumber/${idNumber}`)
-// }
-
 export const createStudent = async (student) => {
   const {data} = await $authHost.post('students', student);
   return data;
@@ -55,13 +51,13 @@ export const fetchGroups = async () => {
   return data;
 }
 
-export const createCar = async (car) => {
-  const {data} = await $authHost.post('cars', car);
+export const createTransport = async (transport) => {
+  const {data} = await $authHost.post('transports', transport);
   return data;
 }
 
-export const fetchCars = async () => {
-  const {data} = await $authHost.get('cars');
+export const fetchTransports = async () => {
+  const {data} = await $authHost.get('transports');
   return data;
 }
 
@@ -95,6 +91,16 @@ export const fetchCategories = async () => {
   return data;
 }
 
+export const createInstructorCategories = async (category) => {
+  const {data} = await $authHost.post('instructor-categories', category);
+  return data;
+}
+
+export const fetchInstructorCategories = async () => {
+  const {data} = await $authHost.get('instructor-categories');
+  return data;
+}
+
 export const createQual = async (qual) => {
   const {data} = await $authHost.post('quals', qual);
   return data;
@@ -102,6 +108,21 @@ export const createQual = async (qual) => {
 
 export const fetchQuals = async () => {
   const {data} = await $authHost.get('quals');
+  return data;
+}
+
+export const fetchLectureEvents = async () => {
+  const {data} = await $authHost.get('lecture-events');
+  return data;
+}
+
+export const fetchDrivingEvents = async () => {
+  const {data} = await $authHost.get('driving-events');
+  return data;
+}
+
+export const fetchTestEvents = async () => {
+  const {data} = await $authHost.get('test-events');
   return data;
 }
 

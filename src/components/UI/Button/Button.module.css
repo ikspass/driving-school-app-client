@@ -6,9 +6,11 @@
   width: max-content;
   flex-shrink: 0;
   transition: 0.3s;
+  align-self: end;
   background-color: var(--accent);
   color: var(--white);
   font-weight: 600;
+  height: fit-content;
 }
 
 .primary:hover{
@@ -17,7 +19,7 @@
 
 .outline{
   background-color: var(--white);
-  border: 1px solid var(--gray);
+  border: 1px solid var(--accent);
   color: var(--black);
   font-weight: 400;
 }

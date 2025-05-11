@@ -1,10 +1,10 @@
 import React from 'react';
 import classes from './SingleFilterButtons.module.css';
 
-const FilterButtons = ({ title, filters, selected, setSelected }) => {
+const SingleFilterButtons = ({ title, filters, selected, setSelected }) => {
 return (
-  <>
-    <p className="small-text" style={{paddingLeft: '10px'}}>{title}</p>
+  <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
+    {title &&  <p className="small-text" style={{paddingLeft: '10px'}}>{title}</p>}
     {filters.length ?
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
         {filters.map((filter) => (
@@ -21,7 +21,7 @@ return (
       :
       <p className="normal-text">Данные отсутствуют</p>
     }
-  </>
+  </div>
 )}
 
-export default FilterButtons;
+export default SingleFilterButtons;

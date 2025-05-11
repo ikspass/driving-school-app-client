@@ -12,7 +12,7 @@ export const getDateInfo = date => {
         monthLong: getMonthName(date.getMonth()),
         monthIndex: date.getMonth(),
         year: date.getFullYear(),
-        fullDate: day + "." + monthesIndex[date.getMonth()] + "." + date.getFullYear(),
+        fullDate: `${date.getFullYear()}-${monthesIndex[date.getMonth()]}-${day}`,
         dayIndex: weekDays[date.getDay()]
     }
 } 

@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { createCar, createCategory, createDrivingPlace } from '../../http/adminAPI';
+import { observer } from 'mobx-react-lite';
+import Button from '../UI/Button/Button';
+import Input from '../UI/Input/Input';
 
 const CreateCategory = observer(() => {
   const [value, setValue] = useState('');
@@ -24,7 +27,7 @@ const CreateCategory = observer(() => {
   return (
     <>
       <div className='content-container'>
-            <p className="heading-text-2">Создать автомобиль</p>
+            <p className="heading-text-2">Добавить автомобиль</p>
             <form>
                  <div className="input-container">
                     <Input

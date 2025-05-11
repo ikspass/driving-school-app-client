@@ -76,7 +76,7 @@ const CreateStudent = observer(({show, onHide}) => {
 
   return(
     <div className='content-container'>
-      <p className="heading-text-2">Создать учётную запись курсанта</p>
+      <p className="heading-text-2">Добавить учётную запись курсанта</p>
       <form>
         <div className="form-container">
           <div className="input-container">
@@ -127,9 +127,7 @@ const CreateStudent = observer(({show, onHide}) => {
           </div>
         </div>
       </form>
-      <div className="button-container">
-        <Button onClick={confirm}>Сохранить</Button>
-      </div>
+      <Button onClick={confirm}>Сохранить</Button>
     </div>
   )
 })

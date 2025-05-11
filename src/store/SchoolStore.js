@@ -4,11 +4,11 @@ export default class SchoolStore{
   constructor(){
     this._tests = []
     
-    this._materials = []
+    this._chapters = []
 
     this._topics = []
 
-    this._cars = []
+    this._transports = []
 
     this._drivingPlaces = []
 
@@ -18,6 +18,8 @@ export default class SchoolStore{
 
     this._categories = []
 
+    this._scheduleGroups = []
+
     makeAutoObservable(this);
   }
   
@@ -25,16 +27,16 @@ export default class SchoolStore{
     this._tests = tests;
   }
   
-  setMaterials(materials){
-    this._materials = materials;
+  setMaterials(chapters){
+    this._chapters = chapters;
   }
   
   setTopics(topics){
     this._topics = topics;
   }
   
-  setCars(cars){
-    this._cars = cars;
+  setTransports(transports){
+    this._transports = transports;
   }
   
   setDrivingPlaces(drivingPlaces){
@@ -52,21 +54,25 @@ export default class SchoolStore{
   setCategories(categories){
     this._categories = categories;
   }
+  
+  setSchedileGroups(scheduleGroups){
+    this._scheduleGroups = scheduleGroups;
+  }
 
   get tests() {
     return this._tests;
   }
 
-  get materials() {
-    return this._materials;
+  get chapters() {
+    return this._chapters;
   }
 
   get topics() {
     return this._topics;
   }
 
-  get cars() {
-    return this._cars;
+  get transports() {
+    return this._transports;
   }
 
   get drivingPlaces() {
@@ -83,5 +89,9 @@ export default class SchoolStore{
 
   get categories() {
     return this._categories;
+  }
+
+  get sheduleGroups() {
+    return this._sheduleGroups;
   }
 }

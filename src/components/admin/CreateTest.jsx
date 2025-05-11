@@ -31,34 +31,34 @@ const CreateTest = observer(() => {
     } catch (error) {
         console.error("Ошибка при создании категории:", error);
     }
-}
+  }
 
   return (
     <>
       <div className='content-container'>
-            <p className="heading-text-2">Создать зачёт/экзамен</p>
-            <form>
-                 <div className="input-container">
-                    <Input
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        title={"Название"}  
-                    /> 
-                    <Input
-                        value={desc}
-                        onChange={e => setDesc(e.target.value)}
-                        title={"Описание"}  
-                    />
-                    <SingleFilterButtons 
-                      title='Категория'
-                      filters={schoolStore.categories.map(elem => ({id: elem.id, value: elem.value}))}
-                      selected={category}
-                      setSelected={setCategory}
-                    />
-                </div>
-                <Button onClick={confirm}>Сохранить</Button>
-            </form>
-        </div>
+        <p className="heading-text-2">Добавить зачёт/экзамен</p>
+        <form>
+          <div className="input-container">
+            <Input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              title={"Название"}  
+            /> 
+            <Input
+              value={desc}
+              onChange={e => setDesc(e.target.value)}
+              title={"Описание"}  
+            />
+            <SingleFilterButtons 
+              title='Категория'
+              filters={schoolStore.categories.map(elem => ({id: elem.id, value: elem.value}))}
+              selected={category}
+              setSelected={setCategory}
+            />
+          </div>
+          <Button onClick={confirm}>Сохранить</Button>
+        </form>
+      </div>
     </>
   )
 })

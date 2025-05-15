@@ -8,7 +8,7 @@ import Button from '../UI/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import FileInput from '../UI/FileInput/FileInput';
 
-const CreateInstructor = observer(() => {
+const CreateInstructor = observer(({onClose}) => {
   const [idNumber, setIdNumber] = useState('');
   const [passportNumber, setPassportNumber] = useState('');
   const [adress, setAdress] = useState('');
@@ -58,6 +58,7 @@ const CreateInstructor = observer(() => {
         createInstructor({userId: data.id, dateOfEmployment: dateOfEmployment})
         .then(data => {
           console.log('Инструктор создан', data);
+          onClose();
         })
         .catch(err => {
             console.error('Ошибка при создании инструктора:', err);

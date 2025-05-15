@@ -51,10 +51,18 @@ const AdminStudentsPage = observer(() => {
     { key: "student.status", label: "Статус", isLink: false },
   ];
 
+  const updateStudents = async () => {
+    const data = await fetchUsers();
+    userStore.setUsers(data);
+  };
+
   return (
     <div className="filter-container">
       <Modal
-        children={<CreateStudent/>}
+        children={<CreateStudent onClose={() => {
+          setCreateStudentModal(false);
+          updateStudents()
+        }}/>}
         isOpen={createStudentModal}
         onClose={() => setCreateStudentModal(false)}
       />

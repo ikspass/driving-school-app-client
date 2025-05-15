@@ -1,6 +1,12 @@
 import { $authHost, $host } from ".";
 import { jwtDecode } from 'jwt-decode'
 
+export const adminLogin = async (password) => {
+  const {data} = await $host.post('auth/admin-login', {password});
+  localStorage.setItem('token', data.token);  
+  return jwtDecode(data.token);
+}
+
 export const createUser = async (user) => {
   const {data} = await $authHost.post('users', user);
   return data;
@@ -8,6 +14,11 @@ export const createUser = async (user) => {
 
 export const fetchUsers = async () => {
   const {data} = await $authHost.get('users');
+  return data;
+}
+
+export const fetchUserById = async (id) => {
+  const {data} = await $authHost.get(`users/${id}`);
   return data;
 }
 
@@ -108,6 +119,26 @@ export const createQual = async (qual) => {
 
 export const fetchQuals = async () => {
   const {data} = await $authHost.get('quals');
+  return data;
+}
+
+export const createScheduleGroups = async (scheduleGroup) => {
+  const {data} = await $authHost.post('schedule-groups', scheduleGroup);
+  return data;
+}
+
+export const fetchScheduleGroups = async () => {
+  const {data} = await $authHost.get('schedule-groups');
+  return data;
+}
+
+export const createTeacherQual = async (qual) => {
+  const {data} = await $authHost.post('teacher-quals', qual);
+  return data;
+}
+
+export const fetchTeacherQuals = async () => {
+  const {data} = await $authHost.get('teacher-quals');
   return data;
 }
 

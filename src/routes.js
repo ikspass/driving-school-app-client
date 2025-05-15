@@ -2,7 +2,7 @@ import CreateGroup from "./components/admin/CreateGroup"
 import CreateStudent from "./components/admin/CreateStudent"
 import GroupsPage from "./pages/GroupsPage"
 import AdminPage from "./pages/AdminPage"
-import AdminStaffPage from "./pages/AdminStaffPage"
+import AdminStaffPage from "./pages/StaffPage"
 import StudentsPage from "./pages/StudentsPage"
 import AuthPage from "./pages/AuthPage"
 import GroupPage from "./pages/GroupPage"
@@ -15,7 +15,9 @@ import TeacherPage from "./pages/TeacherPage"
 import InstructorsPage from "./pages/InstructorsPage"
 import TeachersPage from "./pages/TeachersPage"
 import HomePage from "./pages/HomePage"
-import { ADMIN_ROUTE, HOME_ROUTE, CREATE_GROUP_ROUTE, CREATE_STUDENT_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, INSTRUCTORS_ROUTE, LOGIN_ROUTE, MATERIALS_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, TEACHERS_ROUTE } from "./utils/consts"
+import { ADMIN_ROUTE, HOME_ROUTE, CREATE_GROUP_ROUTE, CREATE_STUDENT_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, INSTRUCTORS_ROUTE, LOGIN_ROUTE, MATERIALS_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, TEACHERS_ROUTE, CONTACTS_ROUTE, ADMINAUTH_ROUTE } from "./utils/consts"
+import ContactsPage from "./pages/ContactsPage"
+import AdminAuthPage from "./pages/admin/AdminAuthPage"
 
 export const authRoutes = [
   {
@@ -33,6 +35,10 @@ export const authRoutes = [
   {
     path: STATISTIC_ROUTE,
     Component: StatisticPage
+  },
+  {
+    path: CONTACTS_ROUTE,
+    Component: ContactsPage
   },
   {
     path: GROUPS_ROUTE,
@@ -81,7 +87,8 @@ export const authRoutes = [
   {
     path: ADMIN_ROUTE,
     Component: AdminPage
-  }
+  },
+
 ]
 
 export const publicRoutes = [
@@ -93,4 +100,8 @@ export const publicRoutes = [
     path: REGISTRATION_ROUTE,
     Component: AuthPage
   },
+  {
+    path: ADMINAUTH_ROUTE,
+    Component: AdminAuthPage
+  }
 ]

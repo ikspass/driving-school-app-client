@@ -6,7 +6,7 @@ import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons'
 import Button from '../UI/Button/Button';
 import Input from '../UI/Input/Input';
 
-const CreateTest = observer(() => {
+const CreateTest = observer(({onClose}) => {
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [category, setCategory] = useState('');
@@ -28,6 +28,7 @@ const CreateTest = observer(() => {
     try {
       const data = await createTest({name: name, description: desc, categoryValue: category});
       console.log(data);
+      onClose();
     } catch (error) {
         console.error("Ошибка при создании категории:", error);
     }

@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react-lite'
 import React, { useState, useContext, useEffect } from 'react'
-import Button from '../components/UI/Button/Button'
-import CreateCategory from '../components/admin/CreateCategory'
-import CreateTransport from '../components/admin/CreateTransport'
-import CreateDrivingPlace from '../components/admin/CreateDrivingPlace'
-import CreateTest from '../components/admin/CreateTest'
-import Modal from '../components/Modal'
-import InformationTable from '../components/InformationTable'
-import { Context } from '..'
-import { fetchCars, fetchCategories, fetchDrivingPlaces, fetchTransports } from '../http/adminAPI'
+import Button from '../../components/UI/Button/Button'
+import CreateCategory from '../../components/admin/CreateCategory'
+import CreateTransport from '../../components/admin/CreateTransport'
+import CreateDrivingPlace from '../../components/admin/CreateDrivingPlace'
+import CreateTest from '../../components/admin/CreateTest'
+import Modal from '../../components/Modal'
+import InformationTable from '../../components/InformationTable'
+import { Context } from '../..'
+import { fetchCars, fetchCategories, fetchDrivingPlaces, fetchTransports } from '../../http/adminAPI'
 
 const AdminSchoolDataPage = observer(() => {
   const [createCategoryModal, setCreateCategoryModal] = useState(false)
@@ -32,12 +32,14 @@ const AdminSchoolDataPage = observer(() => {
     { key: "description", label: "Описание", isLink: false},
   ]
 
-  const carColumns = [
+  const transportColumns = [
     { key: "id", label: "ID", isLink: false},
     { key: "name", label: "Название", isLink: false},
     { key: "sign", label: "Номерной знак", isLink: false},
     { key: "color", label: "Цвет", isLink: false},
-    { key: "instructor.user.fullName", label: 'Инструктор', isLink: true }
+    { key: "category.value", label: "Категория", isLink: false},
+    { key: "instructor.user.fullName", label: 'Инструктор', isLink: true },
+    { key: "status", label: 'Статус', isLink: false }
   ]
 
   const drivingPlaceColumns = [
@@ -64,26 +66,50 @@ const AdminSchoolDataPage = observer(() => {
     { key: "description", label: "Описание", isLink: false},
   ]
 
+  const updateCategories = async () => {
+    const data = await fetchCategories();
+    schoolStore.setCategories(data);
+  };
+
+  const updateTransport = async () => {
+    const data = await fetchTransports();
+    schoolStore.setTransports(data);
+  };
+
+  const updatePlaces = async () => {
+    const data = await fetchDrivingPlaces();
+    schoolStore.setDrivingPlaces(data);
+  };
+
   return (
       <div className="filter-container">
 
         <Modal
-          children={<CreateCategory/>}
+          children={<CreateCategory onClose={() => {
+            setCreateCategoryModal(false);
+            updateCategories();
+          }} />}  
           isOpen={createCategoryModal}
           onClose={() => setCreateCategoryModal(false)}
         />
         <Modal
-          children={<CreateTransport/>}
+          children={<CreateTransport onClose={() => {
+            setCreateTransportModal(false)
+            updateTransport();
+          }}/>}
           isOpen={createTransportModal}
           onClose={() => setCreateTransportModal(false)}
         />
         <Modal
-          children={<CreateDrivingPlace/>}
+          children={<CreateDrivingPlace onClose={() => {
+            setCreatePlaceModal(false)
+            updatePlaces();
+          }}/>}
           isOpen={createPlaceModal}
           onClose={() => setCreatePlaceModal(false)}
         />
         <Modal
-          children={<CreateTest/>}
+          children={<CreateTest onClose={() => setCreateTestModal(false)}/>}
           isOpen={createTestModal}
           onClose={() => setCreateTestModal(false)}
         />
@@ -100,7 +126,7 @@ const AdminSchoolDataPage = observer(() => {
         <p className="heading-text-2">Автопарк</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <InformationTable 
-            columns={carColumns}
+            columns={transportColumns}
             data={schoolStore.transports}
           />
           <Button className='outline' onClick={() => setCreateTransportModal(true)}>Добавить автомобиль</Button>

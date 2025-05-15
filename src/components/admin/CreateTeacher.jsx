@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useContext, useEffect } from 'react'
 import { Context } from '../..';
-import { createGroup, createTeacher, createUser, fetchCategories, fetchQuals, fetchTeachers } from '../../http/adminAPI';
+import { createGroup, createTeacher, createTeacherQual, createUser, fetchCategories, fetchQuals, fetchTeachers } from '../../http/adminAPI';
 import Input from '../UI/Input/Input';
 import MultipleFilterButtons from '../UI/MultipleFilterButtons/MultipleFilterButtons';
 import Button from '../UI/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import FileInput from '../UI/FileInput/FileInput';
 
-const CreateTeacher = observer(() => {
+const CreateTeacher = observer(({onClose}) => {
   const [idNumber, setIdNumber] = useState('');
   const [passportNumber, setPassportNumber] = useState('');
   const [adress, setAdress] = useState('');
@@ -33,43 +33,44 @@ const CreateTeacher = observer(() => {
   }
 
   const confirm = async (e) => {
-    e.preventDefault()
-    
-    const formDataUser = new FormData()
-
-    formDataUser.append('idNumber', idNumber)
-    formDataUser.append('passportNumber', passportNumber)
-    formDataUser.append('adress', adress)
-    formDataUser.append('fullName', fullName)
-    formDataUser.append('dateOfBirth', dateOfBirth)
-    formDataUser.append('phoneNumber', phoneNumber)
-    formDataUser.append('roleValue', 'teacher')
-    formDataUser.append('img', file)
-
-    if (!qual) {
-      console.error('Категория не выбрана');
+    e.preventDefault();
+  
+    const formDataUser = new FormData();
+    formDataUser.append('idNumber', idNumber);
+    formDataUser.append('passportNumber', passportNumber);
+    formDataUser.append('adress', adress);
+    formDataUser.append('fullName', fullName);
+    formDataUser.append('dateOfBirth', dateOfBirth);
+    formDataUser.append('phoneNumber', phoneNumber);
+    formDataUser.append('roleValue', 'teacher');
+    formDataUser.append('img', file);
+  
+    if (qual.length === 0) {
+      console.error('Квалификация не выбрана');
       return;
     }
-
-    createUser(formDataUser)
-    .then(data => {
-      console.log('Пользователь создан', data);
-      if (data && data.id) {
-
-        createTeacher({userId: data.id, dateOfEmployment: dateOfEmployment})
-        .then(data => {
-          console.log('Преподаватель создан', data);
-        })
-        .catch(err => {
-            console.error('Ошибка при создании преподавателя:', err);
+  
+    try {
+      const userData = await createUser(formDataUser);
+      console.log('Пользователь создан', userData);
+  
+      if (userData && userData.id) {
+        const teacherData = await createTeacher({ userId: userData.id, dateOfEmployment });
+        console.log('Преподаватель создан', teacherData);
+  
+        qual.forEach(elem => {
+          createTeacherQual({ teacherId: teacherData.id, qualId: elem.id })
         });
-
+        console.log('Квалификации созданы');
+  
+        onClose();
       } else {
         console.error('Не удалось получить id пользователя');
       }
-    })
-    .catch(err => console.error('Ошибка при создании пользователя:', err));
-  }
+    } catch (err) {
+      console.error('Ошибка при создании:', err);
+    }
+  };
 
   const navigate = useNavigate();
 

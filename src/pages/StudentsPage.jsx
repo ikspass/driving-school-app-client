@@ -4,33 +4,41 @@ import { Context } from '..';
 import { observer } from 'mobx-react-lite'
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons';
 import { GROUP_ROUTE, STUDENT_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts';
-import { fetchGroups, fetchInstructors, fetchStudents } from '../http/adminAPI';
+import { fetchGroups, fetchInstructors, fetchStudents, fetchUsers } from '../http/adminAPI';
 
 const StudentsPage = observer(() => {
 
-  const {student} = useContext(Context);
-  const {group} = useContext(Context)
+  const {userStore} = useContext(Context);
+  const {groupStore} = useContext(Context)
 
   useEffect(() => {
-    fetchStudents().then(data => student.setStudents(data))
-    fetchGroups().then(data => student.setGroups(data))
-    fetchInstructors().then(data => student.setInstructors(data))
+    fetchUsers().then(data => userStore.setUsers(data))
+    fetchGroups().then(data => groupStore.setGroups(data))
   }, [])
 
   const [selectedGroup, setSelectedGroup] = useState([])
   const [selectedInstructor, setSelectedInstructor] = useState([])
 
-  const filteredStudents = student.students.filter(student => {
-    const matchesGroup = selectedGroup ? student.group.value === selectedGroup.value : true;
-    const matchesInstructor = selectedInstructor ? student.instructor.user.fullName === selectedInstructor.value : true;
+  const filteredStudents = userStore.students.filter(user => {
+    let matchesGroup = true;
+    let matchesInstructor = true;
+    if(user.student.groupId){
+      matchesGroup = selectedGroup ? user.student.groupId === selectedGroup.id : true;
+    }
+    if(user.student.instructorId){
+      matchesInstructor = selectedInstructor ? user.student.instructorId === selectedInstructor.id : true;
+    }
     return matchesGroup && matchesInstructor;
   });
 
+  console.log(filteredStudents)
+  console.log(userStore.students)
+
   const columns = [
-    { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
-    { key: "user.dateOfBirth", label: "Дата рождения", isLink: false },
-    { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
-    { key: "user.instructor.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
+    { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
+    { key: "dateOfBirth", label: "Дата рождения", isLink: false },
+    { key: "phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "student.instructor.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
     { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
     { key: "status", label: "Статус", isLink: false },
   ];
@@ -45,13 +53,13 @@ const StudentsPage = observer(() => {
       <div className="filter-container">
         <MultipleFilterButtons 
           title='Группа'
-          filters={group.groups.map(elem => ({id: elem.id, value: elem.name}))}
+          filters={groupStore.groups.map(elem => ({id: elem.id, value: elem.name}))}
           selected={selectedGroup}
           setSelected={setSelectedGroup}
         />
         <MultipleFilterButtons 
           title='Инструктор'
-          filters={student.instructors.map(elem => ({id: elem.id, value: elem.user.fullName}))}
+          filters={userStore.instructors.map(elem => ({id: elem.id, value: elem.user.fullName}))}
           selected={selectedInstructor}
           setSelected={setSelectedInstructor}
         />

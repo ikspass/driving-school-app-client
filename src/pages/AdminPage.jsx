@@ -4,15 +4,13 @@ import Dashboard from '../components/Dashboard'
 import AdminStudentsPage from './admin/AdminStudentsPage'
 import AdminTeachersPage from './admin/AdminTeachersPage'
 import AdminInstructorsPage from './admin/AdminInstructorsPage'
-import AdminSchoolDataPage from './AdminSchoolDataPage'
+import AdminSchoolDataPage from './admin/AdminSchoolDataPage'
 import AdminGroupsPage from './admin/AdminGroupsPage'
-import AdminSchedulePage from './admin/AdminSchedulePage'
 
 export default function AdminPage() {
   const [selectedComponent, setSelectedComponent] = useState(null);
 
   const items=[
-    // {value: 'Расписание', component: AdminSchedulePage},
     {value: 'Курсанты', component: AdminStudentsPage},
     {value: 'Группы', component: AdminGroupsPage},
     {value: 'Преподаватели', component: AdminTeachersPage},

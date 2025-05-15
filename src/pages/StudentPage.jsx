@@ -1,12 +1,28 @@
-import React from 'react'
+import React, {useContext, useEffect} from 'react'
 import DescriptionTable from "../components/DescriptionTable"
 import InformationTable from '../components/InformationTable'
 import Button from '../components/UI/Button/Button'
+import { fetchUserById } from '../http/adminAPI'
+import { observer } from 'mobx-react-lite'
+import { Context } from '..'
+import { useLocation } from 'react-router-dom'
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
 
-export default function StudentPage() {
+const StudentPage = observer(({}) => {
 
-  const student = {id: 0, userId: 0, fullName: 'Рычкова Полина Андреевна', dateOfBirth: '2005-09-18', phoneNumber: '+375256085506', status: 'Активен', instructor: {id: 0, fullName: 'Иванов Иван Иванович'}, group: {id: 0, name: '16B'}}
+  const {userStore} = useContext(Context)
+
+  const location = useLocation();
+  const paths = location.pathname.split('/')
+
+  useEffect(() => {
+    userStore.setSelectedUserId(paths[paths.length-1])
+
+    fetchUserById(userStore.selectedUserId).then(data => userStore.setSelectedUser(data));
+  }, [])
+
+  const student = userStore.selectedUser;
+  console.log(student)
 
   return (
     <div className="content-container">
@@ -14,24 +30,24 @@ export default function StudentPage() {
       <div className="content-container">
         <div className="horizontal-container">
           <div className="image-container">
-            <img src="" alt="" />
+            <img src={`${process.env.REACT_APP_API_URL}/${student.img}`} alt={student.fullName} />
           </div>
           <DescriptionTable
             value = {[
+              {key:'Идентификационный номер', value: student.idNumber},
+              {key:'Номер паспорта', value: student.passportNumber},
               {key:'ФИО', value: student.fullName},
+              {key:'Адрес', value: student.adress},
               {key:'Дата рождения', value: student.dateOfBirth},
               {key:'Номер телефона', value: student.phoneNumber},
-              {key:'Адрес', value: ''},
-              {key:'Идентификационный номер', value: ''},
-              {key:'Номер паспорта', value: ''},
             ]}
           />
           <div style={{display: 'flex', flex: 1, justifyContent: 'end'}}>
             <div className="button-container">
-              <Button style={{width: '100%'}}>Назначить инструктора</Button>
-              <Button style={{width: '100%'}}>Перевести в другую группу</Button>
-              <Button style={{width: '100%'}}>Редактировать данные</Button>
-              <Button style={{width: '100%'}}>Отчислить курсанта</Button>
+              <Button className='outline' style={{width: '100%'}}>Назначить инструктора</Button>
+              <Button className='outline' style={{width: '100%'}}>Перевести в другую группу</Button>
+              <Button className='outline' style={{width: '100%'}}>Редактировать данные</Button>
+              <Button className='outline' style={{width: '100%'}}>Отчислить курсанта</Button>
             </div>
           </div>
         </div>
@@ -39,8 +55,16 @@ export default function StudentPage() {
         <div style={{width: '50vw'}}>
           <DescriptionTable 
             value = {[
-              {key:'Инструктор', value: student.instructor.fullName, link: `${INSTRUCTOR_ROUTE}/${student.instructor.id}` },
-              {key:'Группа', value: student.group.name, link: `${GROUP_ROUTE}/${student.group.id}`},
+              {
+                key:'Инструктор',
+                value: student.instructor ? student.instructor.fullName : null,
+                link: student.instructor ? `${INSTRUCTOR_ROUTE}/${student.instructor.id}` : null
+              },
+              {
+                key:'Группа',
+                value: student.group ? student.group.name : null,
+                link: student.group ? `${GROUP_ROUTE}/${student.group.id}` : null
+              },
             ]}
           />
         </div>
@@ -71,4 +95,6 @@ export default function StudentPage() {
       
     </div>
   )
-}
+})
+
+export default StudentPage;

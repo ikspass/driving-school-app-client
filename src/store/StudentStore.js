@@ -15,11 +15,11 @@ export default class StudentStore{
     this._studentTests = studentTests;
   }
   
-  setStudentTests(studentLectures){
+  setStudentLectures(studentLectures){
     this._studentLectures = studentLectures;
   }
   
-  setStudentTests(studentRatakes){
+  setStudentRetakes(studentRatakes){
     this._studentRetakes = studentRatakes;
   }
 

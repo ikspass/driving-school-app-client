@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react'
-import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../../utils/consts';
+import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE, TEACHER_ROUTE } from '../../utils/consts';
 import { Context } from '../..';
 import { fetchStudents, fetchGroups, fetchInstructors, fetchCategories, fetchUsers } from '../../http/adminAPI';
 import InformationTable from '../../components/InformationTable';
@@ -33,17 +33,22 @@ const AdminGroupsPage = observer(() => {
   const [selectedStatus, setSelectedStatus] = useState(statuses[0])
 
   const filteredGroups = groupStore.groups.filter(group => {
-    const matchesStatus = selectedStatus ? group.status === selectedStatus.value : true;
-    const matchesCategory = selectedCategory ? group.categoryId === selectedCategory.id : true;
-    const matchesTeacher = selectedTeacher ? group.teacherId === selectedTeacher.id : true;
-    return matchesCategory && matchesTeacher && matchesStatus;
+    const matchesStatus = selectedStatus ? group.status == selectedStatus.value : true;
+    const matchesCategory = selectedCategory.length > 0 ? selectedCategory.some(cat => cat.id === group.categoryId) : true;
+    const matchesTeacher = selectedTeacher.length > 0 ? selectedTeacher.some(teacher => teacher.id === group.teacherId) : true;
+    // console.log(group.teacherId)
+    // console.log(selectedTeacher)
+    return matchesStatus && matchesCategory && matchesTeacher;
   });
+  // console.log(groupStore.groups)
+  // console.log(filteredGroups)
 
   const columns = [
-    { key: "name", label: "Номер", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
+    { key: "name", label: "Номер", isLink: true , navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
     { key: "category.value", label: "Категория", isLink: false },
-    { key: "teacher.user.fullName", label: "Преподаватель", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
-    { key: "dateOfStart", label: "Дата начала обучения", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
+    { key: "scheduleGroup.name", label: "Время", isLink: false },
+    { key: "teacher.user.fullName", label: "Преподаватель", isLink: true, navigateTo: (row) => `${TEACHER_ROUTE}/${row.id}`},
+    { key: "dateOfStart", label: "Дата начала обучения", isLink: false},
     { key: "status", label: "Статус", isLink: false },
   ];
 
@@ -75,7 +80,7 @@ const AdminGroupsPage = observer(() => {
             />
             <MultipleFilterButtons 
               title='Преподаватель'
-              filters={userStore.teachers.map(elem => ({id: elem.id, value: elem.user.fullName}))}
+              filters={userStore.teachers.map(elem => ({id: elem.teacher.id, value: elem.fullName}))}
               selected={selectedTeacher}
               setSelected={setSelectedTeacher}
             />

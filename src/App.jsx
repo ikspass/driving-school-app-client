@@ -3,7 +3,7 @@ import './styles/App.css'
 import { BrowserRouter, useLocation } from "react-router-dom";
 import AppRouter from "./components/AppRouter";
 import Header from "./components/Header";
-import { ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE } from "./utils/consts";
+import { ADMIN_ROUTE, ADMINAUTH_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE } from "./utils/consts";
 import { observer } from 'mobx-react-lite';
 
 const App = () => {
@@ -17,7 +17,7 @@ const App = () => {
 
 function Main() {
   const location = useLocation();
-  const noHeaderRoutes = [LOGIN_ROUTE, REGISTRATION_ROUTE, ADMIN_ROUTE];
+  const noHeaderRoutes = [LOGIN_ROUTE, REGISTRATION_ROUTE, ADMIN_ROUTE, ADMINAUTH_ROUTE];
 
   const shouldHideHeader = noHeaderRoutes.includes(location.pathname);
 

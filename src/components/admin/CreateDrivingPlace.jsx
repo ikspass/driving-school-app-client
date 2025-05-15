@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import Button from '../UI/Button/Button';
 import Input from '../UI/Input/Input';
 
-const CreateCategory = observer(() => {
+const CreateCategory = observer(({onClose}) => {
   const [value, setValue] = useState('');
   const [desc, setDesc] = useState('');
 
@@ -19,6 +19,7 @@ const CreateCategory = observer(() => {
     try {
       const data = await createDrivingPlace({value: value, description: desc});
       console.log(data);
+      onClose();
     } catch (error) {
         console.error("Ошибка при создании категории:", error);
     }

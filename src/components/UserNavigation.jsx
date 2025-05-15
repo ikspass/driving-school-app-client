@@ -10,7 +10,7 @@ export default function UserNavigation() {
     <>
       <Link to='/' className="navigation-item">
         <MainIcon/>
-        <p className="normal-text">Главная</p>
+        <p className="normal-text">Контакты</p>
       </Link>
       <Link to='/statistic' className="navigation-item">
         <StatisticsIcon/>

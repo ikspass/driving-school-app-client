@@ -46,13 +46,14 @@ const AdminInstructorsPage = observer(() => {
     { key: "phoneNumber", label: "Номер телефона", isLink: false },
     { key: "instructor.dateOfEmployment", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
     { key: "instructor.categories", label: "Категории", isLink: false },
+    { key: "instructor.dateOfEmployment", label: "Дата приёма на работу", isLink: false },
     { key: "status", label: "Статус", isLink: false },
   ];
 
   return (
     <div className="filter-container">
       <Modal
-        children={<CreateInstructor/>}
+        children={<CreateInstructor onClose={() => setCreateInstructorModal(false)}/>}
         isOpen={createInstructorModal}
         onClose={() => setCreateInstructorModal(false)}
       />
@@ -74,12 +75,6 @@ const AdminInstructorsPage = observer(() => {
               filters={schoolStore.categories.map(elem => ({id: elem.id, value: elem.value}))}
               selected={selectedCategory}
               setSelected={setSelectedCategory}
-            />
-            <MultipleFilterButtons 
-              title='Инструктор'
-              filters={userStore.instructors.map(elem => ({id: elem.id, value: elem.fullName}))}
-              selected={selectedInstructor}
-              setSelected={setSelectedInstructor}
             />
           </div>
         </div>

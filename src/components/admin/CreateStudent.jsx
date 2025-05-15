@@ -10,7 +10,7 @@ import FileInput from "../UI/FileInput/FileInput";
 import { createStudent, createUser, fetchCategories } from "../../http/adminAPI";
 import { observer } from "mobx-react-lite";
 
-const CreateStudent = observer(({show, onHide}) => {
+const CreateStudent = observer(({onClose}) => {
   const [idNumber, setIdNumber] = useState('');
   const [passportNumber, setPassportNumber] = useState('');
   const [adress, setAdress] = useState('');
@@ -60,6 +60,7 @@ const CreateStudent = observer(({show, onHide}) => {
         createStudent({userId: data.id, categoryValue: category.value})
         .then(data => {
           console.log('Студент создан', data);
+          onClose();
         })
         .catch(err => {
             console.error('Ошибка при создании студента:', err);

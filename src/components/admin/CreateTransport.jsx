@@ -6,7 +6,7 @@ import Button from '../UI/Button/Button';
 import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons';
 import { Context } from '../..';
 
-const CreateTransport = observer(() => {
+const CreateTransport = observer(({onClose}) => {
   const [name, setName] = useState('');
   const [sign, setSign] = useState('');
   const [color, setColor] = useState('');
@@ -19,7 +19,7 @@ const CreateTransport = observer(() => {
   }, [])
 
   const confirm = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
 
     if (!name || !sign || !color) {
       alert("Пожалуйста, заполните все поля!");
@@ -29,6 +29,7 @@ const CreateTransport = observer(() => {
     try {
       const data = await createTransport({name: name, sign: sign, color: color, categoryValue: category.value});
       console.log(data);
+      onClose();
     } catch (error) {
         console.error("Ошибка при создании автомобиля:", error);
     }

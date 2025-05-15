@@ -4,7 +4,11 @@ export default class UserStore{
   constructor(){
     this._isAuth = localStorage.getItem('token') || false
 
-    this._user = {}
+    this._user = JSON.parse(localStorage.getItem('user')) || {}
+
+    this._selectedUserId = null
+
+    this._selectedUser = {}
 
     // this._teachers = []
 
@@ -24,6 +28,14 @@ export default class UserStore{
   setUser(user){
     this._user = user;
   }
+
+  setSelectedUser(user){
+    this._selectedUser = user;
+  }
+
+  setSelectedUserId(id){
+    this._selectedUserId = id;
+  }
     
   setUsers(users){
     this._users = users;
@@ -35,6 +47,14 @@ export default class UserStore{
 
   get user() {
     return this._user;
+  }
+
+  get selectedUserId() {
+    return this._selectedUserId;
+  }
+
+  get selectedUser() {
+    return this._selectedUser;
   }
 
   get teachers() {

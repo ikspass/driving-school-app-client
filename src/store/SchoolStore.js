@@ -55,7 +55,7 @@ export default class SchoolStore{
     this._categories = categories;
   }
   
-  setSchedileGroups(scheduleGroups){
+  setScheduleGroups(scheduleGroups){
     this._scheduleGroups = scheduleGroups;
   }
 
@@ -91,7 +91,7 @@ export default class SchoolStore{
     return this._categories;
   }
 
-  get sheduleGroups() {
-    return this._sheduleGroups;
+  get scheduleGroups() {
+    return this._scheduleGroups;
   }
 }

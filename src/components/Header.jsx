@@ -9,27 +9,29 @@ import { LOGIN_ROUTE } from "../utils/consts";
 
 const Header = observer(() => {
 
-  const {user} = useContext(Context);
+  const {userStore} = useContext(Context);
   const navigate = useNavigate()
 
   const logOut = () => {
-    user.setUser({});
-    user.setIsAuth(false);
+    userStore.setUser({});
+    userStore.setIsAuth(false);
     localStorage.clear('token');
     navigate(LOGIN_ROUTE);
   }
 
   return (
     <div className="header">
-      <div className="header-title">
-        <p className="heading-text-2">Driving School App</p>
-        <div style={{display: 'flex', gap: '30px', alignItems: 'center'}}>
-          <Button onClick={() => logOut()}>Выйти</Button>
-          <div className="user-photo"></div>
+      <div className="main-container">
+        <div className="header-title">
+          <p className="heading-text-2">Driving School App</p>
+          <div style={{display: 'flex', gap: '30px', alignItems: 'center'}}>
+            <Button onClick={() => logOut()}>Выйти</Button>
+            <div className="user-photo"></div>
+          </div>
         </div>
-      </div>
-      <div className="header-navigation">
-        <AdminNavigation />        
+        <div className="header-navigation">
+          <AdminNavigation />        
+        </div>
       </div>
     </div>
   );

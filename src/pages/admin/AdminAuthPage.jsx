@@ -19,10 +19,13 @@ const AdminAuthPage = () => {
   const confirm = async (e) => {
     e.preventDefault();
     
-    const data = await adminLogin(password);
-    console.log(data)
-
+    adminLogin(password)
+    .then(user => {
+      localStorage.setItem('user', JSON.stringify(user));
+    })
+    .catch(err => console.error('Ошибка ', err));
     userStore.setIsAuth(true)
+    navigate(ADMIN_ROUTE)
   }
   
   return (

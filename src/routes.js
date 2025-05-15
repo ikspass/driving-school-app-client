@@ -1,5 +1,3 @@
-import CreateGroup from "./components/admin/CreateGroup"
-import CreateStudent from "./components/admin/CreateStudent"
 import GroupsPage from "./pages/GroupsPage"
 import AdminPage from "./pages/AdminPage"
 import AdminStaffPage from "./pages/StaffPage"
@@ -14,16 +12,12 @@ import StudentPage from "./pages/StudentPage"
 import TeacherPage from "./pages/TeacherPage"
 import InstructorsPage from "./pages/InstructorsPage"
 import TeachersPage from "./pages/TeachersPage"
-import HomePage from "./pages/HomePage"
-import { ADMIN_ROUTE, HOME_ROUTE, CREATE_GROUP_ROUTE, CREATE_STUDENT_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, INSTRUCTORS_ROUTE, LOGIN_ROUTE, MATERIALS_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, TEACHERS_ROUTE, CONTACTS_ROUTE, ADMINAUTH_ROUTE } from "./utils/consts"
+import { ADMIN_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, INSTRUCTORS_ROUTE, LOGIN_ROUTE, MATERIALS_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, TEACHERS_ROUTE, CONTACTS_ROUTE, ADMINAUTH_ROUTE, GROUP_ROUTE } from "./utils/consts"
 import ContactsPage from "./pages/ContactsPage"
 import AdminAuthPage from "./pages/admin/AdminAuthPage"
 
-export const authRoutes = [
-  {
-    path: HOME_ROUTE,
-    Component: HomePage
-  },
+// Общие маршруты для студентов и преподавателей
+const studentStaffRoutes = [
   {
     path: SCHEDULE_ROUTE,
     Component: SchedulePage
@@ -40,6 +34,10 @@ export const authRoutes = [
     path: CONTACTS_ROUTE,
     Component: ContactsPage
   },
+];
+
+// Общие маршруты для преподавателей и администраторов
+const staffAdminRoutes = [
   {
     path: GROUPS_ROUTE,
     Component: GroupsPage
@@ -49,15 +47,7 @@ export const authRoutes = [
     Component: AdminStaffPage
   },
   {
-    path: CREATE_STUDENT_ROUTE,
-    Component: CreateStudent
-  },
-  {
-    path: CREATE_GROUP_ROUTE,
-    Component: CreateGroup
-  },
-  {
-    path: GROUPS_ROUTE + '/:id',
+    path: GROUP_ROUTE + '/:id',
     Component: GroupPage
   },
   {
@@ -84,13 +74,17 @@ export const authRoutes = [
     path: TEACHERS_ROUTE,
     Component: TeachersPage
   },
+];
+
+// Уникальные маршруты для администраторов
+const adminRoutes = [
   {
     path: ADMIN_ROUTE,
     Component: AdminPage
   },
+];
 
-]
-
+// Публичные маршруты
 export const publicRoutes = [
   {
     path: LOGIN_ROUTE,
@@ -104,4 +98,27 @@ export const publicRoutes = [
     path: ADMINAUTH_ROUTE,
     Component: AdminAuthPage
   }
-]
+];
+
+export const initialRoutes = {
+  admin: ADMIN_ROUTE, // Страница по умолчанию для администратора
+  teacher: CONTACTS_ROUTE, // Страница по умолчанию для преподавателя
+  student: CONTACTS_ROUTE, // Страница по умолчанию для студента
+  public: LOGIN_ROUTE, // Страница по умолчанию для неавторизованных пользователей
+};
+
+// Функция для получения маршрутов в зависимости от роли
+export const getRoutesByRole = (role) => {
+  switch (role) {
+    case 'admin':
+      return [...adminRoutes, ...staffAdminRoutes, ...studentStaffRoutes];
+    case 'teacher':
+      return [...staffAdminRoutes, ...studentStaffRoutes];
+    case 'instructor':
+      return [...staffAdminRoutes, ...studentStaffRoutes];
+    case 'student':
+      return [...studentStaffRoutes];
+    default:
+      return publicRoutes; // Публичные маршруты
+  }
+};

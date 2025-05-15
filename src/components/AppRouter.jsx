@@ -1,20 +1,24 @@
 import React, { useContext } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { authRoutes, publicRoutes } from '../routes';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { getRoutesByRole, initialRoutes, publicRoutes } from '../routes';
 import { Context } from '..';
 
 function AppRouter() {
 
   const {userStore} = useContext(Context)
+  const routes = getRoutesByRole(userStore.user.role.value);
   
+  // Определяем начальную страницу в зависимости от роли
+  const initialRoute = userStore.isAuth 
+    ? initialRoutes[userStore.user.role] 
+    : initialRoutes.public;
+
   return (
     <Routes>
-      {userStore.isAuth && authRoutes.map(({path, Component}) => 
-        <Route key={path} path={path} element={<Component />}/>
-      )}
-      {publicRoutes.map(({path, Component}) => 
-        <Route key={path} path={path} element={<Component />}/>
-      )}
+      <Route path="*" element={<Navigate to={initialRoute} />} />
+      {routes.map(({ path, Component }) => (
+        <Route key={path} path={path} element={<Component />} />
+      ))}
     </Routes> 
   );
 }

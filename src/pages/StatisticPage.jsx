@@ -39,16 +39,28 @@ export default function StatisticPage() {
       startDate: "10.01.2025" 
     },
   ];
+  const [selectedRow, setSelectedRow] = useState(null);
+
 
   return (
     <div style={{display: 'flex', flexDirection: 'column', gap: '30px'}}>
       <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
         <p className="heading-text-2">Зачёты</p>
-        <InformationTable columns={columns} data={info}/>
+        <InformationTable
+          columns={columns}
+          data={info}
+          selectable = {true}
+          setSelectedRow={setSelectedRow}
+        />
       </div>
       <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
         <p className="heading-text-2">Список занятий</p>
-        <InformationTable columns={columns} data={info}/>
+        <InformationTable 
+          columns={columns} 
+          data={info}
+          selectable = {true}
+          setSelectedRow={setSelectedRow}
+        />
       </div>
     </div>
   )

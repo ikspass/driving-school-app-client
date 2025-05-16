@@ -42,6 +42,8 @@ const StudentsPage = observer(() => {
     { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
     { key: "status", label: "Статус", isLink: false },
   ];
+  const [selectedRow, setSelectedRow] = useState(null);
+
 
   return (
     <div className='horizontal-container'>
@@ -49,6 +51,8 @@ const StudentsPage = observer(() => {
         columns={columns}
         data={filteredStudents}
         numbered = {true}
+        selectable = {true}
+        setSelectedRow={setSelectedRow}
       />
       <div className="filter-container">
         <MultipleFilterButtons 

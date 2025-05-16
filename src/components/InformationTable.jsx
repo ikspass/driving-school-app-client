@@ -1,19 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { STUDENT_ROUTE } from '../utils/consts';
 
-function InformationTable({ columns, data, numbered }) { 
-  const navigate = useNavigate();   
+function InformationTable({ columns, data, numbered, selectable, setSelectedRow }) { 
+  const navigate = useNavigate();
+  const [selectedRows, setSelectedRows] = useState({});
+  const [allSelected, setAllSelected] = useState(false);
 
   const getValue = (row, key) => {
     return key.split('.').reduce((acc, part) => acc && acc[part], row);
   };
+
+  const handleRowClick = (rowId) => {
+    setSelectedRows((prev) => {
+      const newSelectedRows = {
+        ...prev,
+        [rowId]: !prev[rowId],
+      };
+      return newSelectedRows; // Return updated state without calling setSelectedRow here
+    });
+  };
+
+  const handleSelectAll = () => {
+    const newSelectedRows = {};
+    data.forEach(row => {
+      newSelectedRows[row.id] = !allSelected;
+    });
+    setSelectedRows(newSelectedRows);
+    setAllSelected(!allSelected);
+  };
+
+  useEffect(() => {
+    // Update the selected rows when selectedRows changes
+    const selectedKeys = Object.keys(selectedRows).filter(key => selectedRows[key]);
+    setSelectedRow(selectedKeys); // Now this update happens after render
+
+    // Update the allSelected state based on selectedRows
+    setAllSelected(Object.keys(selectedRows).length === data.length && Object.values(selectedRows).every(Boolean));
+  }, [selectedRows, data.length, setSelectedRow]); // Add setSelectedRow to dependencies
 
   return (
     <table className="information-table normal-text">
       {columns ?
         <thead>
           <tr>
+            {selectable && (
+              <th>
+                <input 
+                  type="checkbox" 
+                  checked={allSelected} 
+                  onChange={handleSelectAll} 
+                />
+              </th>
+            )}
             {numbered && <th>№</th>}
             {columns.map((column, key) => (
               <th key={key}>
@@ -28,7 +66,17 @@ function InformationTable({ columns, data, numbered }) {
       <tbody>
         {data && data.length > 0 ?
           data.map((row, infoIndex) => (
-            <tr key={infoIndex}>
+            <tr key={infoIndex} onClick={() => handleRowClick(row.id)}>
+              {selectable && (
+                <td>
+                  <input 
+                    type="checkbox" 
+                    id={row.id} 
+                    checked={!!selectedRows[row.id]} 
+                    readOnly 
+                  />
+                </td>
+              )}
               {numbered && <td>{infoIndex + 1}</td>}
               {columns.map((column, keyIndex) => (
                 <td key={keyIndex}>

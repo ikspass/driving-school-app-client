@@ -23,6 +23,8 @@ const StudentPage = observer(({}) => {
 
   const student = userStore.selectedUser;
   console.log(student)
+  const [selectedRow, setSelectedRow] = useState(null);
+
 
   return (
     <div className="content-container">
@@ -79,6 +81,8 @@ const StudentPage = observer(({}) => {
         data={[
           {name: 'Зачёт 1', theme: ['Глава 1', 'Глава 2', 'Глава 3', 'Глава 4'], status: 'Сдано'}
         ]}
+        selectable = {true}
+        setSelectedRow={setSelectedRow}
       />
       <p className="heading-text-2">Посещаемость</p>
       <InformationTable 
@@ -91,6 +95,8 @@ const StudentPage = observer(({}) => {
         data={[
           {date: '2025-05-06', time: '16:00', materials: ['Глава 1', 'Глава 2', 'Глава 3',], attendance: 'Присутствовал'}
         ]}
+        selectable = {true}
+        setSelectedRow={setSelectedRow}
       />
       
     </div>

@@ -9,6 +9,7 @@ import SingleFilterButtons from '../../components/UI/SingleFilterButtons/SingleF
 import Button from '../../components/UI/Button/Button';
 import Modal from '../../components/Modal';
 import CreateGroup from '../../components/admin/CreateGroup';
+import EditGroup from '../../components/admin/EditGroup';
 
 const AdminGroupsPage = observer(() => {
   const {userStore} = useContext(Context);
@@ -16,6 +17,8 @@ const AdminGroupsPage = observer(() => {
   const {schoolStore} = useContext(Context)
 
   const [createGroupModal, setCreateGroupModal] = useState(false)
+  const [editGroupModal, setEditGroupModal] = useState(false)
+  const [editGroupId, setEditGroupId] = useState(null)
 
   useEffect(() => {
     fetchUsers().then(data => userStore.setUsers(data))
@@ -36,12 +39,8 @@ const AdminGroupsPage = observer(() => {
     const matchesStatus = selectedStatus ? group.status == selectedStatus.value : true;
     const matchesCategory = selectedCategory.length > 0 ? selectedCategory.some(cat => cat.id === group.categoryId) : true;
     const matchesTeacher = selectedTeacher.length > 0 ? selectedTeacher.some(teacher => teacher.id === group.teacherId) : true;
-    // console.log(group.teacherId)
-    // console.log(selectedTeacher)
     return matchesStatus && matchesCategory && matchesTeacher;
   });
-  // console.log(groupStore.groups)
-  // console.log(filteredGroups)
 
   const columns = [
     { key: "name", label: "Номер", isLink: true , navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
@@ -52,12 +51,35 @@ const AdminGroupsPage = observer(() => {
     { key: "status", label: "Статус", isLink: false },
   ];
 
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  console.log(selectedRow)
+
+  const handleEditClick = () => {
+    if (selectedRow) {
+      if (selectedRow.length > 1){
+        const groupData = filteredGroups.find(group => group.id === selectedRow);
+        // setEditGroupModal(true);
+      }
+      else{
+        console.log("Выберите одну строку для редактирования")
+      }
+    } else {
+      console.log("Строка не выбрана");
+    }
+  };
+
   return (
     <div className="filter-container">
       <Modal
         children={<CreateGroup onClose={() => setCreateGroupModal(false)}/>}
         isOpen={createGroupModal}
         onClose={() => setCreateGroupModal(false)}
+      />
+      <Modal
+        children={<EditGroup onClose={() => setEditGroupModal(false)}/>}
+        isOpen={editGroupModal}
+        onClose={() => setEditGroupModal(false)}
       />
       <SingleFilterButtons 
         filters={statuses}
@@ -70,6 +92,8 @@ const AdminGroupsPage = observer(() => {
             columns={columns}
             data={filteredGroups}
             numbered = {true}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
           />
           <div className="filter-container">
             <MultipleFilterButtons 
@@ -87,8 +111,16 @@ const AdminGroupsPage = observer(() => {
           </div>
         </div>
         <div className="button-container">
-          <Button className='outline' onClick={() => setCreateGroupModal(true)}>Добавить группу</Button>
-          <Button className='outline'>Редактировать данные</Button>
+          <Button className='outline' 
+            onClick={() => setCreateGroupModal(true)}
+          >
+            Добавить группу
+          </Button>
+          {/* <Button className='outline'
+            onClick={handleEditClick}
+          >
+            Редактировать данные
+          </Button> */}
         </div>
       </div>
     </div>

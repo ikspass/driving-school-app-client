@@ -53,6 +53,8 @@ const AdminTeachersPage = observer(() => {
     { key: "teacher.status", label: "Статус", isLink: false },
   ];
 
+  const [selectedRow, setSelectedRow] = useState(null);
+
   const updateTeachers = async () => {
     const data = await fetchUsers();
     userStore.setUsers(data);
@@ -79,6 +81,8 @@ const AdminTeachersPage = observer(() => {
             columns={columns}
             data={transformedTeachers}
             numbered = {true}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
           />
           <div className="filter-container">
             <SingleFilterButtons 
@@ -90,8 +94,9 @@ const AdminTeachersPage = observer(() => {
           </div>
         </div>
         <div className="button-container">
-          <Button className='outline' onClick={() => setCreateTeacherModal(true)}>Добавить преподавателя</Button>
-          <Button className='outline'>Редактировать данные</Button>
+          <Button className='outline' onClick={() => setCreateTeacherModal(true)}>Создать преподавателя</Button>
+          <Button className='outline'>Удалить преподавателя</Button>
+          {/* <Button className='outline'>Редактировать данные</Button> */}
         </div>
       </div>
     </div>

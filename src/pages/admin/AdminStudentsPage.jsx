@@ -30,6 +30,7 @@ const AdminStudentsPage = observer(() => {
     {id: 4, value: 'Окончил обучение'},
   ]
 
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const [selectedGroup, setSelectedGroup] = useState([])
   const [selectedInstructor, setSelectedInstructor] = useState([])
@@ -77,6 +78,8 @@ const AdminStudentsPage = observer(() => {
             columns={columns}
             data={filteredStudents}
             numbered = {true}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
           />
           <div className="filter-container">
             <MultipleFilterButtons 

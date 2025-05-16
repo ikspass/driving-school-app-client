@@ -8,6 +8,7 @@ import CreateTest from '../../components/admin/CreateTest'
 import Modal from '../../components/Modal'
 import InformationTable from '../../components/InformationTable'
 import { Context } from '../..'
+import Separator from '../../components/UI/Separator/Separator'
 import { fetchCars, fetchCategories, fetchDrivingPlaces, fetchTransports } from '../../http/adminAPI'
 
 const AdminSchoolDataPage = observer(() => {
@@ -17,6 +18,8 @@ const AdminSchoolDataPage = observer(() => {
   const [createChapterModal, setCreateChapterModal] = useState(false)
   const [createTopicModal, setCreateTopicModal] = useState(false)
   const [createTestModal, setCreateTestModal] = useState(false)
+  const [selectedRow, setSelectedRow] = useState(null);
+
   
   const {schoolStore} = useContext(Context)
 
@@ -119,53 +122,87 @@ const AdminSchoolDataPage = observer(() => {
           <InformationTable 
             columns={categoryColumns}
             data={schoolStore.categories}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
           />
-          <Button className='outline' onClick={() => setCreateCategoryModal(true)}>Добавить категорию</Button>
+          <div className="button-container">
+            <Button className='outline' onClick={() => setCreateCategoryModal(true)}>Добавить категорию</Button>
+            <Button className='outline' onClick={() => setCreateCategoryModal(true)}>Удалить категорию</Button>
+          </div>
         </div>
+        <Separator />
 
         <p className="heading-text-2">Автопарк</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <InformationTable 
             columns={transportColumns}
             data={schoolStore.transports}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
           />
-          <Button className='outline' onClick={() => setCreateTransportModal(true)}>Добавить автомобиль</Button>
+          <div className="button-container">
+            <Button className='outline' onClick={() => setCreateTransportModal(true)}>Добавить автомобиль</Button>
+            <Button className='outline' onClick={() => setCreateTransportModal(true)}>Удалить автомобиль</Button>
+          </div>
         </div>
+        <Separator />
 
         <p className="heading-text-2">Локации вождения</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <InformationTable 
             columns={drivingPlaceColumns}
             data={schoolStore.drivingPlaces}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
           />
-          <Button className='outline' onClick={() => setCreatePlaceModal(true)}>Добавить локацию</Button>
+          <div className="button-container">
+            <Button className='outline' onClick={() => setCreatePlaceModal(true)}>Добавить локацию</Button>
+            <Button className='outline' onClick={() => setCreatePlaceModal(true)}>Удалить локацию</Button>
+          </div>
         </div>
+        <Separator />
 
         <p className="heading-text-2">Материалы</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <InformationTable 
             columns={chapterColumns}
             data={schoolStore.chapters}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
           />
-          <Button className='outline'>Добавить главу</Button>
+          <div className="button-container">
+            <Button className='outline'>Добавить главу</Button>
+            <Button className='outline'>Удалить главу</Button>
+          </div>
         </div>
+        <Separator />
 
         <p className="heading-text-2">Темы</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <InformationTable 
             columns={topicColumns}
             data={schoolStore.topics}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
           />
-          <Button className='outline'>Добавить тему</Button>
+          <div className="button-container">
+            <Button className='outline'>Добавить тему</Button>
+            <Button className='outline'>Удалить тему</Button>
+          </div>
         </div>
-
+        <Separator/>
         <p className="heading-text-2">Тесты</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <InformationTable 
             columns={testColumns}
             data={schoolStore.tests}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
           />
-          <Button className='outline' onClick={() => setCreateTestModal(true)}>Добавить зачёт/экзамен</Button>
+          <div className="button-container">
+            <Button className='outline' onClick={() => setCreateTestModal(true)}>Добавить зачёт/экзамен</Button>
+            <Button className='outline' onClick={() => setCreateTestModal(true)}>Удалить зачёт/экзамен</Button>
+          </div>
         </div>
 
       </div>

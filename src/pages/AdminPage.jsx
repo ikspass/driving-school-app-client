@@ -6,6 +6,7 @@ import AdminTeachersPage from './admin/AdminTeachersPage'
 import AdminInstructorsPage from './admin/AdminInstructorsPage'
 import AdminSchoolDataPage from './admin/AdminSchoolDataPage'
 import AdminGroupsPage from './admin/AdminGroupsPage'
+import Button from '../components/UI/Button/Button'
 
 export default function AdminPage() {
   const [selectedComponent, setSelectedComponent] = useState(null);

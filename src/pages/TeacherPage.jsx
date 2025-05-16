@@ -33,6 +33,8 @@ const TeacherPage = observer(() => {
     );
   }
 
+  const [selectedRow, setSelectedRow] = useState(null);
+
   return (
     <div className="content-container">
       <p className="heading-text-2">Персональные данные преподавателя</p>
@@ -91,6 +93,8 @@ const TeacherPage = observer(() => {
           { label: 'Статус', key: 'status' },
         ]}
         data={user.teacher ? user.teacher.groups : []}
+        selectable = {true}
+        setSelectedRow={setSelectedRow}
       />
       <p className="heading-text-2">Посещаемость</p>
       <InformationTable
@@ -103,6 +107,8 @@ const TeacherPage = observer(() => {
         data={[
           { date: '2025-05-06', time: '16:00', materials: ['Глава 1', 'Глава 2', 'Глава 3'], attendance: 'Присутствовал' }
         ]}
+        selectable = {true}
+        setSelectedRow={setSelectedRow}
       />
     </div>
   );

@@ -43,6 +43,9 @@ const StaffPage = observer(() => {
     { key: "status", label: "Статус", isLink: false },
   ];
 
+  const [selectedRow, setSelectedRow] = useState(null);
+
+
   return (
     <div className="content-container">
       <div className="filter-container">
@@ -58,6 +61,8 @@ const StaffPage = observer(() => {
               columns={columns}
               data={filteredTeachers}
               numbered = {true}
+              selectable = {true}
+              setSelectedRow={setSelectedRow}
             />
           </div>
           <div className="filter-container">

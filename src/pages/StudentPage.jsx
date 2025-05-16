@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext, useState, useEffect} from 'react'
 import DescriptionTable from "../components/DescriptionTable"
 import InformationTable from '../components/InformationTable'
 import Button from '../components/UI/Button/Button'

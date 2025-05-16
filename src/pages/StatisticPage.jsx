@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import InformationTable from '../components/InformationTable';
 
 export default function StatisticPage() {

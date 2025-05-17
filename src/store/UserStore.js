@@ -6,6 +6,12 @@ export default class UserStore{
 
     this._user = JSON.parse(localStorage.getItem('user')) || {}
 
+    this._student = {}
+
+    this._teacher = {}
+
+    this._instructor = {}
+
     this._selectedUserId = null
 
     this._selectedUser = {}
@@ -28,6 +34,18 @@ export default class UserStore{
   setUser(user){
     this._user = user;
   }
+  
+  setStudent(student){
+    this._student = student;
+  }
+  
+  setTeacher(teacher){
+    this._teacher = teacher;
+  }
+  
+  setInstructor(instructor){
+    this._instructor = instructor;
+  }
 
   setSelectedUser(user){
     this._selectedUser = user;
@@ -47,6 +65,18 @@ export default class UserStore{
 
   get user() {
     return this._user;
+  }
+
+  get student() {
+    return this._student;
+  }
+
+  get teacher() {
+    return this._teacher;
+  }
+
+  get instructor() {
+    return this._instructor;
   }
 
   get selectedUserId() {

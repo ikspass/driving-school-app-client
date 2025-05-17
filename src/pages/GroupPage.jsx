@@ -1,7 +1,106 @@
-import React from 'react'
+import React, { useState, useContext, useEffect } from 'react'
+import Header from '../components/Header';
+import ButtonBack from '../components/UI/ButtonBack/ButtonBack';
+import DescriptionTable from '../components/DescriptionTable';
+import InformationTable from '../components/InformationTable';
+import Button from '../components/UI/Button/Button';
+import Separator from '../components/UI/Separator/Separator';
+import PinList from '../components/UI/PinList/PinList';
 
-export default function GroupPage() {
+import {useParams} from 'react-router-dom'
+import { fetchOneGroup } from '../http/adminAPI';
+import { Context } from '..';
+import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../utils/consts';
+
+function GroupPage() {
+
+  const { groupStore } = useContext(Context)
+
+  const {id} = useParams();
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOneGroup(id)
+      .then(data => {
+        groupStore.setGroup(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+  }, [id, groupStore]);
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  
+  const group = groupStore.group || {};
+
+  const studentsColumns = [
+    { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
+    { key: "dateOfBirth", label: "Дата рождения", isLink: false },
+    { key: "phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "student.instructor.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
+    { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
+    { key: "status", label: "Статус", isLink: false },
+  ];
+
+  console.log(group)
+  const studentsInfo = group.students.map((student) => student)
+
+
   return (
-    <div>GroupPage</div>
+    <>
+      <div className="main-container">
+        <div className="content-container">
+          <p className="heading-text-2">Группа {group.name}</p>
+          <div className="horizontal-container">
+            <DescriptionTable
+              value = {[
+                {key:'Категория', value: group.category.value},
+                {key:'Преподаватель', value: group.teacher.user.fullName},
+                {key:'Количество студентов', value: group.studentsCount},
+                {key:'Дата начала обучения', value: group.dateOfStart},
+                {key:'Расписание группы', value: group.scheduleGroup.name},
+              ]}
+            />
+            <div className="filter-container">
+              <PinList
+                value={[group.status]}
+              />
+            </div>
+            <div className='button-container'>
+              <Button className='outline'>Назначить преподавателя</Button>
+              <Button className='outline'>Оставить сообщение</Button>
+              <Button className='outline'>Оставить сообщение</Button>
+            </div>
+          </div>
+          <p className="heading-text-2">Список курсантов</p>
+          <InformationTable 
+            columns={studentsColumns} 
+            data={studentsInfo}
+            numbered={true}
+          />
+          <Separator />
+          <p className="heading-text-2">Статистика</p>
+          <InformationTable 
+            columns={studentsColumns} 
+            data={studentsInfo}
+            numbered={true}
+          />
+          <Separator />
+          <p className="heading-text-2">Расписание группы</p>
+          <InformationTable 
+            columns={studentsColumns} 
+            data={studentsInfo}
+            numbered={true} 
+          />
+        </div>
+      </div>
+    </>
   )
 }
+
+export default GroupPage;

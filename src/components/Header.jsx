@@ -1,11 +1,11 @@
 import { Context } from "..";
 import { useContext } from 'react'
-import AdminNavigation from "./AdminNavigation";
-import UserNavigation from "./UserNavigation";
+import StudentNavigation from "./StudentNavigation";
 import Button from "./UI/Button/Button";
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { LOGIN_ROUTE } from "../utils/consts";
+import StaffNavigation from "./StaffNavigation";
 
 const Header = observer(() => {
 
@@ -30,7 +30,7 @@ const Header = observer(() => {
           </div>
         </div>
         <div className="header-navigation">
-          <AdminNavigation />        
+          <StaffNavigation />        
         </div>
       </div>
     </div>

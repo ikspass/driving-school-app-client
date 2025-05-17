@@ -4,23 +4,24 @@ import { ReactComponent as StatisticsIcon } from '../styles/svg/statistics.svg';
 import { ReactComponent as ScheduleIcon } from '../styles/svg/schedule.svg';
 import { ReactComponent as MaterialsIcon } from '../styles/svg/materials.svg';
 import { Link } from 'react-router-dom';
+import { CONTACTS_ROUTE, MATERIALS_ROUTE, SCHEDULE_ROUTE, STATISTIC_ROUTE } from '../utils/consts';
 
-export default function UserNavigation() {
+export default function StudentNavigation() {
   return (
     <>
-      <Link to='/' className="navigation-item">
+      <Link to={CONTACTS_ROUTE} className="navigation-item">
         <MainIcon/>
         <p className="normal-text">Контакты</p>
       </Link>
-      <Link to='/statistic' className="navigation-item">
+      <Link to={STATISTIC_ROUTE} className="navigation-item">
         <StatisticsIcon/>
         <p className="normal-text">Статистика</p>
       </Link>
-      <Link to='/schedule' className="navigation-item">
+      <Link to={SCHEDULE_ROUTE} className="navigation-item">
         <ScheduleIcon/>
         <p className="normal-text">Расписание</p>
       </Link>
-      <Link to='/material' className="navigation-item">
+      <Link to={MATERIALS_ROUTE} className="navigation-item">
         <MaterialsIcon/>
         <p className="normal-text">Материалы</p>
       </Link>  

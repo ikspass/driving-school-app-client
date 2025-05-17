@@ -61,8 +61,6 @@ const StaffPage = observer(() => {
               columns={columns}
               data={filteredTeachers}
               numbered = {true}
-              selectable = {true}
-              setSelectedRow={setSelectedRow}
             />
           </div>
           <div className="filter-container">
@@ -88,6 +86,8 @@ const StaffPage = observer(() => {
               columns={columns}
               data={filteredTeachers}
               numbered = {true}
+              selectable = {true}
+              setSelectedRow={setSelectedRow}
             />
           </div>
           <div className="filter-container">

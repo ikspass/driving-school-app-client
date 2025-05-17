@@ -24,7 +24,7 @@ const DescriptionTable = ({ value }) => {
                   </td>
                 ) : (
                   <td className="link-text">
-                    {item.value ? (
+                    {item.value !== undefined && item.value !== null ? (
                       <p onClick={() => navigate(item.link)}>{item.value}</p>
                     ) : (
                       '-'
@@ -32,7 +32,7 @@ const DescriptionTable = ({ value }) => {
                   </td>
                 )
               ) : (
-                <td>{item.value || '-'}</td>
+                <td>{item.value !== undefined && item.value !== null ? item.value : '-'}</td>
               )}
             </tr>
           ))

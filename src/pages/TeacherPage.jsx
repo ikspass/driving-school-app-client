@@ -1,39 +1,44 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Context } from '..';
-import { fetchUserById } from '../http/adminAPI';
 import Button from '../components/UI/Button/Button';
 import InformationTable from '../components/InformationTable';
 import DescriptionTable from '../components/DescriptionTable';
 import PinList from '../components/UI/PinList/PinList';
+import { fetchOneUser } from '../http/adminAPI';
 
 const TeacherPage = observer(() => {
   const { userStore } = useContext(Context);
-  const location = useLocation();
-  const paths = location.pathname.split('/');
+
+  const {id} = useParams();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const userId = paths[paths.length - 1];
-    userStore.setSelectedUserId(userId);
+    fetchOneUser(id)
+      .then(data => {
+        userStore.setTeacher(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+  }, [id, userStore]);
   
-    fetchUserById(userId)
-      .then(data => userStore.setSelectedUser(data))
-      .catch(error => console.error('Ошибка при получении пользователя:', error));  
-  }, []);
-
-  const user = userStore.selectedUser;
-
-  // Проверка, если пользователь не найден
-  if (!user || Object.keys(user).length === 0) {
-    return (
-      <div className="content-container">
-        <p className="heading-text-2">Пользователь не найден</p>
-      </div>
-    );
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  const [selectedRow, setSelectedRow] = useState(null);
+  const user = userStore.teacher || {};
+
+  // if (!user || Object.keys(user).length === 0) {
+  //   return (
+  //     <div className="content-container">
+  //       <p className="heading-text-2">Пользователь не найден</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="content-container">
@@ -93,8 +98,6 @@ const TeacherPage = observer(() => {
           { label: 'Статус', key: 'status' },
         ]}
         data={user.teacher ? user.teacher.groups : []}
-        selectable = {true}
-        setSelectedRow={setSelectedRow}
       />
       <p className="heading-text-2">Посещаемость</p>
       <InformationTable
@@ -107,8 +110,6 @@ const TeacherPage = observer(() => {
         data={[
           { date: '2025-05-06', time: '16:00', materials: ['Глава 1', 'Глава 2', 'Глава 3'], attendance: 'Присутствовал' }
         ]}
-        selectable = {true}
-        setSelectedRow={setSelectedRow}
       />
     </div>
   );

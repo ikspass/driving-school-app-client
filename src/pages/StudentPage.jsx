@@ -2,29 +2,36 @@ import React, {useContext, useState, useEffect} from 'react'
 import DescriptionTable from "../components/DescriptionTable"
 import InformationTable from '../components/InformationTable'
 import Button from '../components/UI/Button/Button'
-import { fetchUserById } from '../http/adminAPI'
 import { observer } from 'mobx-react-lite'
 import { Context } from '..'
-import { useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
+import { fetchOneUser } from '../http/adminAPI'
 
 const StudentPage = observer(({}) => {
 
   const {userStore} = useContext(Context)
 
-  const location = useLocation();
-  const paths = location.pathname.split('/')
+  const {id} = useParams();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    userStore.setSelectedUserId(paths[paths.length-1])
+    fetchOneUser(id)
+      .then(data => {
+        userStore.setStudent(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+  }, [id, userStore]);
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    fetchUserById(userStore.selectedUserId).then(data => userStore.setSelectedUser(data));
-  }, [])
-
-  const student = userStore.selectedUser;
-  console.log(student)
-  const [selectedRow, setSelectedRow] = useState(null);
-
+  const user = userStore.student || {};
 
   return (
     <div className="content-container">
@@ -32,16 +39,16 @@ const StudentPage = observer(({}) => {
       <div className="content-container">
         <div className="horizontal-container">
           <div className="image-container">
-            <img src={`${process.env.REACT_APP_API_URL}/${student.img}`} alt={student.fullName} />
+            <img src={`${process.env.REACT_APP_API_URL}/${user.img}`} alt={user.fullName} />
           </div>
           <DescriptionTable
             value = {[
-              {key:'Идентификационный номер', value: student.idNumber},
-              {key:'Номер паспорта', value: student.passportNumber},
-              {key:'ФИО', value: student.fullName},
-              {key:'Адрес', value: student.adress},
-              {key:'Дата рождения', value: student.dateOfBirth},
-              {key:'Номер телефона', value: student.phoneNumber},
+              {key:'ФИО', value: user.fullName},
+              {key:'Номер телефона', value: user.phoneNumber},
+              {key:'Дата рождения', value: user.dateOfBirth},
+              {key:'Адрес', value: user.adress},
+              {key:'Идентификационный номер', value: user.idNumber},
+              {key:'Номер паспорта', value: user.passportNumber},
             ]}
           />
           <div style={{display: 'flex', flex: 1, justifyContent: 'end'}}>
@@ -59,13 +66,13 @@ const StudentPage = observer(({}) => {
             value = {[
               {
                 key:'Инструктор',
-                value: student.instructor ? student.instructor.fullName : null,
-                link: student.instructor ? `${INSTRUCTOR_ROUTE}/${student.instructor.id}` : null
+                value: user.instructor ? user.instructor.fullName : null,
+                link: user.instructor ? `${INSTRUCTOR_ROUTE}/${user.instructor.id}` : null
               },
               {
                 key:'Группа',
-                value: student.group ? student.group.name : null,
-                link: student.group ? `${GROUP_ROUTE}/${student.group.id}` : null
+                value: user.group ? user.group.name : null,
+                link: user.group ? `${GROUP_ROUTE}/${user.group.id}` : null
               },
             ]}
           />
@@ -81,8 +88,6 @@ const StudentPage = observer(({}) => {
         data={[
           {name: 'Зачёт 1', theme: ['Глава 1', 'Глава 2', 'Глава 3', 'Глава 4'], status: 'Сдано'}
         ]}
-        selectable = {true}
-        setSelectedRow={setSelectedRow}
       />
       <p className="heading-text-2">Посещаемость</p>
       <InformationTable 
@@ -95,8 +100,6 @@ const StudentPage = observer(({}) => {
         data={[
           {date: '2025-05-06', time: '16:00', materials: ['Глава 1', 'Глава 2', 'Глава 3',], attendance: 'Присутствовал'}
         ]}
-        selectable = {true}
-        setSelectedRow={setSelectedRow}
       />
       
     </div>

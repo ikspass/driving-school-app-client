@@ -1,6 +1,6 @@
 import GroupsPage from "./pages/GroupsPage"
 import AdminPage from "./pages/AdminPage"
-import AdminStaffPage from "./pages/StaffPage"
+import StaffPage from "./pages/StaffPage"
 import StudentsPage from "./pages/StudentsPage"
 import AuthPage from "./pages/AuthPage"
 import GroupPage from "./pages/GroupPage"
@@ -10,9 +10,7 @@ import SchedulePage from "./pages/SchedulePage"
 import StatisticPage from "./pages/StatisticPage"
 import StudentPage from "./pages/StudentPage"
 import TeacherPage from "./pages/TeacherPage"
-import InstructorsPage from "./pages/InstructorsPage"
-import TeachersPage from "./pages/TeachersPage"
-import { ADMIN_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, INSTRUCTORS_ROUTE, LOGIN_ROUTE, MATERIALS_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, TEACHERS_ROUTE, CONTACTS_ROUTE, ADMINAUTH_ROUTE, GROUP_ROUTE } from "./utils/consts"
+import { ADMIN_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, LOGIN_ROUTE, MATERIALS_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, CONTACTS_ROUTE, ADMINAUTH_ROUTE, GROUP_ROUTE } from "./utils/consts"
 import ContactsPage from "./pages/ContactsPage"
 import AdminAuthPage from "./pages/admin/AdminAuthPage"
 
@@ -44,7 +42,7 @@ const staffAdminRoutes = [
   },
   {
     path: STAFF_ROUTE,
-    Component: AdminStaffPage
+    Component: StaffPage
   },
   {
     path: GROUP_ROUTE + '/:id',
@@ -63,16 +61,8 @@ const staffAdminRoutes = [
     Component: InstructorPage
   },
   {
-    path: INSTRUCTORS_ROUTE,
-    Component: InstructorsPage
-  },
-  {
     path: TEACHER_ROUTE + '/:id',
     Component: TeacherPage
-  },
-  {
-    path: TEACHERS_ROUTE,
-    Component: TeachersPage
   },
 ];
 

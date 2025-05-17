@@ -69,8 +69,6 @@ const GroupsPage = observer(() => {
             columns={columns}
             data={filteredGroups}
             numbered = {true}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
           />
           <div className="filter-container">
             <MultipleFilterButtons 

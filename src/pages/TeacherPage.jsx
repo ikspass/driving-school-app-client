@@ -7,6 +7,7 @@ import InformationTable from '../components/InformationTable';
 import DescriptionTable from '../components/DescriptionTable';
 import PinList from '../components/UI/PinList/PinList';
 import { fetchOneUser } from '../http/adminAPI';
+import { GROUP_ROUTE } from '../utils/consts';
 
 const TeacherPage = observer(() => {
   const { userStore } = useContext(Context);
@@ -29,17 +30,13 @@ const TeacherPage = observer(() => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  
   const user = userStore.teacher || {};
-
-  // if (!user || Object.keys(user).length === 0) {
-  //   return (
-  //     <div className="content-container">
-  //       <p className="heading-text-2">Пользователь не найден</p>
-  //     </div>
-  //   );
-  // }
-
+  const groups = user.teacher.groups || {};
+  
+  console.log(user)
+  console.log(groups)
+  
   return (
     <div className="content-container">
       <p className="heading-text-2">Персональные данные преподавателя</p>
@@ -93,23 +90,13 @@ const TeacherPage = observer(() => {
       <p className="heading-text-2">Группы</p>
       <InformationTable
         columns={[
-          { label: 'Номер', key: 'name' },
-          { label: 'Тема', key: 'theme', isLink: true },
-          { label: 'Статус', key: 'status' },
+          { key: "name", label: "Номер", isLink: true , navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
+          { key: "category.value", label: "Категория", isLink: false },
+          { key: "scheduleGroup.name", label: "Время", isLink: false },
+          { key: "dateOfStart", label: "Дата начала обучения", isLink: false},
+          { key: "status", label: "Статус", isLink: false },
         ]}
-        data={user.teacher ? user.teacher.groups : []}
-      />
-      <p className="heading-text-2">Посещаемость</p>
-      <InformationTable
-        columns={[
-          { label: 'Дата', key: 'date' },
-          { label: 'Время', key: 'time' },
-          { label: 'Материалы', key: 'materials', isLink: true },
-          { label: 'Посещаемость', key: 'attendance' },
-        ]}
-        data={[
-          { date: '2025-05-06', time: '16:00', materials: ['Глава 1', 'Глава 2', 'Глава 3'], attendance: 'Присутствовал' }
-        ]}
+        data={groups || []}
       />
     </div>
   );

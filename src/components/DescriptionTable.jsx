@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 const DescriptionTable = ({ value }) => {
   const navigate = useNavigate();
+  
   return (
     <table className="description-table normal-text">
       <tbody>
@@ -13,9 +14,9 @@ const DescriptionTable = ({ value }) => {
                 Array.isArray(item.value) ? (
                   <td>
                     {item.value.length > 0 ? (
-                      item.value.map((value, valueIndex) => (
+                      item.value.map((val, valueIndex) => (
                         <div key={valueIndex}>
-                          <p className='link-text' onClick={() => navigate(item.link)}>{value} aboba</p>
+                          <p className='link-text' onClick={() => navigate(item.link)}>{val}</p>
                         </div>
                       ))
                     ) : (
@@ -32,7 +33,21 @@ const DescriptionTable = ({ value }) => {
                   </td>
                 )
               ) : (
-                <td>{item.value !== undefined && item.value !== null ? item.value : '-'}</td>
+                Array.isArray(item.value) ? (
+                  <td>
+                    {item.value.length > 0 ? (
+                      item.value.map((val, valueIndex) => (
+                        <div key={valueIndex}>
+                          <p>{val}</p>
+                        </div>
+                      ))
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                ) : (
+                  <td>{item.value !== undefined && item.value !== null ? item.value : '-'}</td>
+                )
               )}
             </tr>
           ))

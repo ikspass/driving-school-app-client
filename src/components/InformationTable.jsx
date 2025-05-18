@@ -31,6 +31,7 @@ function InformationTable({ columns, data, numbered }) {
               {numbered && <td>{infoIndex + 1}</td>}
               {columns.map((column, keyIndex) => {
                 const value = getValue(row, column.key);
+                console.log(row)
                 return (
                   <td key={keyIndex}>
                     {Array.isArray(value) ? (

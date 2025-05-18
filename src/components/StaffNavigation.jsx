@@ -23,10 +23,6 @@ export default function StaffNavigation() {
         <GroupIcon/>
         <p className="normal-text">Группы</p>
       </Link>
-      <Link to={GROUP_ROUTE} className="navigation-item">
-        <GroupIcon/>
-        <p className="normal-text">Группа</p>
-      </Link>
       <Link to={STUDENTS_ROUTE} className="navigation-item">
         <StudentIcon/>
         <p className="normal-text">Курсанты</p>

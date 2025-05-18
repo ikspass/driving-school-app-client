@@ -29,32 +29,43 @@ function InformationTable({ columns, data, numbered }) {
           data.map((row, infoIndex) => (
             <tr key={infoIndex}>
               {numbered && <td>{infoIndex + 1}</td>}
-              {columns.map((column, keyIndex) => (
-                <td key={keyIndex}>
-                  {Array.isArray(getValue(row, column.key)) ? (
-                    getValue(row, column.key).map((value, valueIndex) => (
-                      <div key={valueIndex}>
-                        {column.isLink ? (
-                          <p className='link-text'>{value}</p>
-                        ) : (
-                          <p className="normal-text">{value}</p>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    column.isLink ? (
-                      <p className='link-text' onClick={() => {
-                        const navigateTo = column.navigateTo ? column.navigateTo(row) : column.url;
-                        navigate(navigateTo);
-                      }}>
-                        {getValue(row, column.key)}
-                      </p>
+              {columns.map((column, keyIndex) => {
+                const value = getValue(row, column.key);
+                return (
+                  <td key={keyIndex}>
+                    {Array.isArray(value) ? (
+                      value.length > 0 ? (
+                        value.map((v, valueIndex) => (
+                          <div key={valueIndex}>
+                            {column.isLink ? (
+                              <p className='link-text'>{v}</p>
+                            ) : (
+                              <p className="normal-text">{v}</p>
+                            )}
+                          </div>
+                        ))
+                      ) : (
+                        <p className="normal-text">-</p>
+                      )
                     ) : (
-                      <p className='normal-text'>{getValue(row, column.key)}</p>
-                    )
-                  )}
-                </td>
-              ))}
+                      value ? (
+                        column.isLink ? (
+                          <p className='link-text' onClick={() => {
+                            const navigateTo = column.navigateTo ? column.navigateTo(row) : column.url;
+                            navigate(navigateTo);
+                          }}>
+                            {value}
+                          </p>
+                        ) : (
+                          <p className='normal-text'>{value}</p>
+                        )
+                      ) : (
+                        <p className='normal-text'>-</p>
+                      )
+                    )}
+                  </td>
+                );
+              })}
             </tr>
           ))
           :

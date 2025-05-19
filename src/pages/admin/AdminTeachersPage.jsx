@@ -2,8 +2,9 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react'
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE, TEACHER_ROUTE } from '../../utils/consts';
 import { Context } from '../..';
-import { fetchStudents, fetchGroups, fetchInstructors, fetchUsers, fetchQuals } from '../../http/adminAPI';
+import { fetchStudents, fetchGroups, fetchInstructors, fetchUsers, fetchQuals, deleteTeacher, deleteUser } from '../../http/adminAPI';
 import InformationTable from '../../components/InformationTable';
+import SelectableInformationTable from '../../components/SelectableInformationTable'
 import SingleFilterButtons from '../../components/UI/SingleFilterButtons/SingleFilterButtons';
 import Button from '../../components/UI/Button/Button';
 import CreateTeacher from '../../components/admin/CreateTeacher';
@@ -53,12 +54,21 @@ const AdminTeachersPage = observer(() => {
     { key: "teacher.status", label: "Статус", isLink: false },
   ];
 
-  const [selectedRow, setSelectedRow] = useState(null);
-
   const updateTeachers = async () => {
     const data = await fetchUsers();
     userStore.setUsers(data);
   };
+
+  const [selectedTeachers, setSelectedTeachers] = useState([]);
+
+  const deleteTeachers = async () => {
+    console.log('selectedTeachers', selectedTeachers);
+    selectedTeachers.map(id => {
+      deleteTeacher(id);
+      deleteUser(id);
+    })
+    updateTeachers()
+  }
 
   return (
     <div className="filter-container">
@@ -77,12 +87,11 @@ const AdminTeachersPage = observer(() => {
       />
       <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
         <div className="horizontal-container">
-          <InformationTable 
+          <SelectableInformationTable 
             columns={columns}
             data={transformedTeachers}
             numbered = {true}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
+            setSelectedRow={setSelectedTeachers}
           />
           <div className="filter-container">
             <SingleFilterButtons 
@@ -95,7 +104,7 @@ const AdminTeachersPage = observer(() => {
         </div>
         <div className="button-container">
           <Button className='outline' onClick={() => setCreateTeacherModal(true)}>Создать преподавателя</Button>
-          <Button className='outline'>Удалить преподавателя</Button>
+          <Button className='outline' onClick={deleteTeachers}>Удалить преподавателя</Button>
           {/* <Button className='outline'>Редактировать данные</Button> */}
         </div>
       </div>

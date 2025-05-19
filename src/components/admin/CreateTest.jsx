@@ -16,7 +16,7 @@ const CreateTest = observer(({onClose}) => {
   useEffect(() => {
     fetchCategories().then(data => schoolStore.setCategories(data))
   }, [])
-
+  console.log(category)
   const confirm = async (e) => {
     e.preventDefault();
 
@@ -26,7 +26,7 @@ const CreateTest = observer(({onClose}) => {
     }
 
     try {
-      const data = await createTest({name: name, description: desc, categoryValue: category});
+      const data = await createTest({name: name, description: desc, categoryValue: category.value});
       console.log(data);
       onClose();
     } catch (error) {

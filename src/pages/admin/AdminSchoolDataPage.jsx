@@ -8,8 +8,13 @@ import CreateTest from '../../components/admin/CreateTest'
 import Modal from '../../components/Modal'
 import InformationTable from '../../components/InformationTable'
 import { Context } from '../..'
+import MultipleFilterButtons from '../../components/UI/MultipleFilterButtons/MultipleFilterButtons'
 import Separator from '../../components/UI/Separator/Separator'
-import { fetchCars, fetchCategories, fetchDrivingPlaces, fetchTransports } from '../../http/adminAPI'
+import { fetchCategories, fetchDrivingPlaces, fetchEventsCount, fetchTests, fetchTransports, deleteCategory, deleteTransport, deleteDrivingPlace, deleteChapter, deleteTopic,deleteTest, deleteEventsCount, fetchScheduleGroups } from '../../http/adminAPI'
+import SelectableInformationTable from '../../components/SelectableInformationTable'
+import DeleteButton from '../../components/UI/FunctionButton/DeleteButton'
+import CreateButton from '../../components/UI/FunctionButton/CreateButton'
+import CreateScheduleGroup from '../../components/admin/CreateScheduleGroup'
 
 const AdminSchoolDataPage = observer(() => {
   const [createCategoryModal, setCreateCategoryModal] = useState(false)
@@ -18,16 +23,94 @@ const AdminSchoolDataPage = observer(() => {
   const [createChapterModal, setCreateChapterModal] = useState(false)
   const [createTopicModal, setCreateTopicModal] = useState(false)
   const [createTestModal, setCreateTestModal] = useState(false)
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [createScheduleGroupModal, setCreateScheduleGroupModal] = useState(false)
 
-  
+  const [selectedTestCategory, setSelectedTestCategory] = useState([])
+
+  const [selectedCategories, setSelectedCategories] = useState([])
+  const [selectedTransports, setSelectedTransports] = useState([])
+  const [selectedDrivingPlaces, setSelectedDrivingPlaces] = useState([])
+  const [selectedChapters, setSelectedChapters] = useState([])
+  const [selectedTopics, setSelectedTopics] = useState([])
+  const [selectedTests, setSelectedTests] = useState([])
+  const [selectedEventsCounts, setSelectedEventsCounts] = useState([])
+
+
   const {schoolStore} = useContext(Context)
+  const [loading, setLoading] = useState(true);
 
+  console.log(schoolStore.scheduleGroups)
+
+  // const filteredTests = schoolStore.tests.filter(test => {
+  //   const matchesStatus = selectedStatus ? test.status == selectedStatus.value : true;
+  //   const matchesTeacher = selectedTeacher.length > 0 ? selectedTeacher.some(teacher => teacher.id === test.teacherId) : true;
+  //   return matchesStatus && matchesCategory && matchesTeacher;
+  // });  
+  
   useEffect(() => {
-    fetchCategories().then(data => schoolStore.setCategories(data))
-    fetchTransports().then(data => schoolStore.setTransports(data))
-    fetchDrivingPlaces().then(data => schoolStore.setDrivingPlaces(data))
-  }, [])
+    fetchCategories()
+      .then(data => {
+        schoolStore.setCategories(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+
+    fetchTransports()
+      .then(data => {
+        schoolStore.setTransports(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+      
+    fetchDrivingPlaces()
+      .then(data => {
+        schoolStore.setDrivingPlaces(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+      
+    fetchTests()
+      .then(data => {
+        schoolStore.setTests(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+
+    fetchEventsCount()
+      .then(data => {
+        schoolStore.setEventsCount(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+    fetchScheduleGroups()
+      .then(data => {
+        schoolStore.setScheduleGroups(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
+  }, [schoolStore]);
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const categoryColumns = [
     { key: "id", label: "ID", isLink: false},
@@ -67,6 +150,20 @@ const AdminSchoolDataPage = observer(() => {
     { key: "id", label: "ID", isLink: false},
     { key: "name", label: "Название", isLink: false},
     { key: "description", label: "Описание", isLink: false},
+    { key: "category.value", label: "Категория", isLink: false},
+  ]
+
+  const scheduleGroupColumns = [
+    { key: "id", label: "ID", isLink: false},
+    { key: "name", label: "Название", isLink: false},
+    { key: "minTime", label: "Самое раннее время", isLink: false},
+    { key: "maxTime", label: "Самое позднее время", isLink: false},
+  ]
+
+  const eventsCountColumns = [
+    { key: "id", label: "ID", isLink: false},
+    { key: "description", label: "Событие", isLink: false},
+    { key: "count", label: "Количество", isLink: false},
   ]
 
   const updateCategories = async () => {
@@ -83,6 +180,89 @@ const AdminSchoolDataPage = observer(() => {
     const data = await fetchDrivingPlaces();
     schoolStore.setDrivingPlaces(data);
   };
+
+  const updateChapters = async () => {
+    // const data = await fetchDrivingPlaces();
+    // schoolStore.setDrivingPlaces(data);
+  };
+
+  const updateTopics = async () => {
+    // const data = await fetchDrivingPlaces();
+    // schoolStore.setDrivingPlaces(data);
+  };
+
+  const updateTests = async () => {
+    // const data = await fetchDrivingPlaces();
+    // schoolStore.setDrivingPlaces(data);
+  };
+
+  const updateEventsCount = async () => {
+    // const data = await fetchDrivingPlaces();
+    // schoolStore.setDrivingPlaces(data);
+  };
+
+  const handleDeleteCategory = async () => {
+    if (selectedCategories.length !== 0){
+      selectedCategories.map(id => {
+        deleteCategory(id);
+      })
+    }
+    else alert('Категория не выбрана')
+  }
+
+  const handleDeleteTransport = async () => {
+    if (selectedTransports.length !== 0){
+      selectedTransports.map(id => {
+        deleteTransport(id);
+      })
+    }
+    else alert('Транспорт не выбран')
+  }
+
+  const handleDeleteDrivingPlace = async () => {
+    if (selectedDrivingPlaces.length !== 0){
+      selectedDrivingPlaces.map(id => {
+        deleteDrivingPlace(id);
+      })
+    }
+    else alert('Локация не выбрана')
+  }
+
+  const handleDeleteChapter = async () => {
+    if (selectedChapters.length !== 0){
+      selectedChapters.map(id => {
+        deleteChapter(id);
+      })
+    }
+    else alert('Глава не выбрана')
+  }
+
+  const handleDeleteTopic = async () => {
+    if (selectedTopics.length !== 0){
+      selectedTopics.map(id => {
+        deleteTopic(id);
+      })
+    }
+    else alert('Тема не выбрана')
+  }
+
+  const handleDeleteTest = async () => {
+    if (selectedTests.length !== 0){
+      selectedTests.map(id => {
+        deleteTest(id);
+      })
+    }
+    else alert('Зачёт/экзамен не выбран')
+  }
+
+  const handleDeleteEventCount = async () => {
+    if (selectedEventsCounts.length !== 0){
+      selectedEventsCounts.map(id => {
+        deleteEventsCount(id);
+      })
+    }
+    else alert('Категория не выбрана')
+  }
 
   return (
       <div className="filter-container">
@@ -116,92 +296,128 @@ const AdminSchoolDataPage = observer(() => {
           isOpen={createTestModal}
           onClose={() => setCreateTestModal(false)}
         />
+        <Modal
+          children={<CreateScheduleGroup onClose={() => setCreateScheduleGroupModal(false)}/>}
+          isOpen={createScheduleGroupModal}
+          onClose={() => setCreateScheduleGroupModal(false)}
+        />
 
         <p className="heading-text-2">Категории</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
-          <InformationTable 
+          <SelectableInformationTable 
             columns={categoryColumns}
             data={schoolStore.categories}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
+            setSelectedRow={setSelectedCategories}
           />
           <div className="button-container">
-            <Button className='outline' onClick={() => setCreateCategoryModal(true)}>Добавить категорию</Button>
-            <Button className='outline' onClick={() => setCreateCategoryModal(true)}>Удалить категорию</Button>
+            <CreateButton onClick={() => setCreateCategoryModal(true)}/>
+            <DeleteButton onClick={handleDeleteCategory}/>
           </div>
         </div>
         <Separator />
 
         <p className="heading-text-2">Автопарк</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
-          <InformationTable 
+          <SelectableInformationTable 
             columns={transportColumns}
             data={schoolStore.transports}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
+            setSelectedRow={setSelectedTransports}
           />
           <div className="button-container">
-            <Button className='outline' onClick={() => setCreateTransportModal(true)}>Добавить автомобиль</Button>
-            <Button className='outline' onClick={() => setCreateTransportModal(true)}>Удалить автомобиль</Button>
+            <CreateButton onClick={() => setCreateTransportModal(true)}/>
+            <DeleteButton onClick={handleDeleteTransport}/>
           </div>
         </div>
         <Separator />
 
         <p className="heading-text-2">Локации вождения</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
-          <InformationTable 
+          <SelectableInformationTable 
             columns={drivingPlaceColumns}
             data={schoolStore.drivingPlaces}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
+            setSelectedRow={setSelectedDrivingPlaces}
           />
           <div className="button-container">
-            <Button className='outline' onClick={() => setCreatePlaceModal(true)}>Добавить локацию</Button>
-            <Button className='outline' onClick={() => setCreatePlaceModal(true)}>Удалить локацию</Button>
+            <CreateButton onClick={() => setCreatePlaceModal(true)}/>
+            <DeleteButton onClick={handleDeleteDrivingPlace}/>
           </div>
         </div>
         <Separator />
 
         <p className="heading-text-2">Материалы</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
-          <InformationTable 
+          <SelectableInformationTable 
             columns={chapterColumns}
             data={schoolStore.chapters}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
+            setSelectedRow={setSelectedChapters}
           />
           <div className="button-container">
-            <Button className='outline'>Добавить главу</Button>
-            <Button className='outline'>Удалить главу</Button>
+            <CreateButton onClick={() => setCreateTestModal(true)}/>
+            <DeleteButton onClick={handleDeleteEventCount}/>
           </div>
         </div>
         <Separator />
 
         <p className="heading-text-2">Темы</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
-          <InformationTable 
+          <SelectableInformationTable 
             columns={topicColumns}
             data={schoolStore.topics}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
+            setSelectedRow={setSelectedTopics}
           />
           <div className="button-container">
-            <Button className='outline'>Добавить тему</Button>
-            <Button className='outline'>Удалить тему</Button>
+            <CreateButton onClick={() => setCreateTestModal(true)}/>
+            <DeleteButton onClick={''}/>
           </div>
         </div>
         <Separator/>
+        
         <p className="heading-text-2">Тесты</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
-          <InformationTable 
+          <SelectableInformationTable 
             columns={testColumns}
             data={schoolStore.tests}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
+            setSelectedRow={setSelectedTests}
+          />
+          <div className="filter-container">
+            <MultipleFilterButtons 
+              title='Категория'
+              filters={schoolStore.categories.map(elem => ({id: elem.id, value: elem.value}))}
+              selected={selectedTestCategory}
+              setSelected={setSelectedTestCategory}
+            />     
+          </div>
+          <div className="button-container">
+            <CreateButton onClick={() => setCreateTestModal(true)}/>
+            <DeleteButton onClick={handleDeleteTest}/>
+          </div>
+        </div>
+        <Separator/>
+
+        <p className="heading-text-2">Расписание групп</p>
+        <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
+          <SelectableInformationTable 
+            columns={scheduleGroupColumns}
+            data={schoolStore.scheduleGroups}
+            setSelectedRow={setSelectedEventsCounts}
           />
           <div className="button-container">
-            <Button className='outline' onClick={() => setCreateTestModal(true)}>Добавить зачёт/экзамен</Button>
-            <Button className='outline' onClick={() => setCreateTestModal(true)}>Удалить зачёт/экзамен</Button>
+            <CreateButton onClick={() => setCreateScheduleGroupModal(true)}/>
+            <DeleteButton onClick={'handleDeleteSchedu'}/>
+          </div>
+        </div>
+        <Separator/>
+
+        <p className="heading-text-2">Количество занятий</p>
+        <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
+          <SelectableInformationTable 
+            columns={eventsCountColumns}
+            data={schoolStore.eventsCount}
+            setSelectedRow={setSelectedEventsCounts}
+          />
+          <div className="button-container">
+            <CreateButton onClick={() => setCreateTestModal(true)}/>
+            <DeleteButton onClick={handleDeleteEventCount}/>
           </div>
         </div>
 

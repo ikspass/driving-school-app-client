@@ -20,6 +20,8 @@ export default class SchoolStore{
 
     this._scheduleGroups = []
 
+    this._eventsCount = []
+
     makeAutoObservable(this);
   }
   
@@ -58,6 +60,10 @@ export default class SchoolStore{
   setScheduleGroups(scheduleGroups){
     this._scheduleGroups = scheduleGroups;
   }
+  
+  setEventsCount(eventsCount){
+    this._eventsCount = eventsCount;
+  }
 
   get tests() {
     return this._tests;
@@ -93,5 +99,9 @@ export default class SchoolStore{
 
   get scheduleGroups() {
     return this._scheduleGroups;
+  }
+
+  get eventsCount() {
+    return this._eventsCount;
   }
 }

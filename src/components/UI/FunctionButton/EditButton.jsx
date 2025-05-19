@@ -1,8 +1,8 @@
 import { ReactComponent as EditIcon } from '../../../styles/svg/edit.svg';
 
-function EditButton() {
+function EditButton({...props}) {
     return(
-        <button className="function-button">
+        <button {...props} className="function-button">
             <EditIcon/>
         </button>
     )

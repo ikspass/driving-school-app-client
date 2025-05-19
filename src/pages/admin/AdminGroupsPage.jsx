@@ -46,14 +46,13 @@ const AdminGroupsPage = observer(() => {
     { key: "name", label: "Номер", isLink: true , navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
     { key: "category.value", label: "Категория", isLink: false },
     { key: "scheduleGroup.name", label: "Время", isLink: false },
-    { key: "teacher.user.fullName", label: "Преподаватель", isLink: true, navigateTo: (row) => `${TEACHER_ROUTE}/${row.id}`},
+    { key: "teacher.user.fullName", label: "Преподаватель", isLink: true, navigateTo: (row) => `${TEACHER_ROUTE}/${row.teacher.userId}`},
     { key: "dateOfStart", label: "Дата начала обучения", isLink: false},
     { key: "status", label: "Статус", isLink: false },
   ];
 
   const [selectedRow, setSelectedRow] = useState(null);
 
-  console.log(selectedRow)
 
   const handleEditClick = () => {
     if (selectedRow) {

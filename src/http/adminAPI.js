@@ -21,6 +21,10 @@ export const fetchOneUser = async (id) => {
   const {data} = await $authHost.get(`users/${id}`);
   return data;
 }
+export const deleteUser = async (id) => {
+  const {data} = await $authHost.delete(`users/${id}`);
+  return data;
+}
 
 // STUDENT
 
@@ -30,6 +34,10 @@ export const createStudent = async (student) => {
 }
 export const fetchStudents = async () => {
   const {data} = await $authHost.get('students');
+  return data;
+}
+export const deleteStudent = async (id) => {
+  const {data} = await $authHost.delete(`students/${id}`);
   return data;
 }
 
@@ -43,6 +51,10 @@ export const fetchTeachers = async () => {
   const {data} = await $authHost.get('teachers');
   return data;
 }
+export const deleteTeacher = async (id) => {
+  const {data} = await $authHost.delete(`teachers/${id}`);
+  return data;
+}
 
 // INSTRUCTOR
 
@@ -52,6 +64,10 @@ export const createInstructor = async (instructor) => {
 }
 export const fetchInstructors = async () => {
   const {data} = await $authHost.get('instructors');
+  return data;
+}
+export const deleteInstructor = async (id) => {
+  const {data} = await $authHost.delete(`instructors/${id}`);
   return data;
 }
 
@@ -84,6 +100,10 @@ export const fetchTransports = async () => {
   const {data} = await $authHost.get('transports');
   return data;
 }
+export const deleteTransport = async (id) => {
+  const {data} = await $authHost.delete(`transports/${id}`);
+  return data;
+}
 
 // TEST
 
@@ -93,6 +113,10 @@ export const createTest = async (test) => {
 }
 export const fetchTests = async () => {
   const {data} = await $authHost.get('tests');
+  return data;
+}
+export const deleteTest = async (id) => {
+  const {data} = await $authHost.delete(`tests/${id}`);
   return data;
 }
 
@@ -106,6 +130,10 @@ export const fetchDrivingPlaces = async () => {
   const {data} = await $authHost.get('driving-places');
   return data;
 }
+export const deleteDrivingPlace = async (id) => {
+  const {data} = await $authHost.delete(`driving-places/${id}`);
+  return data;
+}
 
 // CATEGORY
 
@@ -115,6 +143,10 @@ export const createCategory = async (category) => {
 }
 export const fetchCategories = async () => {
   const {data} = await $authHost.get('categories');
+  return data;
+}
+export const deleteCategory = async (id) => {
+  const {data} = await $authHost.delete(`categories/${id}`);
   return data;
 }
 
@@ -128,6 +160,10 @@ export const fetchInstructorCategories = async () => {
   const {data} = await $authHost.get('instructor-categories');
   return data;
 }
+export const deleteInstructorCategory = async (id) => {
+  const {data} = await $authHost.delete(`instructor-categories/${id}`);
+  return data;
+}
 
 // QUAL
 
@@ -139,15 +175,23 @@ export const fetchQuals = async () => {
   const {data} = await $authHost.get('quals');
   return data;
 }
+export const deleteQual = async (id) => {
+  const {data} = await $authHost.delete(`quals/${id}`);
+  return data;
+}
 
 // SCHEDULE GROUP
 
-export const createScheduleGroups = async (scheduleGroup) => {
+export const createScheduleGroup = async (scheduleGroup) => {
   const {data} = await $authHost.post('schedule-groups', scheduleGroup);
   return data;
 }
 export const fetchScheduleGroups = async () => {
   const {data} = await $authHost.get('schedule-groups');
+  return data;
+}
+export const deleteScheduleGroup = async (id) => {
+  const {data} = await $authHost.delete(`schedule-groups/${id}`);
   return data;
 }
 
@@ -161,6 +205,10 @@ export const fetchTeacherQuals = async () => {
   const {data} = await $authHost.get('teacher-quals');
   return data;
 }
+export const deleteTeacherQual = async (id) => {
+  const {data} = await $authHost.delete(`teacher-quals/${id}`);
+  return data;
+}
 
 // LECTURE EVENT
 
@@ -170,6 +218,10 @@ export const createLectureEvent = async (lectureEvent) => {
 }
 export const fetchLectureEvents = async () => {
   const {data} = await $authHost.get('lecture-events');
+  return data;
+}
+export const deleteLectureEvent = async (id) => {
+  const {data} = await $authHost.delete(`lecture-events/${id}`);
   return data;
 }
 
@@ -183,6 +235,10 @@ export const fetchDrivingEvents = async () => {
   const {data} = await $authHost.get('driving-events');
   return data;
 }
+export const deleteDrivingEvent = async (id) => {
+  const {data} = await $authHost.delete(`driving-events/${id}`);
+  return data;
+}
 
 // TEST EVENT
 
@@ -192,5 +248,54 @@ export const createTestEvent = async (testEvent) => {
 }
 export const fetchTestEvents = async () => {
   const {data} = await $authHost.get('test-events');
+  return data;
+}
+export const deleteTestEvents = async (id) => {
+  const {data} = await $authHost.delete(`test-events/${id}`);
+  return data;
+}
+
+// EVENTS COUNT
+
+export const createEventCount = async (testEvent) => {
+  const {data} = await $authHost.post('events-count', testEvent);
+  return data;
+}
+export const fetchEventsCount = async () => {
+  const {data} = await $authHost.get('events-count');
+  return data;
+}
+export const deleteEventsCount = async (id) => {
+  const {data} = await $authHost.delete(`events-count/${id}`);
+  return data;
+}
+
+// CHAPTERS
+
+export const createChapter = async (chapter) => {
+  const {data} = await $authHost.post('chapters', chapter);
+  return data;
+}
+export const fetchChapters = async () => {
+  const {data} = await $authHost.get('chapters');
+  return data;
+}
+export const deleteChapter = async (id) => {
+  const {data} = await $authHost.delete(`chapters/${id}`);
+  return data;
+}
+
+// TOPICS
+
+export const createTopic = async (topic) => {
+  const {data} = await $authHost.post('topics', topic);
+  return data;
+}
+export const fetchTopics = async () => {
+  const {data} = await $authHost.get('topics');
+  return data;
+}
+export const deleteTopic = async (id) => {
+  const {data} = await $authHost.delete(`topics/${id}`);
   return data;
 }

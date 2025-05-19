@@ -30,7 +30,7 @@ const Header = observer(() => {
           </div>
         </div>
         <div className="header-navigation">
-          <StaffNavigation />        
+          <StudentNavigation />        
         </div>
       </div>
     </div>

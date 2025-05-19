@@ -32,7 +32,8 @@ const TeacherPage = observer(() => {
   }
   
   const user = userStore.teacher || {};
-  const groups = user.teacher.groups || {};
+  // const groups = user.teacher.groups || {};
+  const groups = {};
   
   console.log(user)
   console.log(groups)

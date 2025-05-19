@@ -1,8 +1,8 @@
 import { ReactComponent as TrashIcon } from '../../../styles/svg/trash.svg'
 
-function DeleteButton() {
+function DeleteButton({...props}) {
     return(
-        <button className="function-button">
+        <button {...props} className="function-button">
             <TrashIcon/>
         </button>
     )

@@ -1,9 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react'
-import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE, TEACHER_ROUTE } from '../../utils/consts';
+import { TEACHER_ROUTE } from '../../utils/consts';
 import { Context } from '../..';
-import { fetchStudents, fetchGroups, fetchInstructors, fetchUsers, fetchQuals, deleteTeacher, deleteUser } from '../../http/adminAPI';
-import InformationTable from '../../components/InformationTable';
+import { fetchUsers, fetchQuals, deleteTeacher, deleteUser } from '../../http/adminAPI';
 import SelectableInformationTable from '../../components/SelectableInformationTable'
 import SingleFilterButtons from '../../components/UI/SingleFilterButtons/SingleFilterButtons';
 import Button from '../../components/UI/Button/Button';
@@ -11,16 +10,29 @@ import CreateTeacher from '../../components/admin/CreateTeacher';
 import Modal from '../../components/Modal';
 
 const AdminTeachersPage = observer(() => {
-  const {userStore} = useContext(Context);
-  const {groupStore} = useContext(Context)
-  const {schoolStore} = useContext(Context)
+  const {userStore, schoolStore} = useContext(Context);
 
   const [createTeacherModal, setCreateTeacherModal] = useState(false)
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    fetchUsers().then(data => userStore.setUsers(data))
-    fetchQuals().then(data => schoolStore.setQuals(data))
-  }, [])
+    const fetchData = async () => {
+      try {
+        const users = await fetchUsers();
+        userStore.setUsers(users);
+        const quals = await fetchQuals();
+        schoolStore.setQuals(quals);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [userStore, schoolStore]);
+
+
 
   const statuses = [
     {id: 1, value: 'Активен'},
@@ -31,21 +43,22 @@ const AdminTeachersPage = observer(() => {
 
   const [selectedQual, setSelectedQual] = useState(null)
   const [selectedStatus, setSelectedStatus] = useState(statuses[0])
+
   const filteredTeachers = userStore.teachers.filter(user => {
     const matchesStatus = selectedStatus ? user.teacher.status === selectedStatus.value : true;
-    const matchesQual = selectedQual ? user.teacher.quals.some(qual => qual.description === selectedQual.value) : true;    
+    const matchesQual = selectedQual ? user.teacher.quals.some(qual => qual.description === selectedQual.value) : true;
     return matchesStatus && matchesQual;
   });
-  
+
   const transformedTeachers = filteredTeachers.map(teacher => ({
     ...teacher,
     // Преобразуем массив квалификаций в строку с описаниями
     teacher: {
-      ...teacher.teacher,
-      quals: teacher.teacher.quals.map(qual => qual.description) // Объединяем описания в строку
+    ...teacher.teacher,
+    quals: teacher.teacher.quals.map(qual => qual.description) // Объединяем описания в строку
     },
   }));
-  
+
   const columns = [
     { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${TEACHER_ROUTE}/${row.id}`},
     { key: "phoneNumber", label: "Номер телефона", isLink: false },
@@ -63,38 +76,33 @@ const AdminTeachersPage = observer(() => {
 
   const deleteTeachers = async () => {
     console.log('selectedTeachers', selectedTeachers);
-    selectedTeachers.map(id => {
-      deleteTeacher(id);
-      deleteUser(id);
-    })
-    updateTeachers()
+    await Promise.all(selectedTeachers.map(async (id) => {
+      await deleteTeacher(id);
+      await deleteUser(id);
+    }));
+    updateTeachers();
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (
     <div className="filter-container">
       <Modal
-        children={<CreateTeacher onClose={() => {
-          setCreateTeacherModal(false)
-          updateTeachers()
-        }}/>}
-        isOpen={createTeacherModal}
-        onClose={() => setCreateTeacherModal(false)}
+      children={<CreateTeacher onClose={() => {
+        setCreateTeacherModal(false)
+        updateTeachers()
+      }}/>}
+      isOpen={createTeacherModal}
+      onClose={() => setCreateTeacherModal(false)}
       />
-      <SingleFilterButtons 
-        filters={statuses}
-        selected={selectedStatus}
-        setSelected={setSelectedStatus}
-      />
+      <SingleFilterButtons filters={statuses} selected={selectedStatus} setSelected={setSelectedStatus} />
       <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
         <div className="horizontal-container">
-          <SelectableInformationTable 
-            columns={columns}
-            data={transformedTeachers}
-            numbered = {true}
-            setSelectedRow={setSelectedTeachers}
-          />
+          <SelectableInformationTable columns={columns} data={transformedTeachers} numbered = {true} setSelectedRow={setSelectedTeachers} />
           <div className="filter-container">
-            <SingleFilterButtons 
+            <SingleFilterButtons
               title='Квалификация'
               filters={schoolStore.quals.map(elem => ({id: elem.id, value: elem.description}))}
               selected={selectedQual}

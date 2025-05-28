@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react'
 import { TEACHER_ROUTE } from '../../utils/consts';
 import { Context } from '../..';
-import { fetchUsers, fetchQuals, deleteTeacher, deleteUser } from '../../http/adminAPI';
+import { fetchUsers, fetchQuals, deleteTeacher, deleteUser, fetchTeacherQuals, fetchTeachers } from '../../http/adminAPI';
 import SelectableInformationTable from '../../components/SelectableInformationTable'
 import SingleFilterButtons from '../../components/UI/SingleFilterButtons/SingleFilterButtons';
 import Button from '../../components/UI/Button/Button';
@@ -10,19 +10,22 @@ import CreateTeacher from '../../components/admin/CreateTeacher';
 import Modal from '../../components/Modal';
 
 const AdminTeachersPage = observer(() => {
-  const {userStore, schoolStore} = useContext(Context);
+
+  const [teachers, setTeachers] = useState([])
+  const [quals, setQuals] = useState([])
 
   const [createTeacherModal, setCreateTeacherModal] = useState(false)
+  const [deleteTeacherModal, setDeleteTeacherModal] = useState(false)
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const users = await fetchUsers();
-        userStore.setUsers(users);
+        const teachers = await fetchTeachers();
+        setTeachers(teachers);
         const quals = await fetchQuals();
-        schoolStore.setQuals(quals);
+        setQuals(quals);
       } catch (error) {
         console.error(error);
       } finally {
@@ -30,7 +33,7 @@ const AdminTeachersPage = observer(() => {
       }
     };
     fetchData();
-  }, [userStore, schoolStore]);
+  }, []);
 
 
 
@@ -44,32 +47,28 @@ const AdminTeachersPage = observer(() => {
   const [selectedQual, setSelectedQual] = useState(null)
   const [selectedStatus, setSelectedStatus] = useState(statuses[0])
 
-  const filteredTeachers = userStore.teachers.filter(user => {
-    const matchesStatus = selectedStatus ? user.teacher.status === selectedStatus.value : true;
-    const matchesQual = selectedQual ? user.teacher.quals.some(qual => qual.description === selectedQual.value) : true;
+  const filteredTeachers = teachers.filter(teacher => {
+    const matchesStatus = selectedStatus ? teacher.status === selectedStatus.value : true;
+    const matchesQual = selectedQual ? teacher.quals.some(qual => qual.description === selectedQual.value) : true;
     return matchesStatus && matchesQual;
   });
 
   const transformedTeachers = filteredTeachers.map(teacher => ({
     ...teacher,
-    // Преобразуем массив квалификаций в строку с описаниями
-    teacher: {
-    ...teacher.teacher,
-    quals: teacher.teacher.quals.map(qual => qual.description) // Объединяем описания в строку
-    },
+    quals: teacher.quals.map(qual => qual.description) // Объединяем описания в строку
   }));
 
   const columns = [
-    { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${TEACHER_ROUTE}/${row.id}`},
-    { key: "phoneNumber", label: "Номер телефона", isLink: false },
-    { key: "teacher.quals", label: "Квалификация", isLink: false},
-    { key: "teacher.dateOfEmployment", label: "Дата приёма на работу", isLink: false},
-    { key: "teacher.status", label: "Статус", isLink: false },
+    { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${TEACHER_ROUTE}/${row.id}`},
+    { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "quals", label: "Квалификация", isLink: false},
+    { key: "dateOfEmployment", label: "Дата приёма на работу", isLink: false},
+    { key: "status", label: "Статус", isLink: false },
   ];
 
   const updateTeachers = async () => {
-    const data = await fetchUsers();
-    userStore.setUsers(data);
+    const data = await fetchTeachers();
+    setTeachers(data);
   };
 
   const [selectedTeachers, setSelectedTeachers] = useState([]);
@@ -90,13 +89,22 @@ const AdminTeachersPage = observer(() => {
   return (
     <div className="filter-container">
       <Modal
-      children={<CreateTeacher onClose={() => {
-        setCreateTeacherModal(false)
-        updateTeachers()
-      }}/>}
-      isOpen={createTeacherModal}
-      onClose={() => setCreateTeacherModal(false)}
-      />
+        isOpen={deleteTeacherModal}
+        onClose={() => setDeleteTeacherModal(false)}
+      >
+        <div className="content-container">
+          <p className="normal-text" style={{paddingRight: '20px'}}>Вы уверены что хотите удалить выбранные данные?</p>
+          <Button onClick={() => {setDeleteTeacherModal(false); deleteTeachers()}}>Подтвердить</Button>
+        </div>
+      </Modal>
+      <Modal
+        children={<CreateTeacher onClose={() => {
+          setCreateTeacherModal(false)
+          updateTeachers()
+        }}/>}
+        isOpen={createTeacherModal}
+        onClose={() => setCreateTeacherModal(false)}
+        />
       <SingleFilterButtons filters={statuses} selected={selectedStatus} setSelected={setSelectedStatus} />
       <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
         <div className="horizontal-container">
@@ -104,15 +112,15 @@ const AdminTeachersPage = observer(() => {
           <div className="filter-container">
             <SingleFilterButtons
               title='Квалификация'
-              filters={schoolStore.quals.map(elem => ({id: elem.id, value: elem.description}))}
+              filters={quals.map(elem => ({id: elem.id, value: elem.description}))}
               selected={selectedQual}
               setSelected={setSelectedQual}
             />
           </div>
         </div>
         <div className="button-container">
-          <Button className='outline' onClick={() => setCreateTeacherModal(true)}>Создать преподавателя</Button>
-          <Button className='outline' onClick={deleteTeachers}>Удалить преподавателя</Button>
+          <Button className='outline' onClick={() => setCreateTeacherModal(true)}>Добавить преподавателя</Button>
+          <Button className='outline' onClick={() => setDeleteTeacherModal(true)}>Удалить преподавателя</Button>
           {/* <Button className='outline'>Редактировать данные</Button> */}
         </div>
       </div>

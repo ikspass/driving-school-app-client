@@ -43,7 +43,7 @@ a:hover{
 
 .normal-text{
   font-family: Roboto;
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal; 
@@ -67,7 +67,7 @@ a{
 }
 .link-text{
   font-family: Roboto;
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal; 
@@ -197,9 +197,9 @@ code {
 }
 
 .description-table{
-  border-collapse: separate; /* Объединение границ */
-  border-radius: 10px; /* Закругление углов таблицы */
-  overflow: hidden; /* Скрытие выступающих частей */
+  border-collapse: separate;
+  border-radius: 10px;
+  overflow: hidden;
   border-spacing: 0;
   width: fit-content;
   flex-shrink: 0;
@@ -208,10 +208,10 @@ code {
 }
 
 .description-table td {
-  border-right: 1px solid var(--gray); /* Границы между ячейками */
+  border-right: 1px solid var(--gray);
   border-bottom: 1px solid var(--gray);
-  padding: 10px; /* Отступ внутри ячеек */
-  margin: 0; /* Убираем отступы */
+  padding: 10px;
+  margin: 0;
   width: fit-content;
   max-width: 50vw;
 }
@@ -226,24 +226,26 @@ code {
 }
 .description-table td:first-child{
   width: fit-content;
+  color: var(--black);  
 }
 
 .information-table{
-  border-collapse: separate; /* Объединение границ */
-  border-radius: 10px; /* Закругление углов таблицы */
-  overflow: hidden; /* Скрытие выступающих частей */
+  border-collapse: separate;
+  border-radius: 10px;
+  overflow: hidden;
   border-spacing: 0;
   width: fit-content;
   min-width: fit-content;
+  height: fit-content;
   max-width: 50vw;
   border: 1px solid var(--gray);
 }
 
 .information-table td, .information-table th {
-  border-right: 1px solid var(--gray); /* Границы между ячейками */
+  border-right: 1px solid var(--gray);
   border-bottom: 1px solid var(--gray);
-  padding: 10px; /* Отступ внутри ячеек */
-  margin: 0; /* Убираем отступы */
+  padding: 10px;
+  margin: 0;
   text-align: center;
   justify-items: center;
   font-weight: 400;
@@ -376,19 +378,24 @@ code {
 }
 
 .event-table{
-   border-collapse: separate; /* Объединение границ */
-   border-radius: 10px; /* Закругление углов таблицы */
-   overflow: hidden; /* Скрытие выступающих частей */
+   border-collapse: separate;
+   border-radius: 10px;
+   overflow: hidden;
    border-spacing: 0;
-   width: 100%;
+   width: 30vw;
    border: 1px solid var(--gray);
+}
+
+.event-table.current-event{
+  box-shadow: 0px 0px 20px 0px var(--light-accent);
+  border: 1px solid var(--light-accent);
 }
   
 .event-table td {
-  border-right: 1px solid var(--gray); /* Границы между ячейками */
+  border-right: 1px solid var(--gray);
   border-bottom: 1px solid var(--gray);
-  padding: 10px; /* Отступ внутри ячеек */
-  margin: 0; /* Убираем отступы */
+  padding: 10px;
+  margin: 0;
 }
   
 .event-table td:last-child {
@@ -509,6 +516,7 @@ form{
   border-radius: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
+  max-width: 700px;
 }
 
 .close-button {
@@ -523,4 +531,11 @@ form{
 
 .admin-nav{
   position: fixed;
+}
+
+.frame{
+  border-radius: 10px;
+  border: 1px solid var(--light-accent);
+  padding: 20px 30px;
+  margin-bottom: 30px;
 }

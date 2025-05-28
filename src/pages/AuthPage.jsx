@@ -5,7 +5,7 @@ import Input from '../components/UI/Input/Input';
 import Button from '../components/UI/Button/Button';
 import { login, registration } from '../http/userAPI';
 import { Context } from '..'
-import { fetchOneUser } from '../http/adminAPI';
+import { fetchUserById } from '../http/adminAPI';
 import { observer } from 'mobx-react-lite';
 
 const AuthPage = observer(() => {
@@ -31,7 +31,7 @@ const AuthPage = observer(() => {
         data = await registration(idNumber, password);
         console.log(data)
       }
-      fetchOneUser(data.id)
+      fetchUserById(data.id)
       .then(user => {
         localStorage.setItem('user', JSON.stringify(user));
       })

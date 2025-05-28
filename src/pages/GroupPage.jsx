@@ -6,21 +6,29 @@ import InformationTable from '../components/InformationTable';
 import Button from '../components/UI/Button/Button';
 import Separator from '../components/UI/Separator/Separator';
 import PinList from '../components/UI/PinList/PinList';
+import Calendar from '../components/Calendar';
 
 import {useParams} from 'react-router-dom'
 import { fetchOneGroup } from '../http/adminAPI';
 import { Context } from '..';
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../utils/consts';
+import { getDateInfo } from '../utils/calendar';
 
 function GroupPage() {
 
-  const { groupStore } = useContext(Context)
+  const currentDate = new Date();
+  const currentDateInfo = getDateInfo(currentDate);
+
+  const { groupStore, eventStore, userStore } = useContext(Context)
 
   const {id} = useParams();
 
   const [loading, setLoading] = useState(true);
+  const [events, setEvents] = useState([])
 
   useEffect(() => {
+    eventStore.setSelectedDate(currentDateInfo.fullDate)
+
     fetchOneGroup(id)
       .then(data => {
         groupStore.setGroup(data);
@@ -51,6 +59,14 @@ function GroupPage() {
   const studentsInfo = group.students.map((student) => student)
 
 
+  if(userStore.user.role.value !== 'student'){
+    setEvents(eventStore.events);
+  }
+  else{
+    eventStore.setStudentId(userStore.user.userId)
+    setEvents(eventStore.studentEvents);
+  }
+
   return (
     <>
       <div className="main-container">
@@ -60,7 +76,7 @@ function GroupPage() {
             <DescriptionTable
               value = {[
                 {key:'Категория', value: group.category.value},
-                {key:'Преподаватель', value: group.teacher.user.fullName},
+                {key:'Преподаватель', value: group.teacher},
                 {key:'Количество студентов', value: group.studentsCount},
                 {key:'Дата начала обучения', value: group.dateOfStart},
                 {key:'Расписание группы', value: group.scheduleGroup.name},
@@ -92,10 +108,8 @@ function GroupPage() {
           />
           <Separator />
           <p className="heading-text-2">Расписание группы</p>
-          <InformationTable 
-            columns={studentsColumns} 
-            data={studentsInfo}
-            numbered={true} 
+          <Calendar
+            events={events}
           />
         </div>
       </div>

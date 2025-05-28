@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function SelectableInformationTable({ columns, data, numbered, setSelectedRow }) { 
+function SelectableInformationTable({ columns = [], data = [], numbered = false, setSelectedRow = () => {} }) { 
   const navigate = useNavigate();
   const [selectedRows, setSelectedRows] = useState({});
   const [allSelected, setAllSelected] = useState(false);
@@ -39,6 +39,7 @@ function SelectableInformationTable({ columns, data, numbered, setSelectedRow })
   }, [selectedRows, data.length, setSelectedRow]); // Add setSelectedRow to dependencies
 
   return (
+    data || columns ?
     <table className="information-table normal-text">
       {columns ?
         <thead>
@@ -108,6 +109,14 @@ function SelectableInformationTable({ columns, data, numbered, setSelectedRow })
           </tr>
         }
       </tbody>
+    </table>
+    :
+    <table className="information-table">
+        <tbody>
+          <tr>
+            <td>Данные отсутствуют</td>
+          </tr>
+        </tbody>
     </table>
   );
 }

@@ -9,6 +9,7 @@ function InformationTable({ columns, data, numbered }) {
   };
 
   return (
+    columns || data ?
     <table className="information-table normal-text">
       {columns ?
         <thead>
@@ -48,7 +49,7 @@ function InformationTable({ columns, data, numbered }) {
                         <p className="normal-text">-</p>
                       )
                     ) : (
-                      value ? (
+                      value != null ? (
                         column.isLink ? (
                           <p className='link-text' onClick={() => {
                             const navigateTo = column.navigateTo ? column.navigateTo(row) : column.url;
@@ -74,6 +75,14 @@ function InformationTable({ columns, data, numbered }) {
           </tr>
         }
       </tbody>
+    </table>
+    :
+    <table className="information-table">
+        <tbody>
+          <tr>
+            <td>Данные отсутствуют</td>
+          </tr>
+        </tbody>
     </table>
   );
 }

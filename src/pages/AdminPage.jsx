@@ -19,7 +19,7 @@ export default function AdminPage() {
     {value: 'Данные', component: AdminSchoolDataPage},
   ]
   return (
-    <div className='horizontal-container'>
+    <div className='horizontal-container' style={{marginTop: '20px'}}>
       <ListGroup 
         className='admin-nav'
         title='Навигация'

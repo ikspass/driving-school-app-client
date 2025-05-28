@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useContext, useEffect } from 'react'
 import { Context } from '../..';
-import { createGroup, createInstructor, createTeacher, createUser, fetchCategories, fetchQuals, fetchTeachers } from '../../http/adminAPI';
+import { createGroup, createInstructor, createInstructorCategories, createTeacher, createUser, fetchCategories, fetchQuals, fetchTeachers } from '../../http/adminAPI';
 import Input from '../UI/Input/Input';
 import MultipleFilterButtons from '../UI/MultipleFilterButtons/MultipleFilterButtons';
 import Button from '../UI/Button/Button';
@@ -58,6 +58,12 @@ const CreateInstructor = observer(({onClose}) => {
         createInstructor({userId: data.id, dateOfEmployment: dateOfEmployment})
         .then(data => {
           console.log('Инструктор создан', data);
+          
+          categories.forEach(elem => {
+            createInstructorCategories({ instructorId: data.id, categoryId: elem.id })
+          });
+          console.log('Категории созданы');
+
           onClose();
         })
         .catch(err => {

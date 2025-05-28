@@ -5,7 +5,7 @@ const SingleFilterButtons = ({ title, filters, selected, setSelected }) => {
 return (
   <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
     {title &&  <p className="small-text" style={{paddingLeft: '10px'}}>{title}</p>}
-    {filters.length ?
+    {filters && filters.length > 0?
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
         {filters.map((filter) => (
           <div

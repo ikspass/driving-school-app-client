@@ -1,68 +1,128 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { observer } from 'mobx-react-lite';
+import React, { useState, useEffect } from 'react'
+import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../utils/consts';
+import { fetchStudents, fetchGroups, fetchInstructors } from '../http/adminAPI';
 import InformationTable from '../components/InformationTable';
-import { Context } from '..';
-import { observer } from 'mobx-react-lite'
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons';
-import { GROUP_ROUTE, STUDENT_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts';
-import { fetchGroups, fetchInstructors, fetchStudents, fetchUsers } from '../http/adminAPI';
+import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons';
+import Modal from '../components/Modal';
+import CreateStudent from '../components/admin/CreateStudent';
 
 const StudentsPage = observer(() => {
 
-  const {userStore} = useContext(Context);
-  const {groupStore} = useContext(Context)
+  const [instructors, setInstructors] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [groups, setGroups] = useState([]);
+
+  const [createStudentModal, setCreateStudentModal] = useState(false)
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchUsers().then(data => userStore.setUsers(data))
-    fetchGroups().then(data => groupStore.setGroups(data))
-  }, [])
+    const fetchData = async () => {
+      try {
+        const students = await fetchStudents();
+        setStudents(students);
+        const instructors = await fetchInstructors();
+        setInstructors(instructors);
+        const groups = await fetchGroups();
+        setGroups(groups);
+
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const statuses = [
+    {id: 1, value: 'Активен'},
+    {id: 2, value: 'Не активен'},
+    {id: 3, value: 'Отчислен'},
+    {id: 4, value: 'Окончил обучение'},
+  ]
+
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const [selectedGroup, setSelectedGroup] = useState([])
   const [selectedInstructor, setSelectedInstructor] = useState([])
+  const [selectedStatus, setSelectedStatus] = useState(statuses[0])
 
-  const filteredStudents = userStore.students.filter(user => {
-    let matchesGroup = true;
-    let matchesInstructor = true;
-    if(user.student.groupId){
-      matchesGroup = selectedGroup ? user.student.groupId === selectedGroup.id : true;
-    }
-    if(user.student.instructorId){
-      matchesInstructor = selectedInstructor ? user.student.instructorId === selectedInstructor.id : true;
-    }
-    return matchesGroup && matchesInstructor;
+  const filteredStudents = students.filter(student => {
+    const matchesStatus = selectedStatus ? student.status === selectedStatus.value : true;
+    const matchesGroup = selectedGroup.length > 0 ? selectedGroup.some(group => group.id === student.groupId) : true;
+    const matchesInstructor = selectedInstructor.length > 0 ? selectedInstructor.some(instructor => instructor.id === student.instructorId) : true;
+    return matchesGroup && matchesInstructor && matchesStatus;
   });
 
-  console.log(filteredStudents)
-  console.log(userStore.students)
-
   const columns = [
-    { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
-    { key: "dateOfBirth", label: "Дата рождения", isLink: false },
-    { key: "phoneNumber", label: "Номер телефона", isLink: false },
-    { key: "student.instructor.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.userId}`},
-    { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.group.id}`},
+    { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
+    { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
+    { key: "instructor.user.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
     { key: "status", label: "Статус", isLink: false },
   ];
 
+  const updateStudents = async () => {
+    const data = await fetchStudents();
+    setStudents(data);
+  };
+
+  const groupFilters = [
+    {id: null, value: 'Без группы'},
+    ...groups.map(elem => ({id: elem.id, value: elem.name}))
+  ];
+
+  const instructorFilters =[
+    {id: null, value: 'Без инструктора'},
+    ...instructors.map(elem => ({id: elem.id, value: elem.user.fullName}))
+  ]
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className='horizontal-container'>
-      <InformationTable 
-        columns={columns}
-        data={filteredStudents}
-        numbered = {true}
+    <div className="filter-container">
+      <Modal
+        children={<CreateStudent onClose={() => {
+          setCreateStudentModal(false);
+          updateStudents()
+        }}/>}
+        isOpen={createStudentModal}
+        onClose={() => setCreateStudentModal(false)}
       />
-      <div className="filter-container">
-        <MultipleFilterButtons 
-          title='Группа'
-          filters={groupStore.groups.map(elem => ({id: elem.id, value: elem.name}))}
-          selected={selectedGroup}
-          setSelected={setSelectedGroup}
-        />
-        <MultipleFilterButtons 
-          title='Инструктор'
-          filters={userStore.instructors.map(elem => ({id: elem.id, value: elem.user.fullName}))}
-          selected={selectedInstructor}
-          setSelected={setSelectedInstructor}
-        />
+      <SingleFilterButtons 
+        filters={statuses}
+        selected={selectedStatus}
+        setSelected={setSelectedStatus}
+      />
+      <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
+        <div className="horizontal-container">
+          <InformationTable 
+            columns={columns}
+            data={filteredStudents}
+            numbered = {true}
+            selectable = {true}
+            setSelectedRow={setSelectedRow}
+          />
+          <div className="filter-container">
+            <MultipleFilterButtons 
+              title='Группа'
+              filters={groupFilters}
+              selected={selectedGroup}
+              setSelected={setSelectedGroup}
+            />
+            <MultipleFilterButtons 
+              title='Инструктор'
+              filters={instructorFilters}
+              selected={selectedInstructor}
+              setSelected={setSelectedInstructor}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )

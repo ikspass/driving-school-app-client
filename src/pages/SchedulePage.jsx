@@ -4,35 +4,70 @@ import Button from '../components/UI/Button/Button'
 import EventTable from '../components/EventTable'
 import { Context } from '..'
 import { observer } from 'mobx-react-lite'
+import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons'
 
 
 const SchedulePage = observer(() => {
 
-  const {eventStore} = useContext(Context)
+  const {eventStore, userStore} = useContext(Context)
+  const user = userStore.user;
+  const typeFilters = [
+    {id: 1, value: 'Мои'},
+    {id: 2, value: 'Все'},
+  ]
+  const eventFilters = [
+    {id: 1, value: 'Все'},
+    {id: 2, value: 'Лекция'},
+    {id: 3, value: 'Вождение'},
+    {id: 4, value: 'Зачёты'},
+  ]
 
-  console.log(eventStore.eventsByDate)
+  const [selectedType, setSelectedType] = useState(typeFilters[0])
+  const [selectedEvent, setSelectedEvent] = useState(eventFilters[0])
 
-  eventStore.eventsByDate.map(event =>{
-    console.log(event)
+  const filteredEvents = eventStore.eventsByDate.filter(event => {
+    if(selectedEvent.value === 'Все') return eventStore.eventsByDate;
+    else{
+      const matchesEvent = selectedEvent ? event.type === selectedEvent.value : true;
+      return matchesEvent;
+    }
   })
 
   return (
     <>
       <div className="horizontal-container">
-        <Calendar />
-        <div className="content-container">
-          {
-            eventStore.eventsByDate.length !== 0 
-            ?
-            (
-            eventStore.eventsByDate.map( event => (
-              <EventTable event={event}/>
-            ))
-          ):(
-            <p style={{textAlign: 'center'}}>В этот день не запланированы события</p>
-          )
+        <div className="filter-container">
+          {user.role.value != 'student' && 
+            <SingleFilterButtons
+              filters={typeFilters}
+              selected={selectedType}
+              setSelected={setSelectedType}
+            />
           }
-          <Button>Добавить событие</Button>
+          <Calendar 
+            events={eventStore.events}
+          />
+        </div>
+        <div className="filter-container">
+          <SingleFilterButtons
+            filters={eventFilters}
+            selected={selectedEvent}
+            setSelected={setSelectedEvent}
+          />
+          <div className="content-container">
+            {
+              filteredEvents.length !== 0 
+              ?
+              (
+              filteredEvents.map( event => (
+                <EventTable event={event}/>
+              ))
+            ):(
+              <p style={{textAlign: 'center'}}>В этот день не запланированы события</p>
+            )
+            }
+            <Button>Добавить событие</Button>
+          </div>
         </div>
       </div>
     </>

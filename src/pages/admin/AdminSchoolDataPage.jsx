@@ -15,6 +15,7 @@ import SelectableInformationTable from '../../components/SelectableInformationTa
 import DeleteButton from '../../components/UI/FunctionButton/DeleteButton'
 import CreateButton from '../../components/UI/FunctionButton/CreateButton'
 import CreateScheduleGroup from '../../components/admin/CreateScheduleGroup'
+import { INSTRUCTOR_ROUTE } from '../../utils/consts'
 
 const AdminSchoolDataPage = observer(() => {
   const [createCategoryModal, setCreateCategoryModal] = useState(false)
@@ -113,55 +114,47 @@ const AdminSchoolDataPage = observer(() => {
   }
 
   const categoryColumns = [
-    { key: "id", label: "ID", isLink: false},
     { key: "value", label: "Название", isLink: false},
     { key: "description", label: "Описание", isLink: false},
   ]
 
   const transportColumns = [
-    { key: "id", label: "ID", isLink: false},
     { key: "name", label: "Название", isLink: false},
     { key: "sign", label: "Номерной знак", isLink: false},
     { key: "color", label: "Цвет", isLink: false},
     { key: "category.value", label: "Категория", isLink: false},
-    { key: "instructor.user.fullName", label: 'Инструктор', isLink: true },
+    { key: "instructor.user.fullName", label: 'Инструктор', isLink: true , navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructorId}`},
     { key: "status", label: 'Статус', isLink: false }
   ]
 
   const drivingPlaceColumns = [
-    { key: "id", label: "ID", isLink: false},
     { key: "value", label: "Название", isLink: false},
     { key: "description", label: "Описание", isLink: false},
   ]
 
   const chapterColumns = [
-    { key: "id", label: "ID", isLink: false},
     { key: "name", label: "Название", isLink: false},
     { key: "topic", label: "Тема", isLink: false},
     { key: "test", label: "Описание", isLink: false},
   ]
 
   const topicColumns = [
-    { key: "id", label: "ID", isLink: false},
     { key: "name", label: "Название", isLink: false},
   ]
 
   const testColumns = [
-    { key: "id", label: "ID", isLink: false},
     { key: "name", label: "Название", isLink: false},
     { key: "description", label: "Описание", isLink: false},
     { key: "category.value", label: "Категория", isLink: false},
   ]
 
   const scheduleGroupColumns = [
-    { key: "id", label: "ID", isLink: false},
     { key: "name", label: "Название", isLink: false},
     { key: "minTime", label: "Самое раннее время", isLink: false},
     { key: "maxTime", label: "Самое позднее время", isLink: false},
   ]
 
   const eventsCountColumns = [
-    { key: "id", label: "ID", isLink: false},
     { key: "description", label: "Событие", isLink: false},
     { key: "count", label: "Количество", isLink: false},
   ]

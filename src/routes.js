@@ -10,9 +10,13 @@ import SchedulePage from "./pages/SchedulePage"
 import StatisticPage from "./pages/StatisticPage"
 import StudentPage from "./pages/StudentPage"
 import TeacherPage from "./pages/TeacherPage"
-import { ADMIN_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, LOGIN_ROUTE, MATERIALS_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, CONTACTS_ROUTE, ADMINAUTH_ROUTE, GROUP_ROUTE } from "./utils/consts"
+import { ADMIN_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, LOGIN_ROUTE, MATERIALS_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, CONTACTS_ROUTE, ADMINAUTH_ROUTE, GROUP_ROUTE, LECTURE_ROUTE, DRIVING_ROUTE, TEST_ROUTE, ADMIN_STUDENTS_ROUTE } from "./utils/consts"
 import ContactsPage from "./pages/ContactsPage"
 import AdminAuthPage from "./pages/admin/AdminAuthPage"
+import LecturePage from "./pages/LecturePage"
+import DrivingPage from "./pages/DrivingPage"
+import TestPage from "./pages/TestPage"
+import AdminStudentsPage from "./pages/admin/AdminStudentsPage"
 
 // Общие маршруты для студентов и преподавателей
 const studentStaffRoutes = [
@@ -64,6 +68,18 @@ const staffAdminRoutes = [
     path: TEACHER_ROUTE + '/:id',
     Component: TeacherPage
   },
+  {
+    path: LECTURE_ROUTE + '/:id',
+    Component: LecturePage
+  },
+  {
+    path: DRIVING_ROUTE + '/:id',
+    Component: DrivingPage
+  },
+  {
+    path: TEST_ROUTE + '/:id',
+    Component: TestPage
+  }
 ];
 
 // Уникальные маршруты для администраторов

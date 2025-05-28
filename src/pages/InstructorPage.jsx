@@ -2,123 +2,149 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Context } from '..';
-import { fetchOneUser } from '../http/adminAPI';
+import { fetchInstructorById, fetchStudents, fetchStudentsByInstructor, fetchUserById } from '../http/adminAPI';
 import Button from '../components/UI/Button/Button';
 import InformationTable from '../components/InformationTable';
 import DescriptionTable from '../components/DescriptionTable';
 import PinList from '../components/UI/PinList/PinList';
+import AssignTransport from '../components/admin/AssignTransport';
+import Modal from '../components/Modal';
+import { GROUP_ROUTE, STUDENT_ROUTE } from '../utils/consts';
+import AssignStudent from '../components/admin/AssignStudent';
 
 const InstructorPage = observer(() => {
-  const { userStore } = useContext(Context);
+
+  const [instructor, setUser] = useState({})
+  const [students, setStudents] = useState([])
 
   const {id} = useParams();
   const [loading, setLoading] = useState(true);
+  const [assignTransportModal, setAssignTransportModal] = useState(false)
+  const [assignStudentModal, setAssignStudentModal ] = useState(false)
+
+  const [selectedRow, setSelectedRow] = useState(null);
 
   useEffect(() => {
-    fetchOneUser(id)
-      .then(data => {
-        userStore.setInstructor(data);
-        setLoading(false);
-      })
-      .catch(error => {
+    const fetchData = async () => {
+      try {
+        const instructor = await fetchInstructorById(id);
+        setUser(instructor);
+        const students = await fetchStudentsByInstructor(instructor.id);
+        setStudents(students);
+      } catch (error) {
         console.error(error);
+      } finally {
         setLoading(false);
-      });
-  }, [id, userStore]);
+      }
+    };
+    fetchData();
+  }, []);
+
   
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  const user = userStore.instructor || {};
+  console.log(instructor)
+  console.log(students)
 
-  // Проверка, если пользователь не найден
-  // if (!user || Object.keys(user).length === 0) {
-  //   return (
-  //     <div className="content-container">
-  //       <p className="heading-text-2">Пользователь не найден</p>
-  //     </div>
-  //   );
-  // }
+  const transportColumns = [
+    { key: "name", label: "Название", isLink: false},
+    { key: "sign", label: "Номерной знак", isLink: false},
+    { key: "color", label: "Цвет", isLink: false},
+    { key: "category.value", label: "Категория", isLink: false},
+  ]
 
-  const [selectedRow, setSelectedRow] = useState(null);
+  const studentColumns = [
+    { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
+    { key: "user.dateOfBirth", label: "Дата рождения", isLink: false },
+    { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.group.id}`},
+    { key: "status", label: "Статус", isLink: false }
+  ]
 
   return (
-    <div className="content-container">
-      <p className="heading-text-2">Персональные данные преподавателя</p>
+    <>
+    <Modal 
+      children={<AssignTransport onClose={() => {
+        setAssignTransportModal(false);
+      }}/>}
+      isOpen={assignTransportModal}
+      onClose={() => setAssignTransportModal(false)}
+    />
+    <Modal 
+      children={<AssignStudent onClose={() => {
+        setAssignStudentModal(false);
+      }}/>}
+      isOpen={assignStudentModal}
+      onClose={() => setAssignStudentModal(false)}
+    />
       <div className="content-container">
-        <div className="horizontal-container">
-          <div className="image-container">
-            <img src={`${process.env.REACT_APP_API_URL}/${user.img}`} alt={user.fullName} />
-          </div>
-          <DescriptionTable
-            value={[
-              { key: 'Идентификационный номер', value: user.idNumber },
-              { key: 'Номер паспорта', value: user.passportNumber },
-              { key: 'ФИО', value: user.fullName },
-              { key: 'Адрес', value: user.adress },
-              { key: 'Дата рождения', value: user.dateOfBirth },
-              { key: 'Номер телефона', value: user.phoneNumber },
-            ]}
-          />
-          <div className="filter-container">
-            <PinList
-              value={[user.teacher.status, user.teacher.quals.map(qual => qual.description), ]}
+        <p className="heading-text-2">Персональные данные инструктора</p>
+        <div className="content-container">
+          <div className="horizontal-container">
+            <div className="image-container">
+              <img src={`${process.env.REACT_APP_API_URL}/${instructor.user.img}`} alt={instructor.user.fullName} />
+            </div>
+            <DescriptionTable
+              value={[
+                { key: 'ФИО', value: instructor.user.fullName },
+                { key: 'Адрес', value: instructor.user.adress },
+                { key: 'Номер телефона', value: instructor.user.phoneNumber },
+                { key: 'Дата рождения', value: instructor.user.dateOfBirth },
+                { key: 'Идентификационный номер', value: instructor.user.idNumber },
+                { key: 'Номер паспорта', value: instructor.user.passportNumber },
+              ]}
             />
-          </div>
-          <div style={{ display: 'flex', flex: 1, justifyContent: 'end' }}>
-            <div className="button-container">
-              <Button className='outline' style={{ width: '100%' }}>Редактировать данные</Button>
-              <Button className='outline' style={{ width: '100%' }}>Добавить группу</Button>
-              <Button className='outline' style={{ width: '100%' }}>Отправить в отпуск</Button>
-              <Button className='outline' style={{ width: '100%' }}>Уволить</Button>
+            <div className="filter-container">
+              <PinList
+                value={[instructor.status, instructor.categories.map(category => category.value), ]}
+              />
+            </div>
+            <div style={{ display: 'flex', flex: 1, justifyContent: 'end' }}>
+              <div className="button-container">
+                <Button className='outline' style={{ width: '100%' }}>Редактировать данные ()</Button>
+                <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignTransportModal(true)}>Назначить автомобиль</Button>
+                <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignStudentModal(true)}>Назначить курсанта ()</Button>
+                <Button className='outline' style={{ width: '100%' }}>Отправить в отпуск ()</Button>
+                <Button className='outline' style={{ width: '100%' }}>Уволить ()</Button>
+              </div>
             </div>
           </div>
+          <p className="heading-text-2">Информация</p>
+          <div style={{ width: '50vw' }}>
+            <DescriptionTable
+              value={[
+                {
+                  key: 'Статус',
+                  // value: user.teacher ? user.teacher.quals.map(qual => qual.description) : [],
+                  value: instructor.status,
+                },
+                {
+                  key: 'Категории',
+                  // value: user.teacher ? user.teacher.quals.map(qual => qual.description) : [],
+                  value: instructor.categories.map(category => category.value),
+                },
+              ]}
+            />
+          </div>
         </div>
-        <p className="heading-text-2">Информация</p>
-        <div style={{ width: '50vw' }}>
-          <DescriptionTable
-            value={[
-              {
-                key: 'Статус',
-                // value: user.teacher ? user.teacher.quals.map(qual => qual.description) : [],
-                value: user.teacher.status,
-              },
-              {
-                key: 'Квалификация',
-                // value: user.teacher ? user.teacher.quals.map(qual => qual.description) : [],
-                value: user.teacher.quals.map(qual => qual.description),
-              },
-            ]}
-          />
-        </div>
+        <p className="heading-text-2">Транспорт</p>
+        <InformationTable
+          columns={transportColumns}
+          data={instructor.transports ? instructor.transports : []}
+          selectable = {true}
+          setSelectedRow={setSelectedRow}
+        />
+        <p className="heading-text-2">Курсанты</p>
+        <InformationTable
+          columns={studentColumns}
+          data={students}
+          selectable = {true}
+          setSelectedRow={setSelectedRow}
+        />
       </div>
-      <p className="heading-text-2">Группы</p>
-      <InformationTable
-        columns={[
-          { label: 'Номер', key: 'name' },
-          { label: 'Тема', key: 'theme', isLink: true },
-          { label: 'Статус', key: 'status' },
-        ]}
-        data={user.teacher ? user.teacher.groups : []}
-        selectable = {true}
-        setSelectedRow={setSelectedRow}
-      />
-      <p className="heading-text-2">Посещаемость</p>
-      <InformationTable
-        columns={[
-          { label: 'Дата', key: 'date' },
-          { label: 'Время', key: 'time' },
-          { label: 'Материалы', key: 'materials', isLink: true },
-          { label: 'Посещаемость', key: 'attendance' },
-        ]}
-        data={[
-          { date: '2025-05-06', time: '16:00', materials: ['Глава 1', 'Глава 2', 'Глава 3'], attendance: 'Присутствовал' }
-        ]}
-        selectable = {true}
-        setSelectedRow={setSelectedRow}
-      />
-    </div>
+    </>
   );
 });
 

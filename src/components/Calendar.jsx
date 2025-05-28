@@ -6,11 +6,9 @@ import { getDateInfo, getMonthName, splitDaysIntoWeeks } from '../utils/calendar
 import { Context } from '..';
 import { observer } from 'mobx-react-lite';
 
-const Calendar = observer(() => {
+const Calendar = observer(({events}) => {
 
   const {eventStore} = useContext(Context);
-  
-  const events = eventStore.events;
 
   const currentDate = new Date();
   const currentDateInfo = getDateInfo(currentDate);
@@ -79,9 +77,7 @@ const Calendar = observer(() => {
     updateCalendar(selectedMonth.id, currentDateInfo.year);
   }, [selectedMonth]);
 
-  useEffect(() => {
-    eventStore.setSelectedDate(currentDateInfo.fullDate)
-  }, [])
+
 
   const handleDateClick = (date) => {
     eventStore.setSelectedDate(date)

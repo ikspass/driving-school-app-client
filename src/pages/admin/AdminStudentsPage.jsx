@@ -11,17 +11,33 @@ import Modal from '../../components/Modal';
 import CreateStudent from '../../components/admin/CreateStudent';
 
 const AdminStudentsPage = observer(() => {
-  const {userStore} = useContext(Context);
-  const {groupStore} = useContext(Context)
-  const {schoolStore} = useContext(Context)
+
+  const [instructors, setInstructors] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [groups, setGroups] = useState([]);
 
   const [createStudentModal, setCreateStudentModal] = useState(false)
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    fetchUsers().then(data => userStore.setUsers(data))
-    fetchGroups().then(data => groupStore.setGroups(data))
-    fetchCategories().then(data => schoolStore.setCategories(data))
-  }, [])
+    const fetchData = async () => {
+      try {
+        const students = await fetchStudents();
+        setStudents(students);
+        const instructors = await fetchInstructors();
+        setInstructors(instructors);
+        const groups = await fetchGroups();
+        setGroups(groups);
+
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const statuses = [
     {id: 1, value: 'Активен'},
@@ -36,26 +52,39 @@ const AdminStudentsPage = observer(() => {
   const [selectedInstructor, setSelectedInstructor] = useState([])
   const [selectedStatus, setSelectedStatus] = useState(statuses[0])
 
-  const filteredStudents = userStore.students.filter(user => {
-    const matchesStatus = selectedStatus ? user.student.status === selectedStatus.value : true;
-    const matchesGroup = selectedGroup ? user.groupId === selectedGroup.id : true;
-    const matchesInstructor = selectedInstructor ? user.instructorId === selectedInstructor.id : true;
+  const filteredStudents = students.filter(student => {
+    const matchesStatus = selectedStatus ? student.status === selectedStatus.value : true;
+    const matchesGroup = selectedGroup.length > 0 ? selectedGroup.some(group => group.id === student.groupId) : true;
+    const matchesInstructor = selectedInstructor.length > 0 ? selectedInstructor.some(instructor => instructor.id === student.instructorId) : true;
     return matchesGroup && matchesInstructor && matchesStatus;
   });
 
-
   const columns = [
-    { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
-    { key: "phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
+    { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
     { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
-    { key: "instructor.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
-    { key: "student.status", label: "Статус", isLink: false },
+    { key: "instructor.user.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
+    { key: "status", label: "Статус", isLink: false },
   ];
 
   const updateStudents = async () => {
-    const data = await fetchUsers();
-    userStore.setUsers(data);
+    const data = await fetchStudents();
+    setStudents(data);
   };
+
+  const groupFilters = [
+    {id: null, value: 'Без группы'},
+    ...groups.map(elem => ({id: elem.id, value: elem.name}))
+  ];
+
+  const instructorFilters =[
+    {id: null, value: 'Без инструктора'},
+    ...instructors.map(elem => ({id: elem.id, value: elem.user.fullName}))
+  ]
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="filter-container">
@@ -84,13 +113,13 @@ const AdminStudentsPage = observer(() => {
           <div className="filter-container">
             <MultipleFilterButtons 
               title='Группа'
-              filters={groupStore.groups.map(elem => ({id: elem.id, value: elem.name}))}
+              filters={groupFilters}
               selected={selectedGroup}
               setSelected={setSelectedGroup}
             />
             <MultipleFilterButtons 
               title='Инструктор'
-              filters={userStore.instructors.map(elem => ({id: elem.id, value: elem.user.fullName}))}
+              filters={instructorFilters}
               selected={selectedInstructor}
               setSelected={setSelectedInstructor}
             />

@@ -17,7 +17,7 @@ export const fetchUsers = async () => {
   const {data} = await $authHost.get('users');
   return data;
 }
-export const fetchOneUser = async (id) => {
+export const fetchUserById = async (id) => {
   const {data} = await $authHost.get(`users/${id}`);
   return data;
 }
@@ -36,9 +36,20 @@ export const fetchStudents = async () => {
   const {data} = await $authHost.get('students');
   return data;
 }
+export const fetchStudentById = async (id) => {
+  const {data} = await $authHost.get(`students/${id}`);
+  return data;
+}
+export const fetchStudentsByInstructor = async (instructorId) => {
+  const {data} = await $authHost.get(`students/instructor/${instructorId}`);
+  return data;
+}
 export const deleteStudent = async (id) => {
   const {data} = await $authHost.delete(`students/${id}`);
   return data;
+}
+export const updateStudentInstructor = async (studentId, instructorId) => {
+  const {data} = await $authHost.patch(`students/${studentId}/instructor/${instructorId}`)
 }
 
 // TEACHER
@@ -49,6 +60,10 @@ export const createTeacher = async (teacher) => {
 }
 export const fetchTeachers = async () => {
   const {data} = await $authHost.get('teachers');
+  return data;
+}
+export const fetchTeacherById = async (id) => {
+  const {data} = await $authHost.get(`teachers/${id}`);
   return data;
 }
 export const deleteTeacher = async (id) => {
@@ -64,6 +79,10 @@ export const createInstructor = async (instructor) => {
 }
 export const fetchInstructors = async () => {
   const {data} = await $authHost.get('instructors');
+  return data;
+}
+export const fetchInstructorById = async (id) => {
+  const {data} = await $authHost.get(`instructors/${id}`);
   return data;
 }
 export const deleteInstructor = async (id) => {
@@ -98,6 +117,10 @@ export const createTransport = async (transport) => {
 }
 export const fetchTransports = async () => {
   const {data} = await $authHost.get('transports');
+  return data;
+}
+export const updateTransportInstructor = async (transportId, instructorId) => {
+  const {data} = await $authHost.patch(`transports/${transportId}/instructor/${instructorId}`)
   return data;
 }
 export const deleteTransport = async (id) => {
@@ -207,51 +230,6 @@ export const fetchTeacherQuals = async () => {
 }
 export const deleteTeacherQual = async (id) => {
   const {data} = await $authHost.delete(`teacher-quals/${id}`);
-  return data;
-}
-
-// LECTURE EVENT
-
-export const createLectureEvent = async (lectureEvent) => {
-  const {data} = await $authHost.post('lecture-events', lectureEvent);
-  return data;
-}
-export const fetchLectureEvents = async () => {
-  const {data} = await $authHost.get('lecture-events');
-  return data;
-}
-export const deleteLectureEvent = async (id) => {
-  const {data} = await $authHost.delete(`lecture-events/${id}`);
-  return data;
-}
-
-// DRIVING EVENT
-
-export const createDrivingEvent = async (drivingEvent) => {
-  const {data} = await $authHost.post('driving-events', drivingEvent);
-  return data;
-}
-export const fetchDrivingEvents = async () => {
-  const {data} = await $authHost.get('driving-events');
-  return data;
-}
-export const deleteDrivingEvent = async (id) => {
-  const {data} = await $authHost.delete(`driving-events/${id}`);
-  return data;
-}
-
-// TEST EVENT
-
-export const createTestEvent = async (testEvent) => {
-  const {data} = await $authHost.post('test-events', testEvent);
-  return data;
-}
-export const fetchTestEvents = async () => {
-  const {data} = await $authHost.get('test-events');
-  return data;
-}
-export const deleteTestEvents = async (id) => {
-  const {data} = await $authHost.delete(`test-events/${id}`);
   return data;
 }
 

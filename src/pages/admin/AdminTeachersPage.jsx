@@ -35,8 +35,6 @@ const AdminTeachersPage = observer(() => {
     fetchData();
   }, []);
 
-
-
   const statuses = [
     {id: 1, value: 'Активен'},
     {id: 2, value: 'Не активен'},
@@ -108,7 +106,11 @@ const AdminTeachersPage = observer(() => {
       <SingleFilterButtons filters={statuses} selected={selectedStatus} setSelected={setSelectedStatus} />
       <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
         <div className="horizontal-container">
-          <SelectableInformationTable columns={columns} data={transformedTeachers} numbered = {true} setSelectedRow={setSelectedTeachers} />
+          <SelectableInformationTable
+            columns={columns}
+            data={transformedTeachers}
+            setSelectedRow={setSelectedTeachers} 
+          />
           <div className="filter-container">
             <SingleFilterButtons
               title='Квалификация'

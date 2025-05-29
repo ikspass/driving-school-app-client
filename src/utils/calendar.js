@@ -13,7 +13,8 @@ export const getDateInfo = date => {
         monthIndex: date.getMonth(),
         year: date.getFullYear(),
         fullDate: `${date.getFullYear()}-${monthesIndex[date.getMonth()]}-${day}`,
-        dayIndex: weekDays[date.getDay()]
+        dayIndex: weekDays[date.getDay()],
+        time: `${date.getHours()}:${date.getMinutes()}`
     }
 } 
 

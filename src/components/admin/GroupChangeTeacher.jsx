@@ -1,0 +1,73 @@
+import { observer } from 'mobx-react-lite';
+import React, { useState, useEffect } from 'react'
+import { fetchStudentsWithoutGroup, fetchTeachers, setStudentGroup, updateGroupTeacher } from '../../http/adminAPI';
+import InformationTable from '../InformationTable';
+import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../../utils/consts';
+import SelectableInformationTable from '../SelectableInformationTable';
+import Button from '../UI/Button/Button';
+import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons';
+import Separator from '../UI/Separator/Separator';
+
+const GroupChangeTeacher = observer(({onClose, group}) => {
+
+  const [teachers, setTeachers] = useState([])
+
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const teachers = await fetchTeachers();
+        setTeachers(teachers);
+      } catch (e) {
+        console.error(e);
+      } finally{
+        setLoading(false)
+      }
+    }
+    fetchData();
+  }, [])
+
+  const confirm = () => {
+    if(selectedTeacher !== null){
+      try {
+        updateGroupTeacher(group.id, selectedTeacher.id);
+      } catch (error) {
+        console.error(error)
+      }
+      onClose();
+    }
+    else{
+      alert('Новый преподаватель не выбран')
+    }
+  }
+
+  const filteredTeachers = teachers.filter(teacher => (
+    teacher.id !== group.teacherId
+  ))
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className='content-container'>
+      <p className="heading-text-2">Изменить преподавателя группы {group.name}</p>
+      <p className="normal-text">Текущий преподаватель: {group.teacher.user.fullName}</p>  
+      <Separator />    
+      <div className="filter-container">
+        <p className="normal-text">Выберите нового преподавателя</p>      
+        <SingleFilterButtons
+          filters={filteredTeachers.map(elem => ({id: elem.id, value: elem.user.fullName}))}
+          selected={selectedTeacher}
+          setSelected={setSelectedTeacher}
+        />
+      </div>
+      <Button onClick={confirm}>Сохранить</Button>
+    </div>
+  )
+})
+
+export default GroupChangeTeacher;

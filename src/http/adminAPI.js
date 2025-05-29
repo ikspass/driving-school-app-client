@@ -40,8 +40,16 @@ export const fetchStudentById = async (id) => {
   const {data} = await $authHost.get(`students/${id}`);
   return data;
 }
+export const fetchStudentsWithoutGroup = async () => {
+  const {data} = await $authHost.get('students/group/not');
+  return data;
+}
 export const fetchStudentsByInstructor = async (instructorId) => {
   const {data} = await $authHost.get(`students/instructor/${instructorId}`);
+  return data;
+}
+export const setStudentGroup = async (studentId, groupId) => {
+  const {data} = await $authHost.patch(`students/${studentId}/group/${groupId}`);
   return data;
 }
 export const deleteStudent = async (id) => {
@@ -100,8 +108,12 @@ export const fetchGroups = async () => {
   const {data} = await $authHost.get('groups');
   return data;
 }
-export const fetchOneGroup = async (id) => {
+export const fetchGroupById = async (id) => {
   const {data} = await $authHost.get('groups/' + id);
+  return data;
+}
+export const updateGroupTeacher = async (groupId, teacherId) => {
+  const {data} = await $authHost.patch(`groups/${groupId}/teacher/${teacherId}`);
   return data;
 }
 export const deleteGroup = async (id) => {
@@ -275,5 +287,20 @@ export const fetchTopics = async () => {
 }
 export const deleteTopic = async (id) => {
   const {data} = await $authHost.delete(`topics/${id}`);
+  return data;
+}
+
+// MESSAGES
+
+export const createMessage = async (message) => {
+  const {data} = await $authHost.post('messages', message);
+  return data;
+}
+export const fetchMessages = async () => {
+  const {data} = await $authHost.get('messages');
+  return data;
+}
+export const deleteMessage = async (id) => {
+  const {data} = await $authHost.delete(`messages/${id}`);
   return data;
 }

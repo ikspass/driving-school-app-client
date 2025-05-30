@@ -23,3 +23,10 @@
   color: var(--black);
   font-weight: 400;
 }
+
+.danger{
+  background-color: var(--white);
+  border: 1px solid var(--red);
+  color: var(--black);
+  font-weight: 400;
+}

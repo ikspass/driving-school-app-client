@@ -126,10 +126,12 @@ function GroupPage() {
                 value={[group.status]}
               />
             </div>
-            <div className='button-container'>
-              <Button className='outline' onClick={() => setChangeTeacherModal(true)}>Изменить преподавателя</Button>
-              <Button className='outline' onClick={() => setAssignStudentsModal(true)}>Добавить курсантов</Button>
-              <Button className='outline' onClick={() => setSendMessageModal(true)}>Оставить сообщение</Button>
+            <div style={{display: 'flex', flex: 1, justifyContent: 'end'}}>
+              <div className='button-container'>
+                <Button className='outline' style={{width: '100%'}} onClick={() => setChangeTeacherModal(true)}>Изменить преподавателя</Button>
+                <Button className='outline' style={{width: '100%'}} onClick={() => setAssignStudentsModal(true)}>Добавить курсантов</Button>
+                <Button className='outline' style={{width: '100%'}} onClick={() => setSendMessageModal(true)}>Оставить сообщение</Button>
+              </div>
             </div>
           </div>
           <p className="heading-text-2">Список курсантов</p>

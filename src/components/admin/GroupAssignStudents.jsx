@@ -53,15 +53,14 @@ const GroupAssignStudents = observer(({onClose, group}) => {
   return (
     <div className='content-container'>
       <p className="heading-text-2">Добавить курсантов</p>
-      <p className="normal-text"></p>
+      <p className="normal-text">Выберите курсантов из списка</p>
       <SelectableInformationTable
         columns={columns}
         data={students}
         setSelectedRow={setSelectedStudents}
       />
       <div className="filter-container">
-        <p className="heading-text-2">Количество выбранных курсантов: {selectedStudents.length}</p>
-        <p className="heading-text-2">Количество курсантов в группе: {group.students.length}</p>
+        <p className="normal-text">Количество выбранных курсантов: {selectedStudents.length}</p>
       </div>
       <Button onClick={confirm}>Сохранить</Button>
     </div>

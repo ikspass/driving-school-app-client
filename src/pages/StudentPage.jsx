@@ -6,9 +6,12 @@ import { observer } from 'mobx-react-lite'
 import { Context } from '..'
 import { useParams } from 'react-router-dom'
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
-import { fetchStudentById, fetchUserById, fetchUsers } from '../http/adminAPI'
+import { fetchStudentById, fetchUserById, fetchUsers, updateStudentStatus } from '../http/adminAPI'
 import Modal from '../components/Modal'
 import AssignInstructor from '../components/admin/AssignInstructor'
+import StudentChangeGroup from '../components/admin/StudentChangeGroup'
+import WarningModal from '../components/WarningModal'
+import SuccessModal from '../components/SuccessModal'
 
 const StudentPage = observer(({}) => {
 
@@ -18,6 +21,10 @@ const StudentPage = observer(({}) => {
   const [loading, setLoading] = useState(true);
   
   const [assignInstructorModal, setAssignInstructorModal] = useState(false)
+  const [changeGroupModal, setChangeGroupModal] = useState(false)
+  const [changeDataModal, setChangeDataModal] = useState(false)
+  const [warningModal, setWarningModal] = useState(false)
+  const [successModal, setSuccessModal] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,27 +40,56 @@ const StudentPage = observer(({}) => {
     };
     fetchData();
   }, []);
-  
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   const updateData = async () => {
     const data = await fetchStudentById(id);
     setStudent(data);
+    console.log('Update data')
+  }
+  console.log(student)
+
+  const expelStudent = async () => {
+    await updateStudentStatus(id, 'Отчислен')
   }
 
-  console.log(student)
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <Modal 
+        children={<AssignInstructor
+          student={student}
+          onClose={() => {
+            setAssignInstructorModal(false);
+            updateData()
+          }}/>}
+        isOpen={assignInstructorModal}
+        onClose={() => setAssignInstructorModal(false)}
+      />
+      <Modal 
+        children={<StudentChangeGroup
+          student={student}
+          onClose={() => {
+            setChangeGroupModal(false);
+            updateData()
+          }}/>}
+        isOpen={changeGroupModal}
+        onClose={() => setChangeGroupModal(false)}
+      />
+
+      {/* <Modal 
         children={<AssignInstructor onClose={() => {
           setAssignInstructorModal(false);
           updateData()
         }}/>}
         isOpen={assignInstructorModal}
         onClose={() => setAssignInstructorModal(false)}
+      /> */}
+      <SuccessModal
+        text='инструктор'
+        
       />
       <div className="content-container">
         <p className="heading-text-2">Персональные данные курсанта</p>
@@ -75,9 +111,18 @@ const StudentPage = observer(({}) => {
             <div style={{display: 'flex', flex: 1, justifyContent: 'end'}}>
               <div className="button-container">
                 <Button className='outline' style={{width: '100%'}} onClick={() => setAssignInstructorModal(true)}>Назначить инструктора</Button>
-                <Button className='outline' style={{width: '100%'}}>Перевести в другую группу</Button>
-                <Button className='outline' style={{width: '100%'}}>Редактировать данные</Button>
-                <Button className='outline' style={{width: '100%'}}>Отчислить курсанта</Button>
+                <Button className='outline' style={{width: '100%'}} onClick={() => setChangeGroupModal(true)}>Изменить группу</Button>
+                <Button className='outline' style={{width: '100%'}}>Редактировать данные()</Button>
+                <Button className='danger' style={{width: '100%'}}>Отчислить курсанта()</Button>
+                <WarningModal 
+                  text='Вы уверены что хотите отчислить курсанта?'
+                  isOpen={warningModal}
+                  onConfirm={() => {
+                    // confirm()
+                    setWarningModal(false)
+                  }}
+                  onCancel={() => setWarningModal(false)}
+                />
               </div>
             </div>
           </div>
@@ -122,7 +167,6 @@ const StudentPage = observer(({}) => {
             {date: '2025-05-06', time: '16:00', materials: ['Глава 1', 'Глава 2', 'Глава 3',], attendance: 'Присутствовал'}
           ]}
         />
-        
       </div>
     </>
   )

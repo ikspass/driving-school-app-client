@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useState, useEffect} from 'react'
 import { ReactComponent as MainIcon } from '../styles/svg/main.svg';
 import { ReactComponent as StatisticsIcon } from '../styles/svg/statistics.svg';
 import { ReactComponent as ScheduleIcon } from '../styles/svg/schedule.svg';
@@ -7,10 +7,13 @@ import { ReactComponent as DataIcon } from '../styles/svg/data.svg';
 import { Link } from 'react-router-dom';
 import { CONTACTS_ROUTE, MATERIALS_ROUTE, SCHEDULE_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE } from '../utils/consts';
 import { Context } from '..';
+import { observer } from 'mobx-react-lite';
 
-export default function StudentNavigation() {
-
-  const {userStore} = useContext(Context);
+const StudentNavigation = () => {
+  const { userStore } = useContext(Context);
+  const user = userStore.user; // Получаем пользователя из userStore
+  
+  console.log(user);
 
   return (
     <>
@@ -30,10 +33,12 @@ export default function StudentNavigation() {
         <MaterialsIcon/>
         <p className="normal-text">Материалы</p>
       </Link>  
-      <Link to={`${STUDENT_ROUTE}/${userStore.user.student.id}`} className="navigation-item">
+      <Link to={`${STUDENT_ROUTE}/${user.student?.id}`} className="navigation-item">
         <DataIcon/>
         <p className="normal-text">Мои данные</p>
       </Link>  
     </>
   )
 }
+
+export default StudentNavigation;

@@ -13,11 +13,15 @@ const ContactsPage = observer(() => {
   console.log(user)
 
   const data = user.student 
-  ? [user.student.instructor, user.student.teacher] 
-  : [
-      { role: { description: 'Инструктор' } },
-      { role: { description: 'Преподаватель' } }
-    ];
+  ? 
+  [user.student.instructor, user.student.group.teacher] 
+  : 
+  [
+    { role: { description: 'Инструктор' } },
+    { role: { description: 'Преподаватель' } }
+  ];
+
+  console.log('data: ', data)
 
   return (
     <div>

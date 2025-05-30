@@ -15,7 +15,7 @@ function AppRouter() {
 
   return (
     <Routes>
-      <Route path="*" element={<Navigate to={initialRoute} />} />
+      <Route path="*" element={<Navigate to={initialRoute} replace/>} />
       {routes.map(({ path, Component }) => (
         <Route key={path} path={path} element={<Component />} />
       ))}

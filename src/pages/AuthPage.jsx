@@ -25,24 +25,21 @@ const AuthPage = observer(() => {
       let data;
       if (isLogin) {
         data = await login(idNumber, password);
-        console.log(data)
-      }
-      else {
+        console.log(data);
+      } else {
         data = await registration(idNumber, password);
-        console.log(data)
+        console.log(data);
       }
-      fetchUserById(data.id)
-      .then(user => {
-        localStorage.setItem('user', JSON.stringify(user));
-      })
-      .catch(err => console.log('ошибка ', err));
-      userStore.setIsAuth(true);
-      navigate(CONTACTS_ROUTE)
+  
+      const user = await fetchUserById(data.id); // Получите пользователя
+      localStorage.setItem('user', JSON.stringify(user));
+      userStore.setUser(user); // Обновите состояние userStore
+      userStore.setIsAuth(true); // Установите аутентификацию в true
+      navigate(CONTACTS_ROUTE); // Перейдите на страницу контактов
     } catch (e) {
-      alert(e.response.data.message)
+      alert(e.response?.data?.message || 'Ошибка');
     }
-    
-  }
+  };
 
   return (
     <div style={{display: 'flex', justifyContent: 'center', marginTop: '200px'}}>

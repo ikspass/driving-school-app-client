@@ -20,6 +20,7 @@ const App = () => {
 function Main() {
   const location = useLocation();
   const noHeaderRoutes = [LOGIN_ROUTE, REGISTRATION_ROUTE, ADMIN_ROUTE, ADMINAUTH_ROUTE];
+  const {userStore} = useContext(Context)
 
   const shouldHideHeader = noHeaderRoutes.includes(location.pathname);
 

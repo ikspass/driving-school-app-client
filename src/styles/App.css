@@ -13,6 +13,7 @@
   --accent: #5EBCFF;
   --red: #E21414;
   --transparent-accent:rgba(94, 188, 255, 0.2);
+  --transparent-gray: #d1d1d148;
 }
 
 a{
@@ -359,6 +360,10 @@ code {
   padding: 5px;
   border-radius: 10px;
   transition: 0.3s;
+}
+
+.calendar-past-event .calendar-table-item{
+  background-color: var(--transparent-gray);
 }
 
 .selected.selected-frame{

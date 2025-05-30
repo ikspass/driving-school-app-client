@@ -308,3 +308,41 @@ export const deleteMessage = async (id) => {
   const {data} = await $authHost.delete(`messages/${id}`);
   return data;
 }
+
+// LECTURE EVENTS
+
+export const createLectureEvent = async (lectureEvent) => {
+  const {data} = await $authHost.post('lecture-events', lectureEvent);
+  return data;
+}
+export const fetchLectureEvents = async () => {
+  const {data} = await $authHost.get('lecture-events');
+  return data;
+}
+export const fetchLectureEventsByGroup = async (groupId) => {
+  const {data} = await $authHost.get(`lecture-events/group/${groupId}`);
+  return data;
+}
+export const deleteLectureEvent = async (id) => {
+  const {data} = await $authHost.delete(`lecture-events/${id}`);
+  return data;
+}
+
+// DRIVING EVENTS
+
+export const createDrivingEvent = async (lectureEvent) => {
+  const {data} = await $authHost.post('driving-events', lectureEvent);
+  return data;
+}
+export const fetchDrivingEvents = async () => {
+  const {data} = await $authHost.get('driving-events');
+  return data;
+}
+export const fetchDrivingEventsByStudent = async (studentId) => {
+  const {data} = await $authHost.get(`driving-events/student/${studentId}`);
+  return data;
+}
+export const deleteDrivingEvent = async (id) => {
+  const {data} = await $authHost.delete(`driving-events/${id}`);
+  return data;
+}

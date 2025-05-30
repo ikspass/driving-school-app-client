@@ -1,43 +1,77 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import Calendar from '../components/Calendar'
 import Button from '../components/UI/Button/Button'
 import EventTable from '../components/EventTable'
 import { Context } from '..'
 import { observer } from 'mobx-react-lite'
 import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons'
+import { fetchDrivingEventsByStudent, fetchLectureEventsByGroup } from '../http/adminAPI'
+import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons'
 
 
 const SchedulePage = observer(() => {
 
   const {eventStore, userStore} = useContext(Context)
   const user = userStore.user;
+  const role = userStore.user.role.value;
+
+  console.log(user)
+
+  const [loading, setLoading] = useState(true);
+  
+  if(role === 'student'){
+    const student = user.student;
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const lectureEvents = await fetchLectureEventsByGroup(student.groupId);
+          console.log(lectureEvents)
+          eventStore.setLectureEvents(lectureEvents);
+  
+          const drivingEvents = await fetchDrivingEventsByStudent(student.id);
+          eventStore.setDrivingEvents(drivingEvents);
+          console.log(drivingEvents)
+
+          
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }, []);
+  }
+
+
   const typeFilters = [
     {id: 1, value: 'Мои'},
     {id: 2, value: 'Все'},
   ]
   const eventFilters = [
-    {id: 1, value: 'Все'},
-    {id: 2, value: 'Лекция'},
-    {id: 3, value: 'Вождение'},
-    {id: 4, value: 'Зачёты'},
+    {id: 1, value: 'Лекция'},
+    {id: 2, value: 'Вождение'},
+    {id: 3, value: 'Зачёты'},
   ]
 
   const [selectedType, setSelectedType] = useState(typeFilters[0])
-  const [selectedEvent, setSelectedEvent] = useState(eventFilters[0])
+  const [selectedEvent, setSelectedEvent] = useState([])
 
   const filteredEvents = eventStore.eventsByDate.filter(event => {
-    if(selectedEvent.value === 'Все') return eventStore.eventsByDate;
-    else{
-      const matchesEvent = selectedEvent ? event.type === selectedEvent.value : true;
-      return matchesEvent;
-    }
+    const matchesEvent = selectedEvent.length > 0 ? selectedEvent.some(selectedEvent => selectedEvent.value === event.type) : true;
+    return matchesEvent;
   })
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <div className="horizontal-container">
         <div className="filter-container">
-          {user.role.value != 'student' && 
+          {role != 'student' && 
             <SingleFilterButtons
               filters={typeFilters}
               selected={selectedType}
@@ -49,7 +83,7 @@ const SchedulePage = observer(() => {
           />
         </div>
         <div className="filter-container">
-          <SingleFilterButtons
+          <MultipleFilterButtons
             filters={eventFilters}
             selected={selectedEvent}
             setSelected={setSelectedEvent}

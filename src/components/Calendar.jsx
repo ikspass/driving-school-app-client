@@ -57,6 +57,11 @@ const Calendar = observer(({events}) => {
     setWeeks(splitDaysIntoWeeks(selectedMonthList));
   };
 
+  useEffect(() => {
+    eventStore.setSelectedDate(currentDateInfo.fullDate)
+  }, [])
+  
+
   const prevMonth = () => {
     setSelectedMonth(prev => {
       const newId = prev.id === 0 ? 11 : prev.id - 1;
@@ -115,14 +120,13 @@ const Calendar = observer(({events}) => {
             {week.map((day, dayIndex) => (
               <td key={dayIndex}>
                 <CalendarDate
-                  props={{
-                    fullDate: day.date,
-                    date: day.date.slice(day.date.length - 2),
-                    isCurrentMonth: day.isCurrentMonth,
-                    eventsCount: day.events.length,
-                    selected: day.date == eventStore.selectedDate,
-                    onClick: () => handleDateClick(day.date) 
-                  }}
+                  fullDate={day.date}
+                  date={day.date.slice(day.date.length - 2)}
+                  isCurrentMonth={day.isCurrentMonth}
+                  eventsCount={day.events.length}
+                  selected={day.date == eventStore.selectedDate}
+                  onClick={() => handleDateClick(day.date) }
+                  isPast={day.events.every(item => item.status === 'Проведено')}
                 />
               </td>
             ))}

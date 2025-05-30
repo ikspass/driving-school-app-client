@@ -28,7 +28,8 @@ const EventTable = ({ event }) => {
     { key: 'date', label: 'Дата', isLink: false },
     { key: 'time', label: 'Время', isLink: false },
     { key: 'student.user.fullName', label: 'Студент', isLink: true },
-    { key: 'instructor.user.fullName', label: 'Преподаватель', isLink: true },
+    { key: 'instructor.user.fullName', label: 'Инструктор', isLink: true },
+    { key: 'transport.name', label: 'Транспорт', isLink: false },
   ];
 
   const getValue = (row, key) => {

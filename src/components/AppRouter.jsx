@@ -10,7 +10,7 @@ function AppRouter() {
   
   // Определяем начальную страницу в зависимости от роли
   const initialRoute = userStore.isAuth 
-    ? initialRoutes[userStore.user.role] 
+    ? initialRoutes[userStore.user.role.value] 
     : initialRoutes.public;
 
   return (

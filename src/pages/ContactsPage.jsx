@@ -10,6 +10,7 @@ const ContactsPage = observer(() => {
   const {userStore} = useContext(Context)
 
   const user = userStore.user
+  console.log(user)
 
   const data = user.student 
   ? [user.student.instructor, user.student.teacher] 

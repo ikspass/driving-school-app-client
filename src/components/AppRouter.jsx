@@ -6,7 +6,7 @@ import { Context } from '..';
 function AppRouter() {
 
   const {userStore} = useContext(Context)
-  const routes = getRoutesByRole(userStore.user.role.value);
+  const routes = userStore.user.role ? getRoutesByRole(userStore.user.role.value) : getRoutesByRole('default');
   
   // Определяем начальную страницу в зависимости от роли
   const initialRoute = userStore.isAuth 

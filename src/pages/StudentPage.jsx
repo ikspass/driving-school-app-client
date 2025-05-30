@@ -4,18 +4,25 @@ import InformationTable from '../components/InformationTable'
 import Button from '../components/UI/Button/Button'
 import { observer } from 'mobx-react-lite'
 import { Context } from '..'
-import { useParams } from 'react-router-dom'
-import { GROUP_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
+import { useNavigate, useParams } from 'react-router-dom'
+import { ERROR_PAGE, GROUP_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
 import { fetchStudentById, fetchUserById, fetchUsers, updateStudentStatus } from '../http/adminAPI'
 import Modal from '../components/Modal'
 import AssignInstructor from '../components/admin/AssignInstructor'
 import StudentChangeGroup from '../components/admin/StudentChangeGroup'
 import WarningModal from '../components/WarningModal'
 import SuccessModal from '../components/SuccessModal'
+import PinList from '../components/UI/PinList/PinList'
 
 const StudentPage = observer(({}) => {
 
+  const {userStore} = useContext(Context)
+
+  const navigate = useNavigate()
   const [student, setStudent] = useState({})
+
+  const role = userStore.user.role.value;
+  console.log(role)
 
   const {id} = useParams();
   const [loading, setLoading] = useState(true);
@@ -24,7 +31,6 @@ const StudentPage = observer(({}) => {
   const [changeGroupModal, setChangeGroupModal] = useState(false)
   const [changeDataModal, setChangeDataModal] = useState(false)
   const [warningModal, setWarningModal] = useState(false)
-  const [successModal, setSuccessModal] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +42,11 @@ const StudentPage = observer(({}) => {
         console.error(error);
       } finally {
         setLoading(false);
+        if(role === 'student'){
+          if(id != userStore.user.student.id){
+            navigate(ERROR_PAGE)
+          }
+        }
       }
     };
     fetchData();
@@ -59,38 +70,44 @@ const StudentPage = observer(({}) => {
   return (
     <>
       <Modal 
-        children={<AssignInstructor
-          student={student}
-          onClose={() => {
-            setAssignInstructorModal(false);
-            updateData()
-          }}/>}
+        children={
+          <AssignInstructor
+            student={student}
+            onClose={() => {
+              setAssignInstructorModal(false);
+              updateData()
+            }}
+          />
+        }
         isOpen={assignInstructorModal}
         onClose={() => setAssignInstructorModal(false)}
       />
       <Modal 
-        children={<StudentChangeGroup
-          student={student}
-          onClose={() => {
-            setChangeGroupModal(false);
-            updateData()
-          }}/>}
+        children={
+          <StudentChangeGroup
+            student={student}
+            onClose={() => {
+              setChangeGroupModal(false);
+              updateData()
+            }}
+          />
+        }
         isOpen={changeGroupModal}
         onClose={() => setChangeGroupModal(false)}
       />
 
       {/* <Modal 
-        children={<AssignInstructor onClose={() => {
-          setAssignInstructorModal(false);
-          updateData()
-        }}/>}
+        children={
+          <AssignInstructor
+            onClose={() => {
+              setAssignInstructorModal(false);
+              updateData()
+            }}
+          />
+        }
         isOpen={assignInstructorModal}
         onClose={() => setAssignInstructorModal(false)}
       /> */}
-      <SuccessModal
-        text='инструктор'
-        
-      />
       <div className="content-container">
         <p className="heading-text-2">Персональные данные курсанта</p>
         <div className="content-container">
@@ -108,23 +125,31 @@ const StudentPage = observer(({}) => {
                 {key:'Номер паспорта', value: student.user.passportNumber},
               ]}
             />
+            <div className="filter-container">
+              <PinList
+                value={[student.status]}
+              />
+            </div>
+            {role !== 'student' &&
             <div style={{display: 'flex', flex: 1, justifyContent: 'end'}}>
               <div className="button-container">
                 <Button className='outline' style={{width: '100%'}} onClick={() => setAssignInstructorModal(true)}>Назначить инструктора</Button>
                 <Button className='outline' style={{width: '100%'}} onClick={() => setChangeGroupModal(true)}>Изменить группу</Button>
                 <Button className='outline' style={{width: '100%'}}>Редактировать данные()</Button>
-                <Button className='danger' style={{width: '100%'}}>Отчислить курсанта()</Button>
+                <Button className='danger' style={{width: '100%'}} onClick={() => setWarningModal(true)}>Отчислить курсанта</Button>
                 <WarningModal 
                   text='Вы уверены что хотите отчислить курсанта?'
                   isOpen={warningModal}
                   onConfirm={() => {
-                    // confirm()
+                    expelStudent()
                     setWarningModal(false)
+                    updateData();
                   }}
                   onCancel={() => setWarningModal(false)}
                 />
               </div>
             </div>
+            }
           </div>
           <p className="heading-text-2">Информация</p>
           <div style={{width: '50vw'}}>

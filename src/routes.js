@@ -106,6 +106,25 @@ export const publicRoutes = [
   }
 ];
 
+export const studentRoutes = [
+  {
+    path: STUDENT_ROUTE + '/:id',
+    Component: StudentPage
+  },
+  {
+    path: INSTRUCTOR_ROUTE + '/:id',
+    Component: InstructorPage
+  },
+  {
+    path: TEACHER_ROUTE + '/:id',
+    Component: TeacherPage
+  },
+  {
+    path: GROUP_ROUTE + '/:id',
+    Component: GroupPage
+  },
+]
+
 export const initialRoutes = {
   admin: ADMIN_ROUTE, // Страница по умолчанию для администратора
   teacher: CONTACTS_ROUTE, // Страница по умолчанию для преподавателя
@@ -123,7 +142,7 @@ export const getRoutesByRole = (role) => {
     case 'instructor':
       return [...staffAdminRoutes, ...studentStaffRoutes];
     case 'student':
-      return [...studentStaffRoutes];
+      return [...studentStaffRoutes, ...studentRoutes];
     default:
       return publicRoutes; // Публичные маршруты
   }

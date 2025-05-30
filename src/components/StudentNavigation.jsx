@@ -30,7 +30,7 @@ export default function StudentNavigation() {
         <MaterialsIcon/>
         <p className="normal-text">Материалы</p>
       </Link>  
-      <Link to={STUDENT_ROUTE + userStore.user.id} className="navigation-item">
+      <Link to={`${STUDENT_ROUTE}/${userStore.user.student.id}`} className="navigation-item">
         <DataIcon/>
         <p className="normal-text">Мои данные</p>
       </Link>  

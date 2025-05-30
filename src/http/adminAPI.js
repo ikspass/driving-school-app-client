@@ -57,7 +57,7 @@ export const deleteStudent = async (id) => {
   return data;
 }
 export const updateStudentStatus = async (studentId, status) => {
-  const {data} = await $authHost.patch(`students/${studentId}/status`, status);
+  const {data} = await $authHost.patch(`students/${studentId}/status`, {status});
   return data;
 }
 export const updateStudentInstructor = async (studentId, instructorId) => {

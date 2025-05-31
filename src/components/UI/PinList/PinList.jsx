@@ -3,15 +3,15 @@ import classes from './PinList.module.css';
 
 const PinList = ({value}) => {
   return (
-    value.map((item) => 
+    value.map((item, index) => 
       Array.isArray(item) ? 
-        item.map(elem => 
-          <div className={`normal-text ${classes.pin}`}>
+        item.map((elem, elemIndex) => 
+          <div key={`${index}-${elemIndex}`} className={`normal-text ${classes.pin}`}>
             {elem}
           </div>
         )
       :
-      <div className={`normal-text ${classes.pin}`}>
+      <div key={index} className={`normal-text ${classes.pin}`}>
         {item}
       </div>
     )

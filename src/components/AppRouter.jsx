@@ -5,7 +5,7 @@ import { Context } from '..';
 
 function AppRouter() {
 
-  const {userStore} = useContext(Context)
+  const {userStore, routeStore} = useContext(Context)
   const routes = userStore.user.role ? getRoutesByRole(userStore.user.role.value) : getRoutesByRole('default');
   
   // Определяем начальную страницу в зависимости от роли
@@ -13,9 +13,11 @@ function AppRouter() {
     ? initialRoutes[userStore.user.role.value] 
     : initialRoutes.public;
 
+  routeStore.setInitialRoute(initialRoute);
+  
   return (
     <Routes>
-      <Route path="*" element={<Navigate to={initialRoute} replace/>} />
+      <Route path="*" element={<Navigate to={routeStore.initialRoute} replace/>} />
       {routes.map(({ path, Component }) => (
         <Route key={path} path={path} element={<Component />} />
       ))}

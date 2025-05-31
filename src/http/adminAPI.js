@@ -259,6 +259,10 @@ export const fetchEventsCount = async () => {
   const {data} = await $authHost.get('events-count');
   return data;
 }
+export const fetchEventsCountByEvent = async (event) => {
+  const {data} = await $authHost.get(`events-count/${event}`);
+  return data;
+}
 export const deleteEventsCount = async (id) => {
   const {data} = await $authHost.delete(`events-count/${id}`);
   return data;

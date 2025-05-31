@@ -19,6 +19,8 @@ const Header = observer(() => {
     navigate(LOGIN_ROUTE);
   }
 
+  const userImage = userStore.user.img;
+
   return (
     <div className="header">
       <div className="main-container">
@@ -26,7 +28,9 @@ const Header = observer(() => {
           <p className="heading-text-2">Driving School App</p>
           <div style={{display: 'flex', gap: '30px', alignItems: 'center'}}>
             <Button onClick={() => logOut()}>Выйти</Button>
-            <div className="user-photo"></div>
+            <div className="user-photo">
+              <img src={`${process.env.REACT_APP_API_URL}/${userStore.user.img}`} alt={userStore.user.fullName}  />
+            </div>
           </div>
         </div>
         <div className="header-navigation">

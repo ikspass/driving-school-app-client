@@ -6,6 +6,7 @@ import StudentStore from './store/StudentStore';
 import GroupStore from './store/GroupStore';
 import SchoolStore from './store/SchoolStore';
 import EventStore from './store/EventStore';
+import RouteStore from './store/RouteStore';
 
 export const Context = createContext(null);
 
@@ -16,7 +17,8 @@ root.render(
     studentStore: new StudentStore(),
     groupStore: new GroupStore(),
     eventStore: new EventStore(),
-    schoolStore: new SchoolStore()
+    schoolStore: new SchoolStore(),
+    routeStore: new RouteStore(),
   }}>
     <App/>
   </Context.Provider>

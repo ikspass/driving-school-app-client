@@ -9,14 +9,11 @@ import { STUDENT_ROUTE } from '../utils/consts';
 import SelectableInformationTable from '../components/SelectableInformationTable';
 
 const LecturePage = () => {
-
-  const {eventStore} = useContext(Context)
-
+  
   const {id} = useParams();
   const [loading, setLoading] = useState(true);
 
   const [event, setEvent] = useState({})
-  event.type = 'Лекция';
 
   const attendanceColumns = [
     { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
@@ -31,17 +28,22 @@ const LecturePage = () => {
 
   const [absentStudents, setAbsentStudents] = useState(localStorage.getItem('absentStudents' || []));
 
+  const fetchData = async () => {
+    try {
+      const data = await fetchLectureEventById(id)
+      setEvent(data)
+    } catch(e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    fetchLectureEventById(id)
-      .then(data => {
-        setEvent(data)
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
-      });
-  }, [id]);
+    fetchData();      
+  }, []);
+
+  console.log(event)
   
   if (loading) {
     return <div>Loading...</div>;
@@ -50,13 +52,12 @@ const LecturePage = () => {
   const saveAbsentStudents = () => {
     localStorage.setItem('absentStudents', absentStudents);
   }
-  console.log(event)
 
   return (
     <div className="content-container">
       <div className="heading-text-2 frame" style={{display: 'flex', justifyContent: 'space-between'}}>
         <p>Лекция</p>
-        <p>2A</p>
+        <p>{event.group.name}</p>
         <p>{event.time}</p>
         <p>{event.date}</p>
       </div>
@@ -80,7 +81,9 @@ const LecturePage = () => {
         <InformationTable 
           columns={chaptersColumns}
         />
-        <Button>Завершить занятие</Button>
+        {event.status === 'Идёт' &&
+          <Button>Завершить занятие</Button>
+        }
     </div>
   )
 }

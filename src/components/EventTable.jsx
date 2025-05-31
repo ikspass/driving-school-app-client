@@ -1,22 +1,20 @@
 import EditButton from "./UI/FunctionButton/EditButton";
 import DeleteButton from "./UI/FunctionButton/DeleteButton";
-import { GROUP_ROUTE, TEACHER_ROUTE } from "../utils/consts";
+import { DRIVING_ROUTE, GROUP_ROUTE, INSTRUCTOR_ROUTE, LECTURE_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, TEST_ROUTE } from "../utils/consts";
 import { useNavigate } from 'react-router-dom';
 
 const EventTable = ({ event }) => {
   const navigate = useNavigate();
 
   const lectureColumns = [
-    { key: 'type', label: 'Событие', isLink: false },
-    { key: 'date', label: 'Дата', isLink: false },
-    { key: 'time', label: 'Время', isLink: false },
+    { key: 'type', label: 'Событие', isLink: true, navigateTo: (row) => `${LECTURE_ROUTE}/${row.id}`},
     { key: 'group.name', label: 'Группа', isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.group.id}` },
     { key: 'teacher.user.fullName', label: 'Преподаватель', isLink: true, navigateTo: (row) => `${TEACHER_ROUTE}/${row.teacher.id}` },
     { key: 'topic.name', label: 'Материалы', isLink: true },
   ];
 
   const testColumns = [
-    { key: 'type', label: 'Событие', isLink: true },
+    { key: 'type', label: 'Событие', isLink: true, navigateTo: (row) => `${TEST_ROUTE}/${row.id}` },
     { key: 'date', label: 'Дата', isLink: false },
     { key: 'time', label: 'Время', isLink: false },
     { key: 'group.name', label: 'Группа', isLink: false },
@@ -24,11 +22,11 @@ const EventTable = ({ event }) => {
   ];
 
   const drivingColumns = [
-    { key: 'type', label: 'Событие', isLink: true },
+    { key: 'type', label: 'Событие', isLink: true, navigateTo: (row) => `${DRIVING_ROUTE}/${row.id}` },
     { key: 'date', label: 'Дата', isLink: false },
     { key: 'time', label: 'Время', isLink: false },
-    { key: 'student.user.fullName', label: 'Студент', isLink: true },
-    { key: 'instructor.user.fullName', label: 'Инструктор', isLink: true },
+    { key: 'student.user.fullName', label: 'Студент', isLink: true, navigateTo: (row) => `${STUDENT_ROUTE}/${row.studentId}`},
+    { key: 'instructor.user.fullName', label: 'Инструктор', isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructorId}`},
     { key: 'transport.name', label: 'Транспорт', isLink: false },
   ];
 

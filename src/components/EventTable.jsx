@@ -8,9 +8,10 @@ const EventTable = ({ event }) => {
 
   const lectureColumns = [
     { key: 'type', label: 'Событие', isLink: true, navigateTo: (row) => `${LECTURE_ROUTE}/${row.id}`},
+    { key: 'date', label: 'Дата', isLink: false },
+    { key: 'time', label: 'Время', isLink: false },
     { key: 'group.name', label: 'Группа', isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.group.id}` },
     { key: 'teacher.user.fullName', label: 'Преподаватель', isLink: true, navigateTo: (row) => `${TEACHER_ROUTE}/${row.teacher.id}` },
-    { key: 'topic.name', label: 'Материалы', isLink: true },
   ];
 
   const testColumns = [

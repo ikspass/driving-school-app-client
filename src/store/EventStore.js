@@ -82,7 +82,11 @@ export default class EventStore{
   }
 
   get events() {
-    return [...this._lectureEvents, ...this._drivingEvents, ...this._testEvents];
+    return [
+      ...this._lectureEvents.map(event => ({ ...event, type: 'Лекция' })),
+      ...this._drivingEvents.map(event => ({ ...event, type: 'Вождение' })),
+      ...this._testEvents.map(event => ({ ...event, type: 'Зачёт' })),
+    ];
   }
 
   get studentEvents() {

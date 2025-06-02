@@ -63,16 +63,33 @@ const SchedulePage = observer(() => {
       fetchData();
     }, []);
 
-  const eventFilters = [
-    {id: 1, value: 'Лекция'},
-    {id: 2, value: 'Вождение'},
-    {id: 3, value: 'Зачёты'},
-  ]
+  let eventFilters;
 
-  const [selectedEvent, setSelectedEvent] = useState([])
+  if(role === 'teacher'){
+    eventFilters = [
+      {id: 1, value: 'Лекция'},
+      {id: 2, value: 'Зачёт'},
+    ]
+  }
+  if(role === 'instructor'){
+    eventFilters = [
+      {id: 1, value: 'Лекция'},
+      {id: 2, value: 'Вождение'},
+      {id: 3, value: 'Зачёт'},
+    ]
+  }
+  if(role === 'student'){
+    eventFilters = [
+      {id: 1, value: 'Лекция'},
+      {id: 2, value: 'Вождение'},
+      {id: 3, value: 'Зачёт'},
+    ]
+  }
+ 
+  const [selectedEvent, setSelectedEvent] = useState(eventFilters.map(filter => filter))
 
-  const filteredEvents = eventStore.eventsByDate.filter(event => {
-    const matchesEvent = selectedEvent.length > 0 ? selectedEvent.some(selectedEvent => selectedEvent.value === event.type) : true;
+  const filteredEvents = eventStore.events.filter(event => {
+    const matchesEvent = selectedEvent.length > 0 ? selectedEvent.some(selectedEvent => selectedEvent.value === event.type) : false;
     return matchesEvent;
   })
 
@@ -82,36 +99,30 @@ const SchedulePage = observer(() => {
 
   return (
     <>
-      <div className="horizontal-container">
-        <div className="filter-container">
-          <Calendar 
-            events={eventStore.events}
-          />
-        </div>
-        <div className="filter-container">
-          <MultipleFilterButtons
-            filters={eventFilters}
-            selected={selectedEvent}
-            setSelected={setSelectedEvent}
-          />
+      <div className="filter-container">
+        <MultipleFilterButtons
+          filters={eventFilters}
+          selected={selectedEvent}
+          setSelected={setSelectedEvent}
+        />
+        <div className="horizontal-container">
+          <Calendar events={filteredEvents} />
           <div className="content-container">
-            {
-              filteredEvents.length !== 0 
-              ?
-              (
-              filteredEvents.map( event => (
-                <EventTable event={event}/>
+            {eventStore.eventsByDate.length !== 0 ? (
+              eventStore.eventsByDate.map((event) => (
+                <EventTable event={event} />
               ))
-            ):(
-              <p style={{textAlign: 'center'}}>В этот день не запланированы события</p>
-            )
-            }
+            ) : (
+              <p style={{ textAlign: "center" }}>
+                В этот день не запланированы события
+              </p>
+            )}
             <Button>Добавить событие</Button>
           </div>
         </div>
       </div>
     </>
-  )
+  );
 })
 
 export default SchedulePage;

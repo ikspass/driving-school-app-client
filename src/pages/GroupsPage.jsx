@@ -20,7 +20,6 @@ const GroupsPage = observer(() => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if(role === 'teacher'){
 
       const fetchData = async () => {
         try {
@@ -38,7 +37,6 @@ const GroupsPage = observer(() => {
         }
       };
       fetchData();
-    }
   }, []);
 
   const statuses = [

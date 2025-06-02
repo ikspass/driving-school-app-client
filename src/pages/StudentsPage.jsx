@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect, useContext } from 'react'
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../utils/consts';
-import { fetchStudents, fetchGroups, fetchInstructors, fetchStudentsByTeacher } from '../http/adminAPI';
+import { fetchStudents, fetchGroups, fetchInstructors, fetchStudentsByTeacher, fetchUserById } from '../http/adminAPI';
 import InformationTable from '../components/InformationTable';
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons';
 import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons';
@@ -13,6 +13,7 @@ const StudentsPage = observer(() => {
 
   const { userStore } = useContext(Context);
   const role = userStore.user.role;
+  const [user, setUser] = useState({})
 
   const [instructors, setInstructors] = useState([]);
   const [students, setStudents] = useState([]);
@@ -26,16 +27,16 @@ const StudentsPage = observer(() => {
     const fetchData = async () => {
       try {
         if(role === 'teacher'){
-          const teacher = userStore.user.teacher;
+          const userData = await fetchUserById(userStore.user.id);
+          const teacher = userData.teacher;
 
           const instructorsData = await fetchInstructors();
           setInstructors(instructorsData);    
 
-          const groupsData = await fetchGroups();
-          setGroups(groupsData);
+          setGroups(teacher.groups)
 
-          const teacherGroups = teacher.groups;
-          console.log(teacherGroups)
+          const students = teacher.groups.flatMap(group => group.students);
+          setStudents(students)
         }
       } catch (error) {
         console.error(error);
@@ -67,20 +68,19 @@ const StudentsPage = observer(() => {
   const columns = [
     { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
     { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
-    { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
+    { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.groupId}`},
     { key: "instructor.user.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
     { key: "status", label: "Статус", isLink: false },
   ];
 
   const updateStudents = async () => {
-    const data = await fetchStudents();
-    setStudents(data);
+    const userData = await fetchUserById(userStore.user.id);
+    const teacher = userData.teacher;
+    const students = teacher.groups.flatMap(group => group.students);
+    setStudents(students)
   };
 
-  const groupFilters = [
-    {id: null, value: 'Без группы'},
-    ...groups.map(elem => ({id: elem.id, value: elem.name}))
-  ];
+  const groupFilters = groups.map(elem => ({id: elem.id, value: elem.name}));
 
   const instructorFilters =[
     {id: null, value: 'Без инструктора'},

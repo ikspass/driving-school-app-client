@@ -257,7 +257,7 @@ code {
   border-bottom: 1px solid var(--gray);
   padding: 10px;
   margin: 0;
-  text-align: left;
+  text-align: center;
   justify-items: center;
   font-weight: 400;
   width: fit-content;
@@ -291,6 +291,7 @@ code {
 
 .calendar-table tbody td{
   cursor: pointer;
+  width: 120px;
 }
 
 .calendar-table tr:first-child,

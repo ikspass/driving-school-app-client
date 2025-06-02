@@ -58,8 +58,8 @@ const Calendar = observer(({events}) => {
   };
 
   useEffect(() => {
-    eventStore.setSelectedDate(currentDateInfo.fullDate)
-  }, [])
+    updateCalendar(selectedMonth.id, currentDateInfo.year);    
+  }, [events, selectedMonth])
   
 
   const prevMonth = () => {
@@ -77,12 +77,13 @@ const Calendar = observer(({events}) => {
       return { id: newId, name: newName };
     });
   };
-
   useEffect(() => {
     updateCalendar(selectedMonth.id, currentDateInfo.year);
   }, [selectedMonth]);
 
-
+  useEffect(() => {
+    eventStore.setSelectedDate(currentDateInfo.fullDate)
+  }, [])
 
   const handleDateClick = (date) => {
     eventStore.setSelectedDate(date)

@@ -1,8 +1,11 @@
 import { makeAutoObservable } from 'mobx';
+import { getDateInfo } from '../utils/calendar';
 
 export default class EventStore{
   constructor(){
-    this._selectedDate = null
+    const currentDate = new Date();
+    const currentDateInfo = getDateInfo(currentDate);
+    this._selectedDate = currentDateInfo.fullDate;
 
     this._lectureEvents = [
       // { id: 1, date: '2025-05-01', status: '', time: '15:00', teacherId: '1', groupId: '1', topicId: ''},

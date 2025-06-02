@@ -9,8 +9,12 @@
   align-self: end;
   background-color: var(--accent);
   color: var(--white);
-  font-weight: 600;
+  font-weight: 400;
   height: fit-content;
+}
+.button.disabled{
+  border: 1px solid var(--gray);
+  color: var(--dark-gray);
 }
 
 .primary:hover{

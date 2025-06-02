@@ -62,7 +62,7 @@ const AdminStudentsPage = observer(() => {
   const columns = [
     { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
     { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
-    { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
+    { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.groupId}`},
     { key: "instructor.user.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
     { key: "status", label: "Статус", isLink: false },
   ];

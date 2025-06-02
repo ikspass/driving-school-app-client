@@ -10,7 +10,7 @@ import InformationTable from '../../components/InformationTable'
 import { Context } from '../..'
 import MultipleFilterButtons from '../../components/UI/MultipleFilterButtons/MultipleFilterButtons'
 import Separator from '../../components/UI/Separator/Separator'
-import { fetchCategories, fetchDrivingPlaces, fetchEventsCount, fetchTests, fetchTransports, deleteCategory, deleteTransport, deleteDrivingPlace, deleteChapter, deleteTopic,deleteTest, deleteEventsCount, fetchScheduleGroups } from '../../http/adminAPI'
+import { fetchCategories, fetchDrivingPlaces, fetchEventsCount, fetchTests, fetchTransports, deleteCategory, deleteTransport, deleteDrivingPlace, deleteTest, fetchScheduleGroups } from '../../http/adminAPI'
 import SelectableInformationTable from '../../components/SelectableInformationTable'
 import DeleteButton from '../../components/UI/FunctionButton/DeleteButton'
 import CreateButton from '../../components/UI/FunctionButton/CreateButton'
@@ -21,8 +21,6 @@ const AdminSchoolDataPage = observer(() => {
   const [createCategoryModal, setCreateCategoryModal] = useState(false)
   const [createTransportModal, setCreateTransportModal] = useState(false)
   const [createPlaceModal, setCreatePlaceModal] = useState(false)
-  const [createChapterModal, setCreateChapterModal] = useState(false)
-  const [createTopicModal, setCreateTopicModal] = useState(false)
   const [createTestModal, setCreateTestModal] = useState(false)
   const [createScheduleGroupModal, setCreateScheduleGroupModal] = useState(false)
 
@@ -31,10 +29,7 @@ const AdminSchoolDataPage = observer(() => {
   const [selectedCategories, setSelectedCategories] = useState([])
   const [selectedTransports, setSelectedTransports] = useState([])
   const [selectedDrivingPlaces, setSelectedDrivingPlaces] = useState([])
-  const [selectedChapters, setSelectedChapters] = useState([])
-  const [selectedTopics, setSelectedTopics] = useState([])
   const [selectedTests, setSelectedTests] = useState([])
-  const [selectedEventsCounts, setSelectedEventsCounts] = useState([])
 
 
   const {schoolStore} = useContext(Context)
@@ -89,16 +84,7 @@ const AdminSchoolDataPage = observer(() => {
         setLoading(false);
       });
 
-    fetchEventsCount()
-      .then(data => {
-        schoolStore.setEventsCount(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
-      });
-    fetchScheduleGroups()
+      fetchScheduleGroups()
       .then(data => {
         schoolStore.setScheduleGroups(data);
         setLoading(false);
@@ -150,13 +136,6 @@ const AdminSchoolDataPage = observer(() => {
 
   const scheduleGroupColumns = [
     { key: "name", label: "Название", isLink: false},
-    { key: "minTime", label: "Самое раннее время", isLink: false},
-    { key: "maxTime", label: "Самое позднее время", isLink: false},
-  ]
-
-  const eventsCountColumns = [
-    { key: "description", label: "Событие", isLink: false},
-    { key: "count", label: "Количество", isLink: false},
   ]
 
   const updateCategories = async () => {
@@ -174,22 +153,7 @@ const AdminSchoolDataPage = observer(() => {
     schoolStore.setDrivingPlaces(data);
   };
 
-  const updateChapters = async () => {
-    // const data = await fetchDrivingPlaces();
-    // schoolStore.setDrivingPlaces(data);
-  };
-
-  const updateTopics = async () => {
-    // const data = await fetchDrivingPlaces();
-    // schoolStore.setDrivingPlaces(data);
-  };
-
   const updateTests = async () => {
-    // const data = await fetchDrivingPlaces();
-    // schoolStore.setDrivingPlaces(data);
-  };
-
-  const updateEventsCount = async () => {
     // const data = await fetchDrivingPlaces();
     // schoolStore.setDrivingPlaces(data);
   };
@@ -221,24 +185,6 @@ const AdminSchoolDataPage = observer(() => {
     else alert('Локация не выбрана')
   }
 
-  const handleDeleteChapter = async () => {
-    if (selectedChapters.length !== 0){
-      selectedChapters.map(id => {
-        deleteChapter(id);
-      })
-    }
-    else alert('Глава не выбрана')
-  }
-
-  const handleDeleteTopic = async () => {
-    if (selectedTopics.length !== 0){
-      selectedTopics.map(id => {
-        deleteTopic(id);
-      })
-    }
-    else alert('Тема не выбрана')
-  }
-
   const handleDeleteTest = async () => {
     if (selectedTests.length !== 0){
       selectedTests.map(id => {
@@ -246,15 +192,6 @@ const AdminSchoolDataPage = observer(() => {
       })
     }
     else alert('Зачёт/экзамен не выбран')
-  }
-
-  const handleDeleteEventCount = async () => {
-    if (selectedEventsCounts.length !== 0){
-      selectedEventsCounts.map(id => {
-        deleteEventsCount(id);
-      })
-    }
-    else alert('Категория не выбрана')
   }
 
   return (
@@ -336,34 +273,6 @@ const AdminSchoolDataPage = observer(() => {
           </div>
         </div>
         <Separator />
-
-        <p className="heading-text-2">Материалы</p>
-        <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
-          <SelectableInformationTable 
-            columns={chapterColumns}
-            data={schoolStore.chapters}
-            setSelectedRow={setSelectedChapters}
-          />
-          <div className="button-container">
-            <CreateButton onClick={() => setCreateTestModal(true)}/>
-            <DeleteButton onClick={handleDeleteEventCount}/>
-          </div>
-        </div>
-        <Separator />
-
-        <p className="heading-text-2">Темы</p>
-        <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
-          <SelectableInformationTable 
-            columns={topicColumns}
-            data={schoolStore.topics}
-            setSelectedRow={setSelectedTopics}
-          />
-          <div className="button-container">
-            <CreateButton onClick={() => setCreateTestModal(true)}/>
-            <DeleteButton onClick={''}/>
-          </div>
-        </div>
-        <Separator/>
         
         <p className="heading-text-2">Тесты</p>
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
@@ -392,28 +301,13 @@ const AdminSchoolDataPage = observer(() => {
           <SelectableInformationTable 
             columns={scheduleGroupColumns}
             data={schoolStore.scheduleGroups}
-            setSelectedRow={setSelectedEventsCounts}
+            // setSelectedRow={}
           />
           <div className="button-container">
             <CreateButton onClick={() => setCreateScheduleGroupModal(true)}/>
             <DeleteButton onClick={'handleDeleteSchedu'}/>
           </div>
         </div>
-        <Separator/>
-
-        <p className="heading-text-2">Количество занятий</p>
-        <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
-          <SelectableInformationTable 
-            columns={eventsCountColumns}
-            data={schoolStore.eventsCount}
-            setSelectedRow={setSelectedEventsCounts}
-          />
-          <div className="button-container">
-            <CreateButton onClick={() => setCreateTestModal(true)}/>
-            <DeleteButton onClick={handleDeleteEventCount}/>
-          </div>
-        </div>
-
       </div>
     )
 })

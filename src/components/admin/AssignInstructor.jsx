@@ -61,8 +61,6 @@ const AssignInstructor = observer(({onClose, setSuccessModal, successText, stude
   console.log(student)
   const filteredInstructors = studentInstructor ? instructors.filter(instructor => (instructor.id !== student.instructorId)) : instructors
 
-
-
   return (
     <>
       <div className="content-container">

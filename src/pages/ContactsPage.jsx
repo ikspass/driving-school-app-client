@@ -11,6 +11,8 @@ const ContactsPage = observer(() => {
 
   const user = userStore.user
   console.log(user)
+  const role = user.role.value
+  
   const instructor = user.student.instructor;
   const teacher = user.student.group.teacher;
 

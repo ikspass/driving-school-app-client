@@ -14,6 +14,14 @@ export const fetchLectureEventById = async (id) => {
   const {data} = await $authHost.get(`lecture-events/${id}`);
   return data;
 }
+export const fetchLectureEventsByGroup = async (id) => {
+  const {data} = await $authHost.get(`lecture-events/group/${id}`);
+  return data;
+}
+export const fetchLectureEventsByTeacher = async (id) => {
+  const {data} = await $authHost.get(`lecture-events/teacher/${id}`);
+  return data;
+}
 export const deleteLectureEvent = async (id) => {
   const {data} = await $authHost.delete(`lecture-events/${id}`);
   return data;
@@ -33,6 +41,14 @@ export const fetchDrivingEventById = async (id) => {
   const {data} = await $authHost.get(`driving-events/${id}`);
   return data;
 }
+export const fetchDrivingEventsByStudent = async (id) => {
+  const {data} = await $authHost.get(`driving-events/student/${id}`);
+  return data;
+}
+export const fetchDrivingEventsByInstructor = async (id) => {
+  const {data} = await $authHost.get(`driving-events/instructor/${id}`);
+  return data;
+}
 export const deleteDrivingEvent = async (id) => {
   const {data} = await $authHost.delete(`driving-events/${id}`);
   return data;
@@ -50,6 +66,14 @@ export const fetchTestEvents = async () => {
 }
 export const fetchTestEventById = async (id) => {
   const {data} = await $authHost.get(`test-events/${id}`);
+  return data;
+}
+export const fetchTestEventsByStudent = async (id) => {
+  const {data} = await $authHost.get(`test-events/student/${id}`);
+  return data;
+}
+export const fetchTestEventsByTeacher = async (id) => {
+  const {data} = await $authHost.get(`test-events/teacher/${id}`);
   return data;
 }
 export const deleteTestEvents = async (id) => {

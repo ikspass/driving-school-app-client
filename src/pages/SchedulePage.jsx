@@ -5,17 +5,21 @@ import EventTable from '../components/EventTable'
 import { Context } from '..'
 import { observer } from 'mobx-react-lite'
 import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons'
-import { fetchDrivingEventsByStudent, fetchLectureEventsByGroup } from '../http/adminAPI'
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons'
+import { fetchDrivingEventsByInstructor, fetchDrivingEventsByStudent, fetchLectureEventsByGroup, fetchLectureEventsByTeacher, fetchTestEventsByStudent, fetchTestEventsByTeacher } from '../http/eventAPI'
 
 
 const SchedulePage = observer(() => {
 
   const {eventStore, userStore} = useContext(Context)
   const user = userStore.user;
-  const role = userStore.user.role.value;
+  const [events, setEvents] = useState([])
 
-  console.log(user)
+  let role;
+
+  if(user){
+    role = userStore.user.role.value;
+  }
 
   const [loading, setLoading] = useState(true);
   
@@ -26,14 +30,55 @@ const SchedulePage = observer(() => {
       const fetchData = async () => {
         try {
           const lectureEvents = await fetchLectureEventsByGroup(student.groupId);
-          console.log(lectureEvents)
           eventStore.setLectureEvents(lectureEvents);
   
           const drivingEvents = await fetchDrivingEventsByStudent(student.id);
           eventStore.setDrivingEvents(drivingEvents);
-          console.log(drivingEvents)
+  
+          const testEvents = await fetchTestEventsByStudent(student.id);
+          eventStore.setTestEvents(testEvents);
 
-          
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }, []);
+  }
+
+  if(role === 'teacher'){
+    const teacher = user.teacher;
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const lectureEvents = await fetchLectureEventsByTeacher(teacher.id);
+          eventStore.setLectureEvents(lectureEvents);
+  
+          const testEvents = await fetchTestEventsByTeacher(teacher.id);
+          eventStore.setTestEvents(testEvents);
+
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }, []);
+  }
+
+  if(role === 'instructor'){
+    const instructor = user.instructor;
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const drivingEvents = await fetchDrivingEventsByInstructor(instructor.id);
+          eventStore.setDrivingEvents(drivingEvents);
+
         } catch (error) {
           console.error(error);
         } finally {
@@ -71,13 +116,6 @@ const SchedulePage = observer(() => {
     <>
       <div className="horizontal-container">
         <div className="filter-container">
-          {role != 'student' && 
-            <SingleFilterButtons
-              filters={typeFilters}
-              selected={selectedType}
-              setSelected={setSelectedType}
-            />
-          }
           <Calendar 
             events={eventStore.events}
           />

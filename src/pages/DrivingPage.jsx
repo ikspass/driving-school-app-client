@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { fetchDrivingEventById } from '../http/eventAPI';
 import DescriptionTable from '../components/DescriptionTable';
 import { ERROR_PAGE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../utils/consts';
-import { fetchEventsCountByEvent } from '../http/adminAPI';
 import Button from '../components/UI/Button/Button';
 import { Context } from '..';
 
@@ -28,8 +27,6 @@ const DrivingPage = () => {
         const eventData = await fetchDrivingEventById(id);
         setEvent(eventData);
 
-        const eventCountData = await fetchEventsCountByEvent('driving_event');
-
         const studentDrivings = eventData.student.drivings;
         const driving = studentDrivings.find(driving => driving.id === eventData.id);
     
@@ -38,7 +35,6 @@ const DrivingPage = () => {
           { key: 'Инструктор', value: eventData.instructor.user.fullName, link: `${INSTRUCTOR_ROUTE}/${eventData.instructorId}` },
           { key: 'Локация', value: eventData.place.value },
           { key: 'Номер занятия', value: driving.id + 1 },
-          { key: 'Осталось занятий', value: eventCountData.count - (driving.id + 1)},
         ]);
 
         const transport = eventData.transport;

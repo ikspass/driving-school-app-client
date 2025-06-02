@@ -249,55 +249,6 @@ export const deleteTeacherQual = async (id) => {
   return data;
 }
 
-// EVENTS COUNT
-
-export const createEventCount = async (testEvent) => {
-  const {data} = await $authHost.post('events-count', testEvent);
-  return data;
-}
-export const fetchEventsCount = async () => {
-  const {data} = await $authHost.get('events-count');
-  return data;
-}
-export const fetchEventsCountByEvent = async (event) => {
-  const {data} = await $authHost.get(`events-count/${event}`);
-  return data;
-}
-export const deleteEventsCount = async (id) => {
-  const {data} = await $authHost.delete(`events-count/${id}`);
-  return data;
-}
-
-// CHAPTERS
-
-export const createChapter = async (chapter) => {
-  const {data} = await $authHost.post('chapters', chapter);
-  return data;
-}
-export const fetchChapters = async () => {
-  const {data} = await $authHost.get('chapters');
-  return data;
-}
-export const deleteChapter = async (id) => {
-  const {data} = await $authHost.delete(`chapters/${id}`);
-  return data;
-}
-
-// TOPICS
-
-export const createTopic = async (topic) => {
-  const {data} = await $authHost.post('topics', topic);
-  return data;
-}
-export const fetchTopics = async () => {
-  const {data} = await $authHost.get('topics');
-  return data;
-}
-export const deleteTopic = async (id) => {
-  const {data} = await $authHost.delete(`topics/${id}`);
-  return data;
-}
-
 // MESSAGES
 
 export const createMessage = async (message) => {
@@ -313,40 +264,3 @@ export const deleteMessage = async (id) => {
   return data;
 }
 
-// LECTURE EVENTS
-
-export const createLectureEvent = async (lectureEvent) => {
-  const {data} = await $authHost.post('lecture-events', lectureEvent);
-  return data;
-}
-export const fetchLectureEvents = async () => {
-  const {data} = await $authHost.get('lecture-events');
-  return data;
-}
-export const fetchLectureEventsByGroup = async (groupId) => {
-  const {data} = await $authHost.get(`lecture-events/group/${groupId}`);
-  return data;
-}
-export const deleteLectureEvent = async (id) => {
-  const {data} = await $authHost.delete(`lecture-events/${id}`);
-  return data;
-}
-
-// DRIVING EVENTS
-
-export const createDrivingEvent = async (lectureEvent) => {
-  const {data} = await $authHost.post('driving-events', lectureEvent);
-  return data;
-}
-export const fetchDrivingEvents = async () => {
-  const {data} = await $authHost.get('driving-events');
-  return data;
-}
-export const fetchDrivingEventsByStudent = async (studentId) => {
-  const {data} = await $authHost.get(`driving-events/student/${studentId}`);
-  return data;
-}
-export const deleteDrivingEvent = async (id) => {
-  const {data} = await $authHost.delete(`driving-events/${id}`);
-  return data;
-}

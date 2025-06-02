@@ -86,11 +86,7 @@ const Calendar = observer(({events}) => {
 
   const handleDateClick = (date) => {
     eventStore.setSelectedDate(date)
-    console.log(date)
-    console.log('eventStore.selectedDate: ', eventStore.selectedDate)
   };
-
-  console.log(calendarWeeks)
 
   return (
     <table className="normal-text calendar-table">

@@ -26,18 +26,19 @@ const AuthPage = observer(() => {
       if (isLogin) {
         data = await login(idNumber, password);
         console.log(data);
+        
       } else {
         data = await registration(idNumber, password);
         console.log(data);
       }
   
-      const user = await fetchUserById(data.id); // Получите пользователя
+      const user = await fetchUserById(data.id);
       localStorage.setItem('user', JSON.stringify(user));
-      userStore.setUser(user); // Обновите состояние userStore
-      userStore.setIsAuth(true); // Установите аутентификацию в true
-      navigate(CONTACTS_ROUTE); // Перейдите на страницу контактов
+      userStore.setUser(user);
+      userStore.setIsAuth(true);
+      navigate(CONTACTS_ROUTE);
     } catch (e) {
-      alert(e.response?.data?.message || 'Ошибка');
+      console.log(e)
     }
   };
 

@@ -252,14 +252,24 @@ code {
   border: 1px solid var(--gray);
 }
 
-.information-table td, .information-table th {
+.information-table td {
+  border-right: 1px solid var(--gray);
+  border-bottom: 1px solid var(--gray);
+  padding: 10px;
+  margin: 0;
+  text-align: left;
+  justify-items: center;
+  font-weight: 400;
+  width: fit-content;
+}
+.information-table th {
   border-right: 1px solid var(--gray);
   border-bottom: 1px solid var(--gray);
   padding: 10px;
   margin: 0;
   text-align: center;
   justify-items: center;
-  font-weight: 400;
+  font-weight: 600;
   width: fit-content;
 }
 
@@ -543,7 +553,7 @@ form{
   position: relative;
   width: 100%;
   border: 1px solid var(--red);
-  min-width: 500px;
+  min-width: 300px;
   max-width: 700px;
   top: 0;
 }

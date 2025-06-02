@@ -34,10 +34,6 @@ const studentStaffRoutes = [
     Component: StatisticPage
   },
   {
-    path: CONTACTS_ROUTE,
-    Component: ContactsPage
-  },
-  {
     path: ERROR_PAGE,
     Component: ErrorPage
   }
@@ -117,6 +113,10 @@ export const publicRoutes = [
 
 export const studentRoutes = [
   {
+    path: CONTACTS_ROUTE,
+    Component: ContactsPage
+  },
+  {
     path: STUDENT_ROUTE + '/:id',
     Component: StudentPage
   },
@@ -148,8 +148,8 @@ export const studentRoutes = [
 
 export const initialRoutes = {
   admin: ADMIN_ROUTE, // Страница по умолчанию для администратора
-  teacher: CONTACTS_ROUTE, // Страница по умолчанию для преподавателя
-  student: CONTACTS_ROUTE, // Страница по умолчанию для студента
+  teacher: SCHEDULE_ROUTE, // Страница по умолчанию для преподавателя
+  student: SCHEDULE_ROUTE, // Страница по умолчанию для студента
   public: LOGIN_ROUTE, // Страница по умолчанию для неавторизованных пользователей
 };
 

@@ -5,17 +5,42 @@ import { observer } from 'mobx-react-lite'
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons';
 import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons';
 import { GROUP_ROUTE, STUDENT_ROUTE, INSTRUCTOR_ROUTE, TEACHER_ROUTE } from '../utils/consts';
-import { fetchCategories, fetchGroups, fetchInstructors, fetchQuals, fetchStudents, fetchUsers } from '../http/adminAPI';
+import { fetchCategories, fetchGroups, fetchInstructors, fetchQuals, fetchStudents, fetchTeachers, fetchUsers } from '../http/adminAPI';
 
 const StaffPage = observer(() => {
 
   const {userStore} = useContext(Context);
   const {schoolStore} = useContext(Context)
 
+  const [loading, setLoading] = useState(true);
+  
+  const [instructors, setInstructors] = useState([])
+  const [teachers, setTeachers] = useState([])
+  const [categories, setCategories] = useState([])
+  const [quals, setQuals] = useState([])
+
   useEffect(() => {
-    fetchUsers().then(data => userStore.setUsers(data))
-    fetchCategories().then(data => schoolStore.setCategories(data))
-    fetchQuals().then(data => schoolStore.setQuals(data))
+    const fetchData = async () => {
+      try {
+        const instructorsData = await fetchInstructors();
+        setInstructors(instructorsData);
+
+        const teachersData = await fetchTeachers();
+        setTeachers(teachersData);
+
+        const categories = await fetchCategories();
+        setCategories(categories);
+
+        const quals = await fetchQuals();
+        setQuals(quals);
+
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false);
+      }
+    } 
+    fetchData();
   }, [])
 
   const statuses = [
@@ -30,48 +55,51 @@ const StaffPage = observer(() => {
   const [selectedCategory, setSelectedCategory] = useState([])
   const [selectedInstructorStatus, setSelectedInstructorStatus] = useState(statuses[0])
   
-  const filteredTeachers = userStore.teachers.filter(user => {
-    const matchesStatus = selectedTeacherStatus ? user.teacher.status === selectedTeacherStatus.value : true;
-    const matchesQual = selectedQual ? user.teacher.quals.some(qual => qual.description === selectedQual.value) : true;    
+  const filteredTeachers = teachers.filter(teacher => {
+    const matchesStatus = selectedTeacherStatus ? teacher.status === selectedTeacherStatus.value : true;
+    const matchesQual = selectedQual ? teacher.quals.some(qual => qual.description === selectedQual.value) : true;    
     return matchesStatus && matchesQual;
   });
   
-  const filteredInstructors = userStore.instructors.filter(user => {
-    const matchesStatus = selectedInstructorStatus ? user.instructor.status === selectedInstructorStatus.value : true;
-    const matchesCategory = selectedCategory ? user.instructor.categories.some(category => category.value === selectedCategory.value) : true;    
+  const filteredInstructors = instructors.filter(instructor => {
+    const matchesStatus = selectedInstructorStatus ? instructor.status === selectedInstructorStatus.value : true;
+    const matchesCategory = selectedCategory.length > 0 
+    ? selectedCategory.some(selected => 
+        instructor.categories.some(category => category.value === selected.value)
+      ) 
+    : true;
     return matchesStatus && matchesCategory;
   });
 
   const transformedTeachers = filteredTeachers.map(teacher => ({
     ...teacher,
-    // Преобразуем массив квалификаций в строку с описаниями
-    teacher: {
-      ...teacher.teacher,
-      quals: teacher.teacher.quals.map(qual => qual.description) // Объединяем описания в строку
-    },
+    quals: teacher.quals.map(qual => qual.description)
   }));
 
   const transformedInstructors = filteredInstructors.map(instructor => ({
     ...instructor,
-    // Преобразуем массив квалификаций в строку с описаниями
-    instructor: {
-      ...instructor.instructor,
-      categories: instructor.instructor.categories.map(category => category.value) // Объединяем описания в строку
-    },
+    categories: instructor.categories.map(category => category.value)
   }));
 
-
-
-  const columns = [
-    { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${TEACHER_ROUTE}/${row.id}`},
-    { key: "phoneNumber", label: "Номер телефона", isLink: false },
-    { key: "teacher.quals", label: "Квалификация", isLink: false},
-    { key: "teacher.dateOfEmployment", label: "Дата приёма на работу", isLink: false},
-    { key: "teacher.status", label: "Статус", isLink: false },
+  const teacherColumns = [
+    { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${TEACHER_ROUTE}/${row.id}`},
+    { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "quals", label: "Квалификация", isLink: false},
+    { key: "dateOfEmployment", label: "Дата приёма на работу", isLink: false},
+    { key: "status", label: "Статус", isLink: false },
   ];
 
-  const [selectedRow, setSelectedRow] = useState(null);
+  const instructorColumns = [
+    { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.id}`},
+    { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "categories", label: "Категория", isLink: false},
+    { key: "dateOfEmployment", label: "Дата приёма на работу", isLink: false},
+    { key: "status", label: "Статус", isLink: false },
+  ];
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="content-container">
@@ -85,7 +113,7 @@ const StaffPage = observer(() => {
                setSelected={setSelectedTeacherStatus}
             />
             <InformationTable 
-              columns={columns}
+              columns={teacherColumns}
               data={transformedTeachers}
               numbered = {true}
             />
@@ -93,7 +121,7 @@ const StaffPage = observer(() => {
           <div className="filter-container">
             <SingleFilterButtons 
               title='Квалификация'
-              filters={schoolStore.quals.map(elem => ({id: elem.id, value: elem.description}))}
+              filters={quals.map(elem => ({id: elem.id, value: elem.description}))}
               selected={selectedQual}
               setSelected={setSelectedQual}
             />
@@ -101,7 +129,7 @@ const StaffPage = observer(() => {
         </div>
       </div>
       <div className="filter-container">
-        <p className="heading-text-2">Инстркуторы</p>
+        <p className="heading-text-2">Инструкторы</p>
         <div className='horizontal-container'>
           <div className="filter-container">
             <SingleFilterButtons 
@@ -110,7 +138,7 @@ const StaffPage = observer(() => {
                setSelected={setSelectedInstructorStatus}
             />
             <InformationTable 
-              columns={columns}
+              columns={instructorColumns}
               data={transformedInstructors}
               numbered = {true}
             />
@@ -118,7 +146,7 @@ const StaffPage = observer(() => {
           <div className="filter-container">
             <MultipleFilterButtons 
               title='Категория'
-              filters={schoolStore.categories.map(elem => ({id: elem.id, value: elem.value}))}
+              filters={categories.map(elem => ({id: elem.id, value: elem.value}))}
               selected={selectedCategory}
               setSelected={setSelectedCategory}
             />

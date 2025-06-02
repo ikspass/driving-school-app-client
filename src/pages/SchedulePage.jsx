@@ -17,7 +17,6 @@ const SchedulePage = observer(() => {
   const role = userStore.user.role;
 
   const [loading, setLoading] = useState(true);
-  
     
     useEffect(() => {
       const fetchData = async () => {

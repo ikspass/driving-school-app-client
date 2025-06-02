@@ -21,8 +21,7 @@ const StudentPage = observer(({}) => {
   const navigate = useNavigate()
   const [student, setStudent] = useState({})
 
-  const role = userStore.user.role.value;
-  console.log(role)
+  const role = userStore.user.role;
 
   const {id} = useParams();
   const [loading, setLoading] = useState(true);

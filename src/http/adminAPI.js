@@ -21,6 +21,10 @@ export const fetchUserById = async (id) => {
   const {data} = await $authHost.get(`users/${id}`);
   return data;
 }
+export const fetchUserByIdNumber = async (idNumber) => {
+  const {data} = await $authHost.get(`users/${idNumber}`);
+  return data;
+}
 export const deleteUser = async (id) => {
   const {data} = await $authHost.delete(`users/${id}`);
   return data;
@@ -46,6 +50,10 @@ export const fetchStudentsWithoutGroup = async () => {
 }
 export const fetchStudentsByInstructor = async (instructorId) => {
   const {data} = await $authHost.get(`students/instructor/${instructorId}`);
+  return data;
+}
+export const fetchStudentsByTeacher = async (teacherId) => {
+  const {data} = await $authHost.get(`students/teacher/${teacherId}`);
   return data;
 }
 export const setStudentGroup = async (studentId, groupId) => {
@@ -114,6 +122,10 @@ export const fetchGroups = async () => {
 }
 export const fetchGroupById = async (id) => {
   const {data} = await $authHost.get('groups/' + id);
+  return data;
+}
+export const fetchGroupsByTeacher = async (id) => {
+  const {data} = await $authHost.get('groups/teacher/' + id);
   return data;
 }
 export const updateGroupTeacher = async (groupId, teacherId) => {

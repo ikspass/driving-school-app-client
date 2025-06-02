@@ -8,7 +8,7 @@ const ErrorPage = () => {
   const { routeStore } = useContext(Context);
 
   return (
-    <div>
+    <div className="content-container">
       <p className="heading-text-2">ERROR</p>
       <Button onClick={() => {navigate(routeStore.initialRoute)}}>Вернуться в приложение</Button>
     </div>

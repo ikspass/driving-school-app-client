@@ -8,26 +8,27 @@ import { Link } from 'react-router-dom';
 import { CONTACTS_ROUTE, MATERIALS_ROUTE, SCHEDULE_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE } from '../utils/consts';
 import { Context } from '..';
 import { observer } from 'mobx-react-lite';
+import { fetchUserById } from '../http/adminAPI';
 
-const StudentNavigation = () => {
+const StudentNavigation = observer(() => {
   const { userStore } = useContext(Context);
-  const user = userStore.user; // Получаем пользователя из userStore
+  const [user, setUser] = useState({})
   
   console.log(user);
+  useEffect(() => {
+    const userData = fetchUserById(userStore.user.id);
+    setUser(userData);
+  }, [])
 
   return (
     <>
-      <Link to={CONTACTS_ROUTE} className="navigation-item">
-        <MainIcon/>
-        <p className="normal-text">Контакты</p>
+      <Link to={SCHEDULE_ROUTE} className="navigation-item">
+        <ScheduleIcon/>
+        <p className="normal-text">Расписание</p>
       </Link>
       <Link to={STATISTIC_ROUTE} className="navigation-item">
         <StatisticsIcon/>
         <p className="normal-text">Статистика</p>
-      </Link>
-      <Link to={SCHEDULE_ROUTE} className="navigation-item">
-        <ScheduleIcon/>
-        <p className="normal-text">Расписание</p>
       </Link>
       <Link to={MATERIALS_ROUTE} className="navigation-item">
         <MaterialsIcon/>
@@ -39,6 +40,6 @@ const StudentNavigation = () => {
       </Link>  
     </>
   )
-}
+})
 
 export default StudentNavigation;

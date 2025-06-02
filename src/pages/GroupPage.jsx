@@ -6,7 +6,7 @@ import Separator from '../components/UI/Separator/Separator';
 import PinList from '../components/UI/PinList/PinList';
 import Calendar from '../components/Calendar';
 import {useNavigate, useParams} from 'react-router-dom'
-import { fetchGroupById } from '../http/adminAPI';
+import { fetchGroupById, fetchUserById } from '../http/adminAPI';
 import { Context } from '..';
 import { ERROR_PAGE, GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE, TEACHER_ROUTE } from '../utils/consts';
 import { getDateInfo } from '../utils/calendar';
@@ -27,7 +27,9 @@ function GroupPage() {
   const [sendMessageModal, setSendMessageModal] = useState(false)
 
   const { eventStore, userStore } = useContext(Context)
-  const role = userStore.user.role.value;
+  const role = userStore.user.role;
+
+  const [user, setUser] = useState({})
 
   const [group, setGroup] = useState({})
   const [groupData, setGroupData] = useState([])
@@ -40,6 +42,9 @@ function GroupPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const userData = await fetchUserById(userStore.user.id);
+        setUser(userData);
+
         const group = await fetchGroupById(id);
         setGroup(group);
 
@@ -57,7 +62,7 @@ function GroupPage() {
       } finally {
         setLoading(false);
         if(role === 'student'){
-          if(id != userStore.user.student.groupId){
+          if(id != user.student.groupId){
             navigate(ERROR_PAGE)
           }
         }

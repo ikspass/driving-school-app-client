@@ -18,35 +18,46 @@ const TeacherPage = observer(() => {
   const [groups, setGroups] = useState([])
 
   const {userStore} = useContext(Context)
-  const role = userStore.user.role.value;
+  const role = userStore.user.role;
 
   const {id} = useParams();
   const [loading, setLoading] = useState(true);
 
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         const teacher = await fetchTeacherById(id);
         setTeacher(teacher);
         setGroups(teacher.groups)
 
-        setTeacherData(
-          role === 'admin' ?
-          [
-            { key: 'ФИО', value: teacher.user.fullName },
-            { key: 'Адрес', value: teacher.user.adress },
-            { key: 'Номер телефона', value: teacher.user.phoneNumber },
-            { key: 'Дата рождения', value: teacher.user.dateOfBirth },
-            { key: 'Идентификационный номер', value: teacher.user.idNumber },
-            { key: 'Номер паспорта', value: teacher.user.passportNumber },
-          ]
-          :
-          [
-            { key: 'ФИО', value: teacher.user.fullName },
-            { key: 'Номер телефона', value: teacher.user.phoneNumber },
-            { key: 'Дата рождения', value: teacher.user.dateOfBirth },
-          ]
-        )
+        const dataForAdmin = [
+          { key: 'ФИО', value: teacher.user.fullName },
+          { key: 'Адрес', value: teacher.user.adress },
+          { key: 'Номер телефона', value: teacher.user.phoneNumber },
+          { key: 'Дата рождения', value: teacher.user.dateOfBirth },
+          { key: 'Идентификационный номер', value: teacher.user.idNumber },
+          { key: 'Номер паспорта', value: teacher.user.passportNumber },
+        ]
+      
+        const dataForStudent = [
+          { key: 'ФИО', value: teacher.user.fullName },
+          { key: 'Номер телефона', value: teacher.user.phoneNumber },
+          { key: 'Дата рождения', value: teacher.user.dateOfBirth },
+        ]
+      
+        const dataForStaff=[
+          { key: 'ФИО', value: teacher.user.fullName },
+          { key: 'Адрес', value: teacher.user.adress },
+          { key: 'Номер телефона', value: teacher.user.phoneNumber },
+          { key: 'Дата рождения', value: teacher.user.dateOfBirth },
+        ]
+
+        if(role === 'admin') setTeacherData(dataForAdmin);
+        if(role === 'instructor' || role === 'teacher') setTeacherData(dataForStaff);
+        if(role === 'student') setTeacherData(dataForStudent);
         
       } catch (error) {
         console.error(error);

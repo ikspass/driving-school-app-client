@@ -20,7 +20,7 @@ const InstructorPage = observer(() => {
   const navigate = useNavigate()
 
   const {userStore} = useContext(Context)
-  const role = userStore.user.role.value;
+  const role = userStore.user.role;
 
   const {id} = useParams();
   const [loading, setLoading] = useState(true);
@@ -34,21 +34,32 @@ const InstructorPage = observer(() => {
         setInstructor(instructor);
         const students = await fetchStudentsByInstructor(instructor.id);
         setStudents(students);
-        const instructorData = role === 'admin' ? 
-        [
+
+        const dataForAdmin = [
           { key: 'ФИО', value: instructor.user.fullName },
           { key: 'Адрес', value: instructor.user.adress },
           { key: 'Номер телефона', value: instructor.user.phoneNumber },
           { key: 'Дата рождения', value: instructor.user.dateOfBirth },
           { key: 'Идентификационный номер', value: instructor.user.idNumber },
           { key: 'Номер паспорта', value: instructor.user.passportNumber },
-        ] :
-        [
+        ]
+
+        const dataForStaff = [
+          { key: 'ФИО', value: instructor.user.fullName },
+          { key: 'Адрес', value: instructor.user.adress },
+          { key: 'Номер телефона', value: instructor.user.phoneNumber },
+          { key: 'Дата рождения', value: instructor.user.dateOfBirth },
+        ]
+
+        const dataForStudent = [
           { key: 'ФИО', value: instructor.user.fullName },
           { key: 'Номер телефона', value: instructor.user.phoneNumber },
           { key: 'Дата рождения', value: instructor.user.dateOfBirth },
-        ];
-        setData(instructorData);
+        ]
+
+        if(role === 'admin') setData(dataForAdmin);
+        if(role === 'instructor' || role === 'teacher') setData(dataForStaff);
+        if(role === 'student') setData(dataForStudent);
 
       } catch (error) {
         console.error(error);

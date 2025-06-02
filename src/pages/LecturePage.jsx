@@ -9,7 +9,7 @@ import { STUDENT_ROUTE } from '../utils/consts';
 import SelectableInformationTable from '../components/SelectableInformationTable';
 
 const LecturePage = () => {
-  
+
   const {id} = useParams();
   const [loading, setLoading] = useState(true);
 
@@ -42,15 +42,13 @@ const LecturePage = () => {
   useEffect(() => {
     fetchData();      
   }, []);
-
-  console.log(event)
   
   if (loading) {
     return <div>Loading...</div>;
   }
 
   const saveAbsentStudents = () => {
-    localStorage.setItem('absentStudents', absentStudents);
+    // localStorage.setItem('absentStudents', absentStudents);
   }
 
   return (

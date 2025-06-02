@@ -1,14 +1,18 @@
 import { observer } from 'mobx-react-lite';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../utils/consts';
-import { fetchStudents, fetchGroups, fetchInstructors } from '../http/adminAPI';
+import { fetchStudents, fetchGroups, fetchInstructors, fetchStudentsByTeacher } from '../http/adminAPI';
 import InformationTable from '../components/InformationTable';
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons';
 import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons';
 import Modal from '../components/Modal';
 import CreateStudent from '../components/admin/CreateStudent';
+import { Context } from '..';
 
 const StudentsPage = observer(() => {
+
+  const { userStore } = useContext(Context);
+  const role = userStore.user.role;
 
   const [instructors, setInstructors] = useState([]);
   const [students, setStudents] = useState([]);
@@ -21,13 +25,18 @@ const StudentsPage = observer(() => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const students = await fetchStudents();
-        setStudents(students);
-        const instructors = await fetchInstructors();
-        setInstructors(instructors);
-        const groups = await fetchGroups();
-        setGroups(groups);
+        if(role === 'teacher'){
+          const teacher = userStore.user.teacher;
 
+          const instructorsData = await fetchInstructors();
+          setInstructors(instructorsData);    
+
+          const groupsData = await fetchGroups();
+          setGroups(groupsData);
+
+          const teacherGroups = teacher.groups;
+          console.log(teacherGroups)
+        }
       } catch (error) {
         console.error(error);
       } finally {
@@ -43,8 +52,6 @@ const StudentsPage = observer(() => {
     {id: 3, value: 'Отчислен'},
     {id: 4, value: 'Окончил обучение'},
   ]
-
-  const [selectedRow, setSelectedRow] = useState(null);
 
   const [selectedGroup, setSelectedGroup] = useState([])
   const [selectedInstructor, setSelectedInstructor] = useState([])
@@ -105,8 +112,6 @@ const StudentsPage = observer(() => {
             columns={columns}
             data={filteredStudents}
             numbered = {true}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
           />
           <div className="filter-container">
             <MultipleFilterButtons 

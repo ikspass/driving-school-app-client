@@ -17,21 +17,17 @@ const App = () => {
   );
 }
 
-function Main() {
-  const location = useLocation();
-  const noHeaderRoutes = [LOGIN_ROUTE, REGISTRATION_ROUTE, ADMIN_ROUTE, ADMINAUTH_ROUTE];
-  const {userStore} = useContext(Context)
-
-  const shouldHideHeader = noHeaderRoutes.includes(location.pathname);
+const Main = observer(() => {
+  const { userStore } = useContext(Context);
 
   return (
     <>
-      {!shouldHideHeader && <Header />}
+      {userStore.isAuth && userStore.user?.role?.value !== 'admin' && <Header />}
       <div className="main-container">
         <AppRouter />
       </div>
     </>
   );
-}
+});
 
 export default App;

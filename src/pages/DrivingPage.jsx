@@ -5,18 +5,19 @@ import DescriptionTable from '../components/DescriptionTable';
 import { ERROR_PAGE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../utils/consts';
 import Button from '../components/UI/Button/Button';
 import { Context } from '..';
+import { fetchUserById } from '../http/adminAPI';
 
 const DrivingPage = () => {
 
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [event, setEvent] = useState({});
+  const [user, setUser] = useState({})
 
   const navigate = useNavigate();
 
   const { userStore } = useContext(Context)
-  const role = userStore.user.role.value;
-  const user = userStore.user;
+  const role = userStore.user.role;
   
   const [transportTable, setTransportTable] = useState([]);
   const [eventTable, setEventTable] = useState([]);
@@ -24,6 +25,9 @@ const DrivingPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const userData = await fetchUserById(userStore.user.id);
+        setUser(userData);
+
         const eventData = await fetchDrivingEventById(id);
         setEvent(eventData);
 
@@ -50,7 +54,7 @@ const DrivingPage = () => {
       } finally {
         setLoading(false);
         if (role === 'student') {
-          const drivings = userStore.user.student?.drivings;
+          const drivings = user.student?.drivings;
         
           if (!drivings.some(driving => driving.id == id)) {
             navigate(ERROR_PAGE);

@@ -2,15 +2,15 @@ import React, { useContext } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { getRoutesByRole, initialRoutes, publicRoutes } from '../routes';
 import { Context } from '..';
+import { observer } from 'mobx-react-lite';
 
-function AppRouter() {
+const AppRouter = observer(() => {
 
   const {userStore, routeStore} = useContext(Context)
-  const routes = userStore.user.role ? getRoutesByRole(userStore.user.role.value) : getRoutesByRole('default');
+  const routes = userStore.user.role ? getRoutesByRole(userStore.user.role) : getRoutesByRole('default');
   
-  // Определяем начальную страницу в зависимости от роли
   const initialRoute = userStore.isAuth 
-    ? initialRoutes[userStore.user.role.value] 
+    ? initialRoutes[userStore.user.role] 
     : initialRoutes.public;
 
   routeStore.setInitialRoute(initialRoute);
@@ -23,6 +23,6 @@ function AppRouter() {
       ))}
     </Routes> 
   );
-}
+})
 
 export default AppRouter;

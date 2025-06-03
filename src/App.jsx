@@ -22,7 +22,7 @@ const Main = observer(() => {
 
   return (
     <>
-      {userStore.isAuth && userStore.user?.role?.value !== 'admin' && <Header />}
+      {userStore.isAuth && userStore.user?.role !== 'admin' && <Header />}
       <div className="main-container">
         <AppRouter />
       </div>

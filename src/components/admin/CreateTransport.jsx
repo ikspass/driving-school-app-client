@@ -31,25 +31,25 @@ const CreateTransport = observer(({onClose}) => {
       console.log(data);
       onClose();
     } catch (error) {
-        console.error("Ошибка при создании автомобиля:", error);
+        console.error("Ошибка при создании транспорта:", error);
     }
 }
 
   return (
     <>
       <div className='content-container'>
-            <p className="heading-text-2">Добавить автомобиль</p>
+            <p className="heading-text-2">Добавить транспорт</p>
             <form>
                  <div className="input-container">
                     <Input
                         value={name}
                         onChange={e => setName(e.target.value)}
-                        title={"Название автомобиля"}  
+                        title={"Название"}  
                     /> 
                     <Input
                         value={sign}
                         onChange={e => setSign(e.target.value)}
-                        title={"Номерной знак"}  
+                        title={"Регистрационный номер"}  
                     /> 
                     <Input
                         value={color}

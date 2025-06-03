@@ -70,6 +70,11 @@ function GroupPage() {
     };
     fetchData();
   }, []);
+
+  const updateData = async() => {
+    const group = await fetchGroupById(id);
+    setGroup(group);
+  }
   
   const studentsColumns = role === 'student' ?
   [
@@ -88,8 +93,6 @@ function GroupPage() {
     { key: "status", label: "Статус", isLink: false },
   ]
   
-
-  console.log(group)
   const studentsInfo = group.students ? group.students.map((student) => student) : [];
 
   // if(userStore.user.role.value !== 'student'){
@@ -112,11 +115,15 @@ function GroupPage() {
             group={group} 
             onClose={() => {
               setAssignStudentsModal(false);
+              updateData()
             }}
           />
         }
         isOpen={assignStudentsModal}
-        onClose={() => setAssignStudentsModal(false)}
+        onClose={() => {
+          setAssignStudentsModal(false)
+        
+        }}
       />
       <Modal 
         children={

@@ -7,22 +7,25 @@ import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons';
 import Button from '../UI/Button/Button';
 import { Context } from '../..';
 import { useParams } from 'react-router-dom';
+import ExceptionModal from '../ExceptionModal';
+import Separator from '../UI/Separator/Separator';
 
-const AssignTransport = observer(({onClose}) => {
+const AssignTransport = observer(({onClose, instructor}) => {
 
   const [transports, setTransports] = useState([])
 
-  const {id} = useParams();
-
   const [loading, setLoading] = useState(true);
 
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [exceptionModal, setExceptionModal] = useState(false);
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const transports = await fetchTransports();
-        setTransports(transports);
+        setTransports(transports.filter(transport => transport.instructor === null));
+
+        console.log(instructor)
       } catch (error) {
         console.error(error);
       } finally {
@@ -34,19 +37,20 @@ const AssignTransport = observer(({onClose}) => {
 
   const [selectedTransport, setSelectedTransport] = useState(null)
 
-  const confirm = () => {
+  const confirm = async () => {
     if(selectedTransport !== null){
-      if(selectedTransport.instructor === 'Не назначен'){
-        const data = updateTransportInstructor(selectedTransport.id, id)
-        
+      if(selectedTransport.instructor === null){
+        const data = await updateTransportInstructor(selectedTransport.id, instructor.id)
       }
       else{
-        
+        setMessage('Транспорт занят другим инструктором')
+        setExceptionModal(true);
       }
       onClose();
     }
     else {
-      alert('Транспорт не выбран')
+      setMessage('Транспорт не выбран')
+      setExceptionModal(true);
     }
   }
 
@@ -59,17 +63,27 @@ const AssignTransport = observer(({onClose}) => {
   return (
     <div className="content-container">
       <p className="heading-text-2">Назначить транспорт</p>
-      {selectedTransport ?
-      <p className="normal-text">Инструктор: {selectedTransport.instructor}</p>
-      :
-      <p className="normal-text">Выберите инструктора</p>
-      }
+      <p className="normal-text">Текущий транспорт:</p>
+      <InformationTable
+        columns={[
+          { key: "name", label: "Название", isLink: false},
+          { key: "category.value", label: "Категория", isLink: false},
+        ]}
+        data={instructor.transports}
+      />
+      <Separator />
       <SingleFilterButtons 
-        filters={transports.map(transport => ({id: transport.id, value: transport.name, instructor: transport.instructor ? transport.instructor.user.fullName : 'Не назначен'}))}
+        title='Свободный транспорт'
+        filters={transports.map(transport => ({id: transport.id, value: `${transport.name} (${transport.category.value})`, instructor: transport.instructor ? transport.instructor.user.fullName : null}))}
         selected={selectedTransport}
         setSelected={setSelectedTransport}
       />
       <Button onClick={confirm}>Сохранить</Button>
+      <ExceptionModal
+        text={message}
+        isOpen={exceptionModal}
+        onConfirm={() => setExceptionModal(false)}
+      />
     </div>
   )
 })

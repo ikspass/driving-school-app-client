@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from 'react'
-import { fetchStudentsWithoutGroup, setStudentGroup } from '../../http/adminAPI';
+import { fetchStudents, setStudentGroup } from '../../http/adminAPI';
 import InformationTable from '../InformationTable';
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../../utils/consts';
 import SelectableInformationTable from '../SelectableInformationTable';
@@ -18,8 +18,8 @@ const GroupAssignStudents = observer(({onClose, group}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const students = await fetchStudentsWithoutGroup();
-        setStudents(students);
+        const students = await fetchStudents();
+        setStudents(students.filter(student => student.groupId === null && student.category.value === group.category.value));
       } catch (error) {
         console.error(error);
       } finally {
@@ -42,8 +42,9 @@ const GroupAssignStudents = observer(({onClose, group}) => {
   }
 
   const columns = [
-    { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
+    { key: "user.fullName", label: "ФИО", isLink: false },
     { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "category.value", label: "Категория", isLink: false },
   ]
 
   if (loading) {

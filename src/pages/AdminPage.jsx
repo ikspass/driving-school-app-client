@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import ListGroup from '../components/UI/ListGroup/ListGroup'
 import Dashboard from '../components/Dashboard'
 import AdminStudentsPage from './admin/AdminStudentsPage'
@@ -7,6 +7,7 @@ import AdminInstructorsPage from './admin/AdminInstructorsPage'
 import AdminSchoolDataPage from './admin/AdminSchoolDataPage'
 import AdminGroupsPage from './admin/AdminGroupsPage'
 import Button from '../components/UI/Button/Button'
+import { Context } from '..'
 
 export default function AdminPage() {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -18,6 +19,10 @@ export default function AdminPage() {
     {value: 'Инструкторы', component: AdminInstructorsPage},
     {value: 'Данные', component: AdminSchoolDataPage},
   ]
+
+  const {userStore} = useContext(Context)
+  console.log(userStore.user)
+
   return (
     <div className='horizontal-container' style={{marginTop: '20px'}}>
       <ListGroup 

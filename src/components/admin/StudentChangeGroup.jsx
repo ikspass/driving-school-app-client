@@ -38,6 +38,7 @@ const StudentChangeGroup = observer(({onClose, student}) => {
   const confirm = async () => {
     try{
       setStudentGroup(student.id, selectedGroup.id)
+      onClose()
     }
     catch(e){
       console.error(e)
@@ -71,7 +72,7 @@ const StudentChangeGroup = observer(({onClose, student}) => {
           <p className="normal-text">Выберите новую группу</p> 
           {groups.length > 1 ?
             <SingleFilterButtons
-              filters={filteredGroups.map(elem => ({id: elem.id, value: elem.user.fullName}))}
+              filters={filteredGroups.map(elem => ({id: elem.id, value: elem.name}))}
               selected={selectedGroup}
               setSelected={setSelectedGroup}
             />
@@ -85,8 +86,8 @@ const StudentChangeGroup = observer(({onClose, student}) => {
         text='Вы уверены что хотите изменить группу курсанта?'
         isOpen={warningModal}
         onConfirm={() => {
-          confirm()
           setWarningModal(false)
+          confirm()
         }}
         onCancel={() => setWarningModal(false)}
       />

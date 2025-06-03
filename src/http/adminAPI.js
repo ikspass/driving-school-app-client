@@ -44,10 +44,6 @@ export const fetchStudentById = async (id) => {
   const {data} = await $authHost.get(`students/${id}`);
   return data;
 }
-export const fetchStudentsWithoutGroup = async () => {
-  const {data} = await $authHost.get('students/group/not');
-  return data;
-}
 export const fetchStudentsByInstructor = async (instructorId) => {
   const {data} = await $authHost.get(`students/instructor/${instructorId}`);
   return data;

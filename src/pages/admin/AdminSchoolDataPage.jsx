@@ -100,11 +100,13 @@ const AdminSchoolDataPage = observer(() => {
   }
 
   const categoryColumns = [
+    {key: 'id', label: 'ID'},
     { key: "value", label: "Название", isLink: false},
     { key: "description", label: "Описание", isLink: false},
   ]
 
   const transportColumns = [
+    {key: 'id', label: 'ID'},
     { key: "name", label: "Название", isLink: false},
     { key: "sign", label: "Номерной знак", isLink: false},
     { key: "color", label: "Цвет", isLink: false},
@@ -114,27 +116,20 @@ const AdminSchoolDataPage = observer(() => {
   ]
 
   const drivingPlaceColumns = [
+    {key: 'id', label: 'ID'},
     { key: "value", label: "Название", isLink: false},
     { key: "description", label: "Описание", isLink: false},
   ]
 
-  const chapterColumns = [
-    { key: "name", label: "Название", isLink: false},
-    { key: "topic", label: "Тема", isLink: false},
-    { key: "test", label: "Описание", isLink: false},
-  ]
-
-  const topicColumns = [
-    { key: "name", label: "Название", isLink: false},
-  ]
-
   const testColumns = [
+    {key: 'id', label: 'ID'},
     { key: "name", label: "Название", isLink: false},
     { key: "description", label: "Описание", isLink: false},
     { key: "category.value", label: "Категория", isLink: false},
   ]
 
   const scheduleGroupColumns = [
+    {key: 'id', label: 'ID'},
     { key: "name", label: "Название", isLink: false},
   ]
 

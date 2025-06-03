@@ -8,6 +8,7 @@ import SingleFilterButtons from '../../components/UI/SingleFilterButtons/SingleF
 import Button from '../../components/UI/Button/Button';
 import CreateTeacher from '../../components/admin/CreateTeacher';
 import Modal from '../../components/Modal';
+import InformationTable from '../../components/InformationTable';
 
 const AdminTeachersPage = observer(() => {
 
@@ -15,7 +16,6 @@ const AdminTeachersPage = observer(() => {
   const [quals, setQuals] = useState([])
 
   const [createTeacherModal, setCreateTeacherModal] = useState(false)
-  const [deleteTeacherModal, setDeleteTeacherModal] = useState(false)
 
   const [loading, setLoading] = useState(true);
 
@@ -59,7 +59,6 @@ const AdminTeachersPage = observer(() => {
   const columns = [
     { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${TEACHER_ROUTE}/${row.id}`},
     { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
-    { key: "quals", label: "Квалификация", isLink: false},
     { key: "dateOfEmployment", label: "Дата приёма на работу", isLink: false},
     { key: "status", label: "Статус", isLink: false },
   ];
@@ -69,16 +68,6 @@ const AdminTeachersPage = observer(() => {
     setTeachers(data);
   };
 
-  const [selectedTeachers, setSelectedTeachers] = useState([]);
-
-  const deleteTeachers = async () => {
-    console.log('selectedTeachers', selectedTeachers);
-    await Promise.all(selectedTeachers.map(async (id) => {
-      await deleteTeacher(id);
-      await deleteUser(id);
-    }));
-    updateTeachers();
-  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -86,15 +75,6 @@ const AdminTeachersPage = observer(() => {
 
   return (
     <div className="filter-container">
-      <Modal
-        isOpen={deleteTeacherModal}
-        onClose={() => setDeleteTeacherModal(false)}
-      >
-        <div className="content-container">
-          <p className="normal-text" style={{paddingRight: '20px'}}>Вы уверены что хотите удалить выбранные данные?</p>
-          <Button onClick={() => {setDeleteTeacherModal(false); deleteTeachers()}}>Подтвердить</Button>
-        </div>
-      </Modal>
       <Modal
         children={<CreateTeacher onClose={() => {
           setCreateTeacherModal(false)
@@ -106,24 +86,14 @@ const AdminTeachersPage = observer(() => {
       <SingleFilterButtons filters={statuses} selected={selectedStatus} setSelected={setSelectedStatus} />
       <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
         <div className="horizontal-container">
-          <SelectableInformationTable
+          <InformationTable
             columns={columns}
             data={transformedTeachers}
-            setSelectedRow={setSelectedTeachers} 
+            numbered={true}
           />
-          <div className="filter-container">
-            <SingleFilterButtons
-              title='Квалификация'
-              filters={quals.map(elem => ({id: elem.id, value: elem.description}))}
-              selected={selectedQual}
-              setSelected={setSelectedQual}
-            />
-          </div>
         </div>
         <div className="button-container">
           <Button className='outline' onClick={() => setCreateTeacherModal(true)}>Добавить преподавателя</Button>
-          <Button className='outline' onClick={() => setDeleteTeacherModal(true)}>Удалить преподавателя</Button>
-          {/* <Button className='outline'>Редактировать данные</Button> */}
         </div>
       </div>
     </div>

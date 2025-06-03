@@ -90,6 +90,15 @@ const InstructorPage = observer(() => {
     { key: "status", label: "Статус", isLink: false }
   ]
 
+  const updateStudents = async () => {
+    const students = await fetchStudentsByInstructor(instructor.id);
+    setStudents(students);
+  }
+  const updateInstructor = async () => {
+    const instructor = await fetchInstructorById(id);
+    setInstructor(instructor);
+  }
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -97,15 +106,17 @@ const InstructorPage = observer(() => {
   return (
     <>
     <Modal 
-      children={<AssignTransport onClose={() => {
+      children={<AssignTransport instructor={instructor} onClose={() => {
         setAssignTransportModal(false);
+        updateInstructor();
       }}/>}
       isOpen={assignTransportModal}
       onClose={() => setAssignTransportModal(false)}
     />
     <Modal 
-      children={<AssignStudent onClose={() => {
+      children={<AssignStudent instructor={instructor} onClose={() => {
         setAssignStudentModal(false);
+        updateStudents();
       }}/>}
       isOpen={assignStudentModal}
       onClose={() => setAssignStudentModal(false)}
@@ -129,30 +140,12 @@ const InstructorPage = observer(() => {
               <div style={{ display: 'flex', flex: 1, justifyContent: 'end' }}>
                 <div className="button-container">
                   <Button className='outline' style={{ width: '100%' }}>Редактировать данные ()</Button>
-                  <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignTransportModal(true)}>Назначить автомобиль</Button>
-                  <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignStudentModal(true)}>Назначить курсанта ()</Button>
-                  <Button className='outline' style={{ width: '100%' }}>Отправить в отпуск ()</Button>
-                  <Button className='danger' style={{ width: '100%' }}>Уволить ()</Button>
+                  <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignTransportModal(true)}>Назначить транспорт</Button>
+                  <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignStudentModal(true)}>Добавить курсантов</Button>
+                  <Button className='danger' style={{ width: '100%' }}>Удалить</Button>
                 </div>
               </div>
             }
-          </div>
-          <p className="heading-text-2">Информация</p>
-          <div style={{ width: '50vw' }}>
-            <DescriptionTable
-              value={[
-                {
-                  key: 'Статус',
-                  // value: user.teacher ? user.teacher.quals.map(qual => qual.description) : [],
-                  value: instructor.status,
-                },
-                {
-                  key: 'Категории',
-                  // value: user.teacher ? user.teacher.quals.map(qual => qual.description) : [],
-                  value: instructor.categories.map(category => category.value),
-                },
-              ]}
-            />
           </div>
         </div>
         <p className="heading-text-2">Транспорт</p>

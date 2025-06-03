@@ -2,11 +2,9 @@ import React, { useContext, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { Context } from '..';
 import { fetchLectureEventById } from '../http/eventAPI';
-import EventTable from '../components/EventTable';
 import Button from '../components/UI/Button/Button';
 import InformationTable from '../components/InformationTable';
 import { STUDENT_ROUTE } from '../utils/consts';
-import SelectableInformationTable from '../components/SelectableInformationTable';
 
 const LecturePage = () => {
 
@@ -21,34 +19,34 @@ const LecturePage = () => {
     { key: "phoneNumber", label: "Присутствие", isLink: false },
   ]
 
-  const chaptersColumns = [
-    { key: "topic", label: "Тема", isLink: false },
-    { key: "chapter", label: "Глава", isLink: false },
+  const studentsColumns = [
+    { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
+    { key: "phoneNumber", label: "Номер телефона", isLink: false },
   ]
 
-  const [absentStudents, setAbsentStudents] = useState(localStorage.getItem('absentStudents' || []));
-
-  const fetchData = async () => {
-    try {
-      const data = await fetchLectureEventById(id)
-      setEvent(data)
-    } catch(e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
+    
+    const fetchData = async () => {
+      try {
+        const eventData = await fetchLectureEventById(id)
+        setEvent(eventData)
+        console.log(eventData)
+        console.log(event)
+        if(eventData.status === 'В будущем'){
+
+        }
+
+      } catch(e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
     fetchData();      
   }, []);
   
   if (loading) {
     return <div>Loading...</div>;
-  }
-
-  const saveAbsentStudents = () => {
-    // localStorage.setItem('absentStudents', absentStudents);
   }
 
   return (
@@ -59,29 +57,31 @@ const LecturePage = () => {
         <p>{event.time}</p>
         <p>{event.date}</p>
       </div>
-      {/* <div style={{display: 'flex', justifyContent: 'end'}}>
+      {event.status === 'В будущем' &&
         <Button>Начать событие</Button>
-      </div> */}
-      {/* <EventTable 
-        event={event}
-      /> */}
+      }
 
-        <div className="horizontal-container">
-          <SelectableInformationTable
-            columns={attendanceColumns}
-            setSelectedRow={setAbsentStudents}
+      {event.status === 'Идёт' &&
+        <>
+          <InformationTable
+            columns={studentsColumns}
+            numbered={true}
             data={[]}
           />
-          <duv className="button-container">
-            <Button className="outline" onClick={saveAbsentStudents}>Сохранить</Button>
-          </duv>
-        </div>
-        <InformationTable 
-          columns={chaptersColumns}
-        />
-        {event.status === 'Идёт' &&
           <Button>Завершить занятие</Button>
-        }
+        </>
+      }
+      
+      {event.status === 'Проведено' &&
+        <div className="content-container">
+          <p className="heading-text-2">Курсанты</p>
+          <InformationTable
+            columns={attendanceColumns}
+            numbered={true}
+            data={[]}
+          />
+        </div>
+      }
     </div>
   )
 }

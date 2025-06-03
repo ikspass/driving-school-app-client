@@ -27,7 +27,7 @@ const SchedulePage = observer(() => {
 
   const [createLectureModal, setCreateLectureModal] = useState(false)
   const [createTestModal, setCreateTestModal] = useState(false)
-  const [createDrivingModal, setCreateDrivingModal] = useState(true)
+  const [createDrivingModal, setCreateDrivingModal] = useState(false)
     
     useEffect(() => {
       const fetchData = async () => {

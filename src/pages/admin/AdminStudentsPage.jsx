@@ -126,8 +126,7 @@ const AdminStudentsPage = observer(() => {
           </div>
         </div>
         <div className="button-container">
-          <Button className='outline' onClick={() => setCreateStudentModal(true)}>Добавить курсанта</Button>
-          <Button className='outline'>Редактировать данные</Button>
+          <Button className='outline' onClick={() => setCreateStudentModal(true)} style={{width: '100%'}}>Добавить курсанта</Button>
         </div>
       </div>
     </div>

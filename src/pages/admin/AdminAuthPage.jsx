@@ -21,11 +21,12 @@ const AdminAuthPage = () => {
     
     adminLogin(password)
     .then(user => {
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify({id: 0, role: 'admin'}));
+      userStore.setIsAuth(true)
+      userStore.setUser({id: 0, role: 'admin'})
+      navigate(ADMIN_ROUTE)
     })
-    .catch(err => console.error('Ошибка ', err));
-    userStore.setIsAuth(true)
-    navigate(ADMIN_ROUTE)
+    .catch(err => alert(err));
   }
   
   return (

@@ -8,6 +8,8 @@ import AdminSchoolDataPage from './admin/AdminSchoolDataPage'
 import AdminGroupsPage from './admin/AdminGroupsPage'
 import Button from '../components/UI/Button/Button'
 import { Context } from '..'
+import { useNavigate } from 'react-router-dom'
+import { LOGIN_ROUTE } from '../utils/consts'
 
 export default function AdminPage() {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -21,16 +23,26 @@ export default function AdminPage() {
   ]
 
   const {userStore} = useContext(Context)
-  console.log(userStore.user)
+  const navigate = useNavigate()
+  
+  const logOut = async () => {
+    userStore.setUser({});
+    userStore.setIsAuth(false);
+    localStorage.clear('token');
+    await navigate(LOGIN_ROUTE);
+  }
 
   return (
     <div className='horizontal-container' style={{marginTop: '20px'}}>
-      <ListGroup 
-        className='admin-nav'
-        title='Навигация'
-        items={items}
-        onSelect={(component) => setSelectedComponent(component)}
-      />
+      <div>
+        <ListGroup 
+          className='admin-nav'
+          title='Навигация'
+          items={items}
+          onSelect={(component) => setSelectedComponent(component)}
+        />
+        <Button className="outline" style={{marginTop: '220px', width: '200px'}} onClick={logOut}>Выйти</Button>
+      </div>
       <Dashboard ChildComponent={selectedComponent}/>
     </div>
   )

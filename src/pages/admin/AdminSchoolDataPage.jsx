@@ -16,6 +16,7 @@ import DeleteButton from '../../components/UI/FunctionButton/DeleteButton'
 import CreateButton from '../../components/UI/FunctionButton/CreateButton'
 import CreateScheduleGroup from '../../components/admin/CreateScheduleGroup'
 import { INSTRUCTOR_ROUTE } from '../../utils/consts'
+import { fetchTestEvents } from '../../http/eventAPI'
 
 const AdminSchoolDataPage = observer(() => {
   const [createCategoryModal, setCreateCategoryModal] = useState(false)
@@ -149,49 +150,52 @@ const AdminSchoolDataPage = observer(() => {
   };
 
   const updateTests = async () => {
-    // const data = await fetchDrivingPlaces();
-    // schoolStore.setDrivingPlaces(data);
+    const data = await fetchTests();
+    schoolStore.setTests(data);
   };
 
   const handleDeleteCategory = async () => {
     if (selectedCategories.length !== 0){
-      selectedCategories.map(id => {
-        deleteCategory(id);
-      })
+      await Promise.all(selectedCategories.map(async (id) => {
+        await deleteCategory(id)
+      }))
+      updateCategories()
     }
     else alert('Категория не выбрана')
   }
 
   const handleDeleteTransport = async () => {
     if (selectedTransports.length !== 0){
-      selectedTransports.map(id => {
-        deleteTransport(id);
-      })
+      await Promise.all(selectedTransports.map(async (id) => {
+        await deleteTransport(id)
+      }))
+      updateTransport();
     }
     else alert('Транспорт не выбран')
   }
 
   const handleDeleteDrivingPlace = async () => {
     if (selectedDrivingPlaces.length !== 0){
-      selectedDrivingPlaces.map(id => {
-        deleteDrivingPlace(id);
-      })
+      await Promise.all(selectedDrivingPlaces.map(async (id) => {
+        await deleteDrivingPlace(id)
+      }))
+      updatePlaces();
     }
     else alert('Локация не выбрана')
   }
 
   const handleDeleteTest = async () => {
     if (selectedTests.length !== 0){
-      selectedTests.map(id => {
-        deleteTest(id);
-      })
+      await Promise.all(selectedTests.map(async (id) => {
+        await deleteTest(id)
+      }))
+      updateTests();
     }
     else alert('Зачёт/экзамен не выбран')
   }
 
   return (
       <div className="filter-container">
-
         <Modal
           children={<CreateCategory onClose={() => {
             setCreateCategoryModal(false);

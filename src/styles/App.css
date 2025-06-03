@@ -508,7 +508,6 @@ form{
 
 .dashboard{
   display: flex;
-  margin-left: 230px;
   /* background-color: var(--light-accent); */
   flex: 1
 }
@@ -554,31 +553,23 @@ form{
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0px 10px rgba(87, 247, 76, 0.3);
-  position: absolute;
+  position: fixed;
   width: 100%;
   border: 1px solid rgb(87, 247, 76);
   max-width: 700px;
   left: 50%;
-  transform: translate(-50%, -100%); /* Начальное положение */
-  animation: slideDown 0.5s forwards, slideUp 0.5s forwards 5s; /* Анимации */
+  transform: translateX(-50%);
+  top: -200px;
+  transition: top 0.5s ease;
+  z-index: 1000;;
 }
 
-@keyframes slideDown {
-  from {
-    transform: translate(-50%, -100%); /* Сверху */
-  }
-  to {
-    transform: translate(-50%, 0); /* В центре */
-  }
+.slide-in{
+  top: 20px;
 }
 
-@keyframes slideUp {
-  from {
-    transform: translate(-50%, 0); /* В центре */
-  }
-  to {
-    transform: translate(-50%, -100%); /* Сверху */
-  }
+.slide-out{
+  top: -500px;
 }
 
 .close-button {
@@ -587,7 +578,7 @@ form{
   right: 10px;
   border: none;
   background: transparent;
-  font-size: 20px;
+  font-size: 40px;
   cursor: pointer;
 }
 

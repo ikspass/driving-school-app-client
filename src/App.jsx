@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 import { Context } from ".";
 
 const App = () => {
-  const {userStore} = useContext(Context)
+  const {userStore, modalStore} = useContext(Context)
   console.log(userStore.user)
   return (
     <BrowserRouter>

@@ -16,7 +16,6 @@ const CreateTeacher = observer(({onClose}) => {
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [dateOfEmployment, setDateOfEmployment] = useState('');
-  const [qual, setQual] = useState([]);
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -44,12 +43,7 @@ const CreateTeacher = observer(({onClose}) => {
     formDataUser.append('phoneNumber', phoneNumber);
     formDataUser.append('roleValue', 'teacher');
     formDataUser.append('img', file);
-  
-    if (qual.length === 0) {
-      console.error('Квалификация не выбрана');
-      return;
-    }
-  
+    
     try {
       const userData = await createUser(formDataUser);
       console.log('Пользователь создан', userData);
@@ -57,12 +51,7 @@ const CreateTeacher = observer(({onClose}) => {
       if (userData && userData.id) {
         const teacherData = await createTeacher({ userId: userData.id, dateOfEmployment });
         console.log('Преподаватель создан', teacherData);
-  
-        qual.forEach(elem => {
-          createTeacherQual({ teacherId: teacherData.id, qualId: elem.id })
-        });
-        console.log('Квалификации созданы');
-  
+    
         onClose();
       } else {
         console.error('Не удалось получить id пользователя');
@@ -109,12 +98,6 @@ const CreateTeacher = observer(({onClose}) => {
               value={phoneNumber}
               onChange={e => setPhoneNumber(e.target.value)}
               title={"Номер телефона"} 
-            />
-            <MultipleFilterButtons 
-              title='Квалификация'
-              filters={schoolStore.quals.map(elem => ({id: elem.id, value: elem.description}))}
-              selected={qual}
-              setSelected={setQual}
             />
             <Input
               value={dateOfEmployment}

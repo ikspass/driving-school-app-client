@@ -54,9 +54,7 @@ const StudentPage = observer(({}) => {
   const updateData = async () => {
     const data = await fetchStudentById(id);
     setStudent(data);
-    console.log('Update data')
   }
-  console.log(student)
 
   const expelStudent = async () => {
     await updateStudentStatus(id, 'Отчислен')

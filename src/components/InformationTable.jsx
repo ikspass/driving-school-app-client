@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function InformationTable({ columns, data, numbered }) { 
+function InformationTable({ columns, data, numbered, style }) {
   const navigate = useNavigate();
 
   const getValue = (row, key) => {
@@ -10,7 +10,7 @@ function InformationTable({ columns, data, numbered }) {
 
   return (
     columns || data ?
-    <table className="information-table normal-text">
+    <table className="information-table normal-text" style={style}>
       {columns ?
         <thead>
           <tr>
@@ -49,7 +49,11 @@ function InformationTable({ columns, data, numbered }) {
                         <p className="normal-text">-</p>
                       )
                     ) : (
-                      value != null ? (
+                      value === true ? (
+                        <p className='normal-text'>Да</p>
+                      ) : value === false ? (
+                        <p className='normal-text'>Нет</p>
+                      ) : value != null ? (
                         column.isLink ? (
                           <p className='link-text' onClick={() => {
                             const navigateTo = column.navigateTo ? column.navigateTo(row) : column.url;

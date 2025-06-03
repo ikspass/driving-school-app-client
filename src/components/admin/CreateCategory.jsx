@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { createCategory } from '../../http/adminAPI';
 import Input from '../UI/Input/Input';
 import { observer } from 'mobx-react-lite';
 import Button from '../UI/Button/Button';
+import { Context } from '../..';
 
 const CreateCategory = observer(({onClose}) => {
   const [value, setValue] = useState('');
   const [desc, setDesc] = useState('');
+
+  const {modalStore} = useContext(Context)
 
   const confirm = async (e) => {
     e.preventDefault();
@@ -20,6 +23,7 @@ const CreateCategory = observer(({onClose}) => {
       const data = await createCategory({value: value, description: desc});
       console.log(data);
       onClose();
+      modalStore.setIsOpen(true)
     } catch (error) {
       console.error("Ошибка при создании категории:", error);
     }

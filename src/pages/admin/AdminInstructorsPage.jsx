@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useState, useEffect } from 'react'
-import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../../utils/consts';
-import { Context } from '../..';
+import React, { useState, useEffect } from 'react'
+import { INSTRUCTOR_ROUTE } from '../../utils/consts';
 import { fetchCategories, fetchGroups, fetchInstructors, fetchUsers } from '../../http/adminAPI';
 import InformationTable from '../../components/InformationTable';
 import MultipleFilterButtons from '../../components/UI/MultipleFilterButtons/MultipleFilterButtons';
@@ -9,7 +8,6 @@ import SingleFilterButtons from '../../components/UI/SingleFilterButtons/SingleF
 import Button from '../../components/UI/Button/Button';
 import Modal from '../../components/Modal';
 import CreateInstructor from '../../components/admin/CreateInstructor';
-import SelectableInformationTable from '../../components/SelectableInformationTable';
 
 const AdminInstructorsPage = observer(() => {
 
@@ -27,8 +25,6 @@ const AdminInstructorsPage = observer(() => {
   const statuses = [
     {id: 1, value: 'Активен'},
     {id: 2, value: 'Не активен'},
-    {id: 3, value: 'В отпуске'},
-    {id: 4, value: 'Более не работает'},
   ]
 
   const [selectedStatus, setSelectedStatus] = useState(statuses[0])
@@ -52,9 +48,6 @@ const AdminInstructorsPage = observer(() => {
     };
     fetchData();
   }, []);
-
-
- 
 
   console.log('instructors: ', instructors)
   console.log('selectedCategory: ', selectedCategory)
@@ -101,6 +94,7 @@ const AdminInstructorsPage = observer(() => {
 
   return (
     <div className="filter-container">
+      <p className="heading-text-2">Инструкторы</p>
       <Modal
         children={<CreateInstructor onClose={() => {
           setCreateInstructorModal(false)
@@ -114,14 +108,14 @@ const AdminInstructorsPage = observer(() => {
         selected={selectedStatus}
         setSelected={setSelectedStatus}
       />
-      <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
-        <div className="horizontal-container">
-          <SelectableInformationTable 
+      <div className='horizontal-container'>
+          <InformationTable 
+            style={{width: '100%'}}
+            numbered={true}
             columns={columns}
             data={transformedInstructors}
-            setSelectedRow={setSelectedRow}
           />
-          <div className="filter-container">
+          <div className="content-container" style={{width: '400px'}}>
             <MultipleFilterButtons 
               title='Категория'
               filters={categories.map(elem => ({id: elem.id, value: elem.value}))}
@@ -129,7 +123,6 @@ const AdminInstructorsPage = observer(() => {
               setSelected={setSelectedCategory}
             />
           </div>
-        </div>
         <div className="button-container">
           <Button className='outline' onClick={() => setCreateInstructorModal(true)}>Добавить инструктора</Button>
           <Button className='outline'>Редактировать данные</Button>

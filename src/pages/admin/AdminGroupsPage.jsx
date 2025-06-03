@@ -1,8 +1,7 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useState, useEffect } from 'react'
-import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE, TEACHER_ROUTE } from '../../utils/consts';
-import { Context } from '../..';
-import { fetchStudents, fetchGroups, fetchInstructors, fetchCategories, fetchUsers, fetchTeachers } from '../../http/adminAPI';
+import React, { useState, useEffect } from 'react'
+import { GROUP_ROUTE, TEACHER_ROUTE } from '../../utils/consts';
+import { fetchGroups, fetchCategories, fetchTeachers } from '../../http/adminAPI';
 import InformationTable from '../../components/InformationTable';
 import MultipleFilterButtons from '../../components/UI/MultipleFilterButtons/MultipleFilterButtons';
 import SingleFilterButtons from '../../components/UI/SingleFilterButtons/SingleFilterButtons';
@@ -68,7 +67,6 @@ const AdminGroupsPage = observer(() => {
 
   const [selectedRow, setSelectedRow] = useState(null);
 
-
   const handleEditClick = () => {
     if (selectedRow) {
       if (selectedRow.length > 1){
@@ -94,6 +92,7 @@ const AdminGroupsPage = observer(() => {
 
   return (
     <div className="filter-container">
+      <p className="heading-text-2">Группы</p>
       <Modal
         children={<CreateGroup onClose={() => setCreateGroupModal(false)}/>}
         isOpen={createGroupModal}
@@ -113,15 +112,13 @@ const AdminGroupsPage = observer(() => {
         setSelected={setSelectedStatus}
       />
       <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
-        <div className="horizontal-container">
           <InformationTable 
+            style={{width: '100%'}}
             columns={columns}
             data={filteredGroups}
             numbered = {true}
-            selectable = {true}
-            setSelectedRow={setSelectedRow}
           />
-          <div className="filter-container">
+          <div className="content-container"  style={{width: '400px'}}>
             <MultipleFilterButtons 
               title='Категория'
               filters={categories.map(elem => ({id: elem.id, value: elem.value}))}
@@ -134,7 +131,6 @@ const AdminGroupsPage = observer(() => {
               selected={selectedTeacher}
               setSelected={setSelectedTeacher}
             />
-          </div>
         </div>
         <div className="button-container">
           <Button className='outline' 

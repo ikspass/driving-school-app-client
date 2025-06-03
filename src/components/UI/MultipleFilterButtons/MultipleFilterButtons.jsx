@@ -3,7 +3,7 @@ import classes from './MultipleFilterButtons.module.css';
 
 const MultipleFilterButtons = ({ title, filters, selected, setSelected }) => {
   return (
-    <>
+    <div className='filter-container'>
       <p className="small-text" style={{ paddingLeft: '10px' }}>{title}</p>
       {filters.length ? (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -29,7 +29,7 @@ const MultipleFilterButtons = ({ title, filters, selected, setSelected }) => {
       ) : (
         <p className="normal-text">Данные отсутствуют</p>
       )}
-    </>
+    </div>
   );
 }
 

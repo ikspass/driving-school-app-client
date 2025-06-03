@@ -1,28 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useContext } from "react";
+import { Context } from "..";
+import { observer } from "mobx-react-lite";
 
-const SuccessModal = ({ text, isVisible }) => {
-  const [visible, setVisible] = useState(isVisible);
+const SuccessModal = observer(({ message }) => {
+  const {modalStore} = useContext(Context);
 
   useEffect(() => {
-    if (isVisible) {
-      setVisible(true);
+    if (modalStore.isOpen) {
       const timer = setTimeout(() => {
-        setVisible(false);
-      }, 5000);
-      
+        modalStore.setIsOpen(false);
+      }, 3000);
+
       return () => clearTimeout(timer);
     }
-  }, [isVisible]);
+  }, [modalStore.isOpen]);
 
-  if (!visible) return null;
-
-  return (
-    <div className="success-modal">
-      <div className="content-container">
-        <p>{text}</p>
-      </div>
-    </div>
-  );
-};
+    return (
+        <div className={`success-modal ${modalStore.isOpen ? 'slide-in' : 'slide-out'}`}>
+            <div className="content-container">
+                <p>{message}</p>
+            </div>
+        </div>
+    );
+})
 
 export default SuccessModal;

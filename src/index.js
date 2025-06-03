@@ -7,6 +7,7 @@ import GroupStore from './store/GroupStore';
 import SchoolStore from './store/SchoolStore';
 import EventStore from './store/EventStore';
 import RouteStore from './store/RouteStore';
+import ModalStore from './store/ModalStore';
 
 export const Context = createContext(null);
 
@@ -19,6 +20,7 @@ root.render(
     eventStore: new EventStore(),
     schoolStore: new SchoolStore(),
     routeStore: new RouteStore(),
+    modalStore: new ModalStore(),
   }}>
     <App/>
   </Context.Provider>

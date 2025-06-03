@@ -6,8 +6,9 @@ import Button from '../components/UI/Button/Button';
 import InformationTable from '../components/InformationTable';
 import DescriptionTable from '../components/DescriptionTable';
 import PinList from '../components/UI/PinList/PinList';
-import { fetchTeacherById, fetchUserById } from '../http/adminAPI';
+import { deleteTeacher, fetchTeacherById, fetchUserById } from '../http/adminAPI';
 import { ERROR_PAGE, GROUP_ROUTE } from '../utils/consts';
+import WarningModal from '../components/WarningModal';
 
 const TeacherPage = observer(() => {
 
@@ -23,7 +24,7 @@ const TeacherPage = observer(() => {
   const {id} = useParams();
   const [loading, setLoading] = useState(true);
 
-
+  const [warningModal, setWarningModal] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +73,10 @@ const TeacherPage = observer(() => {
     };
     fetchData();
   }, []);
+
+  const handleDeleteTeacher = async () => {
+    await deleteTeacher(id);
+  }
   
   if (loading) {
     return <div>Loading...</div>;
@@ -90,37 +95,27 @@ const TeacherPage = observer(() => {
           />
           <div className="filter-container">
             <PinList
-              value={[teacher.status, teacher.quals.map(qual => qual.description), ]}
+              value={[teacher.status]}
             />
           </div>
           {role === 'admin' &&
             <div style={{ display: 'flex', flex: 1, justifyContent: 'end' }}>
               <div className="button-container">
                 <Button className='outline' style={{ width: '100%' }}>Редактировать данные</Button>
-                <Button className='outline' style={{ width: '100%' }}>Добавить группу</Button>
-                <Button className='outline' style={{ width: '100%' }}>Отправить в отпуск</Button>
-                <Button className='outline' style={{ width: '100%' }}>Уволить</Button>
+                <Button className='danger' style={{ width: '100%' }} onClick={() => {setWarningModal(true)}}>Удалить</Button>
+                <WarningModal 
+                  text='Вы уверены что хотите удалить преподавателя?'
+                  isOpen={warningModal}
+                  onConfirm={() => {
+                    setWarningModal(false)
+                    handleDeleteTeacher()
+                  }}
+                  onCancel={() => setWarningModal(false)}
+                />
               </div>
             </div>
           }
-        </div>
-        <p className="heading-text-2">Информация</p>
-        <div style={{ width: '50vw' }}>
-          <DescriptionTable
-            value={[
-              {
-                key: 'Статус',
-                // value: user.teacher ? user.teacher.quals.map(qual => qual.description) : [],
-                value: teacher.status,
-              },
-              {
-                key: 'Квалификация',
-                // value: user.teacher ? user.teacher.quals.map(qual => qual.description) : [],
-                value: teacher.quals.map(qual => qual.description),
-              },
-            ]}
-          />
-        </div>
+        </div>       
       </div>
       {role != 'student' &&
         <>
@@ -129,7 +124,7 @@ const TeacherPage = observer(() => {
             columns={[
               { key: "name", label: "Номер", isLink: true , navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
               { key: "category.value", label: "Категория", isLink: false },
-              { key: "scheduleGroup.name", label: "Время", isLink: false },
+              { key: "scheduleGroup.name", label: "Hасписание", isLink: false },
               { key: "dateOfStart", label: "Дата начала обучения", isLink: false},
               { key: "status", label: "Статус", isLink: false },
             ]}

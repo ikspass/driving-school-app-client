@@ -1,10 +1,10 @@
 import Button from "./UI/Button/Button";
 
-const WarningModal = ({ text, isOpen, onConfirm, onCancel }) => {
+const WarningModal = ({ text, isOpen, onConfirm, onCancel, style }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="warning-modal">
+    <div className="warning-modal" style={style}>
       <div className="content-container">
         <p>{text}</p>
         <div className="horizontal-container" style={{gap: '10px', alignSelf:'end'}}>

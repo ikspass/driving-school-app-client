@@ -1,9 +1,7 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TEACHER_ROUTE } from '../../utils/consts';
-import { Context } from '../..';
-import { fetchUsers, fetchQuals, deleteTeacher, deleteUser, fetchTeacherQuals, fetchTeachers } from '../../http/adminAPI';
-import SelectableInformationTable from '../../components/SelectableInformationTable'
+import { fetchTeachers } from '../../http/adminAPI';
 import SingleFilterButtons from '../../components/UI/SingleFilterButtons/SingleFilterButtons';
 import Button from '../../components/UI/Button/Button';
 import CreateTeacher from '../../components/admin/CreateTeacher';
@@ -13,7 +11,6 @@ import InformationTable from '../../components/InformationTable';
 const AdminTeachersPage = observer(() => {
 
   const [teachers, setTeachers] = useState([])
-  const [quals, setQuals] = useState([])
 
   const [createTeacherModal, setCreateTeacherModal] = useState(false)
 
@@ -24,8 +21,6 @@ const AdminTeachersPage = observer(() => {
       try {
         const teachers = await fetchTeachers();
         setTeachers(teachers);
-        const quals = await fetchQuals();
-        setQuals(quals);
       } catch (error) {
         console.error(error);
       } finally {
@@ -38,23 +33,14 @@ const AdminTeachersPage = observer(() => {
   const statuses = [
     {id: 1, value: 'Активен'},
     {id: 2, value: 'Не активен'},
-    {id: 3, value: 'В отпуске'},
-    {id: 4, value: 'Более не работает'},
   ]
 
-  const [selectedQual, setSelectedQual] = useState(null)
   const [selectedStatus, setSelectedStatus] = useState(statuses[0])
 
   const filteredTeachers = teachers.filter(teacher => {
     const matchesStatus = selectedStatus ? teacher.status === selectedStatus.value : true;
-    const matchesQual = selectedQual ? teacher.quals.some(qual => qual.description === selectedQual.value) : true;
-    return matchesStatus && matchesQual;
+    return matchesStatus;
   });
-
-  const transformedTeachers = filteredTeachers.map(teacher => ({
-    ...teacher,
-    quals: teacher.quals.map(qual => qual.description) // Объединяем описания в строку
-  }));
 
   const columns = [
     { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${TEACHER_ROUTE}/${row.id}`},
@@ -75,6 +61,7 @@ const AdminTeachersPage = observer(() => {
 
   return (
     <div className="filter-container">
+      <p className="heading-text-2">Преподаватели</p>
       <Modal
         children={<CreateTeacher onClose={() => {
           setCreateTeacherModal(false)
@@ -85,13 +72,12 @@ const AdminTeachersPage = observer(() => {
         />
       <SingleFilterButtons filters={statuses} selected={selectedStatus} setSelected={setSelectedStatus} />
       <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
-        <div className="horizontal-container">
           <InformationTable
+            style={{width: '100%'}}
             columns={columns}
-            data={transformedTeachers}
+            data={filteredTeachers}
             numbered={true}
           />
-        </div>
         <div className="button-container">
           <Button className='outline' onClick={() => setCreateTeacherModal(true)}>Добавить преподавателя</Button>
         </div>

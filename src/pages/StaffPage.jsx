@@ -30,10 +30,6 @@ const StaffPage = observer(() => {
 
         const categories = await fetchCategories();
         setCategories(categories);
-
-        const quals = await fetchQuals();
-        setQuals(quals);
-
       } catch (error) {
         console.error(error)
       } finally {
@@ -46,10 +42,8 @@ const StaffPage = observer(() => {
   const statuses = [
     { id: 1, value: 'Активен'},
     { id: 2, value: 'Не активен'},
-    { id: 3, value: 'Более не работает'},
   ]
 
-  const [selectedQual, setSelectedQual] = useState(null)
   const [selectedTeacherStatus, setSelectedTeacherStatus] = useState(statuses[0])
 
   const [selectedCategory, setSelectedCategory] = useState([])
@@ -57,8 +51,7 @@ const StaffPage = observer(() => {
   
   const filteredTeachers = teachers.filter(teacher => {
     const matchesStatus = selectedTeacherStatus ? teacher.status === selectedTeacherStatus.value : true;
-    const matchesQual = selectedQual ? teacher.quals.some(qual => qual.description === selectedQual.value) : true;    
-    return matchesStatus && matchesQual;
+    return matchesStatus;
   });
   
   const filteredInstructors = instructors.filter(instructor => {
@@ -70,11 +63,6 @@ const StaffPage = observer(() => {
     : true;
     return matchesStatus && matchesCategory;
   });
-
-  const transformedTeachers = filteredTeachers.map(teacher => ({
-    ...teacher,
-    quals: teacher.quals.map(qual => qual.description)
-  }));
 
   const transformedInstructors = filteredInstructors.map(instructor => ({
     ...instructor,
@@ -106,28 +94,22 @@ const StaffPage = observer(() => {
       <div className="filter-container">
         <p className="heading-text-2">Преподаватели</p>
         <div className='horizontal-container'>
-          <div className="filter-container">
+          <div className="filter-container" style={{width: '50%'}}>
             <SingleFilterButtons 
                filters={statuses.map(elem => ({id: elem.id, value: elem.value}))}
                selected={selectedTeacherStatus}
                setSelected={setSelectedTeacherStatus}
             />
-            <InformationTable 
-              columns={teacherColumns}
-              data={transformedTeachers}
-              numbered = {true}
-            />
-          </div>
-          <div className="filter-container">
-            <SingleFilterButtons 
-              title='Квалификация'
-              filters={quals.map(elem => ({id: elem.id, value: elem.description}))}
-              selected={selectedQual}
-              setSelected={setSelectedQual}
-            />
+              <InformationTable 
+                style={{width: '100%'}}
+                columns={teacherColumns}
+                data={filteredTeachers}
+                numbered = {true}
+              />
           </div>
         </div>
       </div>
+      <div></div>
       <div className="filter-container">
         <p className="heading-text-2">Инструкторы</p>
         <div className='horizontal-container'>
@@ -137,11 +119,13 @@ const StaffPage = observer(() => {
                selected={selectedInstructorStatus}
                setSelected={setSelectedInstructorStatus}
             />
-            <InformationTable 
-              columns={instructorColumns}
-              data={transformedInstructors}
-              numbered = {true}
-            />
+              <InformationTable 
+                style={{width: '50vw'}}
+                columns={instructorColumns}
+                data={transformedInstructors}
+                numbered = {true}
+              />
+
           </div>
           <div className="filter-container">
             <MultipleFilterButtons 

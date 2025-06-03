@@ -12,6 +12,7 @@ const EventTable = ({ event }) => {
     { key: 'time', label: 'Время', isLink: false },
     { key: 'group.name', label: 'Группа', isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.group.id}` },
     { key: 'teacher.user.fullName', label: 'Преподаватель', isLink: true, navigateTo: (row) => `${TEACHER_ROUTE}/${row.teacher.id}` },
+    { key: 'status', label: 'Статус', isLink: false },
   ];
 
   const testColumns = [
@@ -20,15 +21,18 @@ const EventTable = ({ event }) => {
     { key: 'time', label: 'Время', isLink: false },
     { key: 'group.name', label: 'Группа', isLink: false },
     { key: 'test', label: 'Зачёт/экзамен', isLink: true },
+    { key: 'status', label: 'Статус', isLink: false },
   ];
 
   const drivingColumns = [
     { key: 'type', label: 'Событие', isLink: true, navigateTo: (row) => `${DRIVING_ROUTE}/${row.id}` },
     { key: 'date', label: 'Дата', isLink: false },
     { key: 'time', label: 'Время', isLink: false },
-    { key: 'student.user.fullName', label: 'Студент', isLink: true, navigateTo: (row) => `${STUDENT_ROUTE}/${row.studentId}`},
-    { key: 'instructor.user.fullName', label: 'Инструктор', isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructorId}`},
+    { key: 'place.value', label: 'Локация', isLink: false },
+    { key: 'student.user.fullName', label: 'Курсант', isLink: true, navigateTo: (row) => `${STUDENT_ROUTE}/${row.studentId}`},
+    // { key: 'instructor.user.fullName', label: 'Инструктор', isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructorId}`},
     { key: 'transport.name', label: 'Транспорт', isLink: false },
+    { key: 'status', label: 'Статус', isLink: false },
   ];
 
   const getValue = (row, key) => {
@@ -87,10 +91,6 @@ const EventTable = ({ event }) => {
           {event.type === 'Вождение' && renderTableRows(drivingColumns)}
         </tbody>
       </table>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <EditButton />
-        <DeleteButton />
-      </div>
     </div>
     :
     <table className="event-table normal-text">

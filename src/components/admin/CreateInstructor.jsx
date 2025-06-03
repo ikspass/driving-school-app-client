@@ -54,7 +54,6 @@ const CreateInstructor = observer(({onClose}) => {
     .then(data => {
       console.log('Пользователь создан', data);
       if (data && data.id) {
-
         createInstructor({userId: data.id, dateOfEmployment: dateOfEmployment})
         .then(data => {
           console.log('Инструктор создан', data);
@@ -63,7 +62,7 @@ const CreateInstructor = observer(({onClose}) => {
             createInstructorCategories({ instructorId: data.id, categoryId: elem.id })
           });
           console.log('Категории созданы');
-
+          
           onClose();
         })
         .catch(err => {

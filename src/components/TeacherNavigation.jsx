@@ -6,15 +6,14 @@ import { ReactComponent as GroupIcon } from '../styles/svg/groups.svg';
 import { ReactComponent as ScheduleIcon } from '../styles/svg/schedule.svg';
 import { ReactComponent as MaterialsIcon } from '../styles/svg/materials.svg';
 import { Link } from 'react-router-dom';
-import { CONTACTS_ROUTE, GROUP_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, MATERIALS_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE } from '../utils/consts';
+import { GROUPS_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE } from '../utils/consts';
 import { Context } from '..';
 import { observer } from 'mobx-react-lite';
 import { fetchUserById } from '../http/adminAPI';
 
-const StaffNavigation = observer(() => {
-
-  const {userStore} = useContext(Context)
-  const [link, setLink] = useState('')
+const TeacherNavigation = observer(() => {
+  const { userStore } = useContext(Context);
+  const [user, setUser] = useState("");
 
   const [loading, setLoading] = useState(true);
 
@@ -22,19 +21,17 @@ const StaffNavigation = observer(() => {
     const fetchData = async () => {
       try {
         const userData = await fetchUserById(userStore.user.id);
-
-        if (userData.role.value === 'teacher') setLink(`${TEACHER_ROUTE}/${userData.teacher.id}`)
-        if (userData.role.value === 'instructor') setLink(`${INSTRUCTOR_ROUTE}/${userData.instructor.id}`)
+        setUser(userData);
 
       } catch (error) {
-        console.error(error)
+        console.error(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
     fetchData();
-  }, [])
-  
+  }, []);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -57,11 +54,7 @@ const StaffNavigation = observer(() => {
         <StaffIcon/>
         <p className="normal-text">Персонал</p>
       </Link>
-      <Link to={MATERIALS_ROUTE} className="navigation-item">
-        <MaterialsIcon/>
-        <p className="normal-text">Материалы</p>
-      </Link>  
-      <Link to={link} className="navigation-item">
+      <Link to={`${TEACHER_ROUTE}/${user.teacher.id}`} className="navigation-item">
         <MaterialsIcon/>
         <p className="normal-text">Мои данные</p>
       </Link>  
@@ -69,4 +62,4 @@ const StaffNavigation = observer(() => {
   )
 })
 
-export default StaffNavigation;
+export default TeacherNavigation;

@@ -34,14 +34,13 @@ export default function AdminPage() {
 
   return (
     <div className='horizontal-container' style={{marginTop: '20px'}}>
-      <div>
+      <div className='admin-nav'>
         <ListGroup 
-          className='admin-nav'
           title='Навигация'
           items={items}
           onSelect={(component) => setSelectedComponent(component)}
         />
-        <Button className="outline" style={{marginTop: '220px', width: '200px'}} onClick={logOut}>Выйти</Button>
+        <Button className="outline" style={{marginTop: '20px',width: '150px'}} onClick={logOut}>Выйти</Button>
       </div>
       <Dashboard ChildComponent={selectedComponent}/>
     </div>

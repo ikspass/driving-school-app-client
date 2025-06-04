@@ -44,7 +44,7 @@ a:hover{
 
 .heading-text-2{
   font-family: Roboto;
-  font-size: 24px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
@@ -54,7 +54,7 @@ a:hover{
 
 .normal-text{
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: normal; 
@@ -68,7 +68,7 @@ a:hover{
 .small-text{
   color: var(--dark-gray);
   font-family: Roboto;
-  font-size: 12px;
+  font-size: 11px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -78,7 +78,7 @@ a{
 }
 .link-text{
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: normal; 
@@ -100,8 +100,10 @@ code {
 
 .main-container{
   /* padding: 20px 0 40px 0; */
-  width: 1800px;
+  width: 1300px;
   margin: 0 auto;
+  padding-bottom: 100px;
+  padding-top: 20px;
   /* background-color: #5EBCFF; */
 }
 
@@ -154,7 +156,7 @@ code {
 
 .navigation-item{
   display: flex;
-  padding: 10px;
+  padding: 7px;
   align-items: center;
   gap: 10px;
   border-bottom: 3px solid var(--white);
@@ -170,14 +172,14 @@ code {
 
 .navigation-item.selected{
   display: flex;
-  padding: 10px;
+  padding: 7px;
   align-items: center;
   gap: 10px;
   border-bottom: 3px solid var(--accent);
 }
 
 .button-container{
-  width: 250px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -221,7 +223,7 @@ code {
 .description-table td {
   border-right: 1px solid var(--gray);
   border-bottom: 1px solid var(--gray);
-  padding: 10px;
+  padding: 7px;
   margin: 0;
   width: fit-content;
   max-width: 50vw;
@@ -255,7 +257,7 @@ code {
 .information-table td, .information-table th {
   border-right: 1px solid var(--gray);
   border-bottom: 1px solid var(--gray);
-  padding: 10px;
+  padding: 7px;
   margin: 0;
   text-align: center;
   justify-items: center;
@@ -368,7 +370,7 @@ code {
 
 .selected-frame{
   border: 3px solid var(--white);
-  padding: 5px;
+  padding: 7px;
   border-radius: 10px;
   transition: 0.3s;
 }
@@ -410,7 +412,7 @@ code {
 .event-table td {
   border-right: 1px solid var(--gray);
   border-bottom: 1px solid var(--gray);
-  padding: 10px;
+  padding: 7px;
   margin: 0;
 }
   
@@ -432,12 +434,17 @@ code {
 }
 
 .main-input input{
-  height: 40px;
-  padding: 7px 20px;
+  padding: 7px 15px;
   border-radius: 100px;
   border: 1px solid var(--gray);
   width: 100%;
 }
+
+input.error-input{
+    border: 1px solid red;
+  
+}
+
 form{
   display: flex;
   flex-direction: column;
@@ -454,7 +461,7 @@ form{
 
 .horizontal-container{
   display: flex;
-  gap: 30px;
+  gap: 20px;
   /* flex-wrap: wrap; */
 }
 
@@ -508,8 +515,9 @@ form{
 
 .dashboard{
   display: flex;
-  /* background-color: var(--light-accent); */
-  flex: 1
+  margin-left: 170px;
+  flex: 1;
+  width: 100vw;
 }
 
 .modal-overlay {
@@ -537,11 +545,12 @@ form{
 
 .warning-modal {
   background: white;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
   box-shadow: 0 0px 10px rgba(255, 0, 0, 0.2);
   position: relative;
   width: 100%;
+  font-size: 12px;
   border: 1px solid var(--red);
   min-width: 300px;
   max-width: 700px;
@@ -592,3 +601,4 @@ form{
   padding: 20px 30px;
   margin-bottom: 30px;
 }
+

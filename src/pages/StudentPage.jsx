@@ -4,15 +4,16 @@ import InformationTable from '../components/InformationTable'
 import Button from '../components/UI/Button/Button'
 import { observer } from 'mobx-react-lite'
 import { Context } from '..'
-import { useNavigate, useParams } from 'react-router-dom'
-import { ERROR_PAGE, GROUP_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
-import { fetchStudentById, fetchUserById, fetchUsers, updateStudentStatus } from '../http/adminAPI'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
+import { ADMIN_ROUTE, ERROR_PAGE, GROUP_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
+import { deleteStudent, fetchStudentById, fetchUserById, fetchUsers, updateStudentStatus } from '../http/adminAPI'
 import Modal from '../components/Modal'
 import AssignInstructor from '../components/admin/AssignInstructor'
 import StudentChangeGroup from '../components/admin/StudentChangeGroup'
 import WarningModal from '../components/WarningModal'
 import SuccessModal from '../components/SuccessModal'
 import PinList from '../components/UI/PinList/PinList'
+import ButtonBack from '../components/UI/ButtonBack/ButtonBack'
 
 const StudentPage = observer(({}) => {
 
@@ -34,18 +35,37 @@ const StudentPage = observer(({}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const student = await fetchStudentById(id);
-        setStudent(student);
+        
+        const userData = await fetchUserById(userStore.user.id);
 
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+        const studentData = await fetchStudentById(id);
+        await setStudent(studentData);
+        
         if(role === 'student'){
-          if(id != userStore.user.student.id){
+          if(id != userData.student?.id){
             navigate(ERROR_PAGE)
           }
         }
+          const tableData = role === 'admin' ?
+          [
+            {key:'ФИО', value: studentData.user.fullName},
+            {key:'Номер телефона', value: studentData.user.phoneNumber},
+            {key:'Дата рождения', value: studentData.user.dateOfBirth},
+            {key:'Идентификационный номер', value: studentData.user.idNumber},
+            {key:'Номер паспорта', value: studentData.user.passportNumber},
+          ]
+          :
+          [
+            {key:'ФИО', value: studentData.user.fullName},
+            {key:'Номер телефона', value: studentData.user.phoneNumber},
+            {key:'Дата рождения', value: studentData.user.dateOfBirth},
+          ]
+        
+      } catch (error) {
+        console.error(error);
+        navigate(ERROR_PAGE)
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -56,8 +76,8 @@ const StudentPage = observer(({}) => {
     setStudent(data);
   }
 
-  const expelStudent = async () => {
-    await updateStudentStatus(id, 'Отчислен')
+  const handleDeleteStudent = async () => {
+    await deleteStudent(id)
   }
 
   if (loading) {
@@ -66,6 +86,11 @@ const StudentPage = observer(({}) => {
 
   return (
     <>
+      {role === 'admin' && 
+      <NavLink to={ADMIN_ROUTE}>
+        <ButtonBack />
+      </NavLink>
+      }
       <Modal 
         children={
           <AssignInstructor
@@ -93,18 +118,6 @@ const StudentPage = observer(({}) => {
         onClose={() => setChangeGroupModal(false)}
       />
 
-      {/* <Modal 
-        children={
-          <AssignInstructor
-            onClose={() => {
-              setAssignInstructorModal(false);
-              updateData()
-            }}
-          />
-        }
-        isOpen={assignInstructorModal}
-        onClose={() => setAssignInstructorModal(false)}
-      /> */}
       <div className="content-container">
         <p className="heading-text-2">Персональные данные курсанта</p>
         <div className="content-container">
@@ -117,7 +130,6 @@ const StudentPage = observer(({}) => {
                 {key:'ФИО', value: student.user.fullName},
                 {key:'Номер телефона', value: student.user.phoneNumber},
                 {key:'Дата рождения', value: student.user.dateOfBirth},
-                {key:'Адрес', value: student.user.adress},
                 {key:'Идентификационный номер', value: student.user.idNumber},
                 {key:'Номер паспорта', value: student.user.passportNumber},
               ]}
@@ -130,17 +142,18 @@ const StudentPage = observer(({}) => {
             {role !== 'student' &&
             <div style={{display: 'flex', flex: 1, justifyContent: 'end'}}>
               <div className="button-container">
-                <Button className='outline' style={{width: '100%'}} onClick={() => setAssignInstructorModal(true)}>Назначить инструктора</Button>
+                <Button className='outline' style={{width: '100%'}} onClick={() => setAssignInstructorModal(true)}>Изменить инструктора</Button>
                 <Button className='outline' style={{width: '100%'}} onClick={() => setChangeGroupModal(true)}>Изменить группу</Button>
-                <Button className='outline' style={{width: '100%'}}>Редактировать данные()</Button>
-                <Button className='danger' style={{width: '100%'}} onClick={() => setWarningModal(true)}>Отчислить курсанта</Button>
+                <Button className='outline' style={{width: '100%'}}>Редактировать данные</Button>
+                <Button className='danger' style={{width: '100%'}} onClick={() => setWarningModal(true)}>Удалить</Button>
                 <WarningModal 
-                  text='Вы уверены что хотите отчислить курсанта?'
+                  style={{top: '-51px'}}
+                  text='Вы уверены что хотите удалить курсанта?'
                   isOpen={warningModal}
                   onConfirm={() => {
-                    expelStudent()
                     setWarningModal(false)
-                    updateData();
+                    handleDeleteStudent()
+                    navigate(ADMIN_ROUTE)
                   }}
                   onCancel={() => setWarningModal(false)}
                 />

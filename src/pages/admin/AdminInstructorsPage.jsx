@@ -71,10 +71,8 @@ const AdminInstructorsPage = observer(() => {
   const columns = [
     { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.id}`},
     { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
-    { key: "user.dateOfBirth", label: "Дата рождения", isLink: false },
     { key: "categories", label: "Категории", isLink: false },
     { key: "dateOfEmployment", label: "Дата приёма на работу", isLink: false },
-    { key: "status", label: "Статус", isLink: false },
   ];
 
   const transformedInstructors = filteredInstructors.map(instructor => ({
@@ -103,6 +101,7 @@ const AdminInstructorsPage = observer(() => {
         isOpen={createInstructorModal}
         onClose={() => setCreateInstructorModal(false)}
       />
+      
       <SingleFilterButtons 
         filters={statuses}
         selected={selectedStatus}
@@ -115,7 +114,7 @@ const AdminInstructorsPage = observer(() => {
             columns={columns}
             data={transformedInstructors}
           />
-          <div className="content-container" style={{width: '400px'}}>
+          <div className="content-container" style={{width: '200px'}}>
             <MultipleFilterButtons 
               title='Категория'
               filters={categories.map(elem => ({id: elem.id, value: elem.value}))}
@@ -125,7 +124,6 @@ const AdminInstructorsPage = observer(() => {
           </div>
         <div className="button-container">
           <Button className='outline' onClick={() => setCreateInstructorModal(true)}>Добавить инструктора</Button>
-          <Button className='outline'>Редактировать данные</Button>
         </div>
       </div>
     </div>

@@ -5,15 +5,16 @@ import Button from '../components/UI/Button/Button';
 import Separator from '../components/UI/Separator/Separator';
 import PinList from '../components/UI/PinList/PinList';
 import Calendar from '../components/Calendar';
-import {useNavigate, useParams} from 'react-router-dom'
+import {NavLink, useNavigate, useParams} from 'react-router-dom'
 import { fetchGroupById, fetchUserById } from '../http/adminAPI';
 import { Context } from '..';
-import { ERROR_PAGE, GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE, TEACHER_ROUTE } from '../utils/consts';
+import { ADMIN_ROUTE, ERROR_PAGE, GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE, TEACHER_ROUTE } from '../utils/consts';
 import { getDateInfo } from '../utils/calendar';
 import Modal from '../components/Modal';
 import GroupAssignStudents from '../components/admin/GroupAssignStudents';
 import SendMessage from '../components/admin/SendMessage';
 import GroupChangeTeacher from '../components/admin/GroupChangeTeacher';
+import ButtonBack from '../components/UI/ButtonBack/ButtonBack';
 
 function GroupPage() {
 
@@ -79,10 +80,7 @@ function GroupPage() {
   const studentsColumns = role === 'student' ?
   [
     { key: "user.fullName", label: "ФИО"},
-    // { key: "user.dateOfBirth", label: "Дата рождения", isLink: false },
     { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
-    // { key: "instructor.user.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
-    // { key: "status", label: "Статус", isLink: false },
   ]
   :
   [
@@ -90,7 +88,6 @@ function GroupPage() {
     { key: "user.dateOfBirth", label: "Дата рождения", isLink: false },
     { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
     { key: "instructor.user.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
-    { key: "status", label: "Статус", isLink: false },
   ]
   
   const studentsInfo = group.students ? group.students.map((student) => student) : [];
@@ -109,6 +106,11 @@ function GroupPage() {
 
   return (
     <>
+      {role === 'admin' && 
+      <NavLink to={ADMIN_ROUTE}>
+        <ButtonBack />
+      </NavLink>
+      }
       <Modal 
         children={
           <GroupAssignStudents 
@@ -156,11 +158,6 @@ function GroupPage() {
             <DescriptionTable
               value = {groupData}
             />
-            <div className="filter-container">
-              <PinList
-                value={[group.status]}
-              />
-            </div>
             {role === 'admin' &&
               <div style={{display: 'flex', flex: 1, justifyContent: 'end'}}>
                 <div className='button-container'>

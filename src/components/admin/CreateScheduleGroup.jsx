@@ -5,25 +5,24 @@ import { Context } from "../..";
 import SingleFilterButtons from "../UI/SingleFilterButtons/SingleFilterButtons"
 import { createGroup, createScheduleGroup, fetchCategories, fetchScheduleGroups, fetchUsers } from "../../http/adminAPI";
 import { observer } from "mobx-react-lite";
+import ExceptionModal from "../ExceptionModal";
 
 const CreateScheduleGroup = observer(({onClose}) => {
     const [name, setName] = useState('');
-    const [minTime, setMinTime] = useState('');
-    const [maxTime, setMaxTime] = useState('');
-
+    const [exceptionModal, setExceptionModal] = useState(false)
 
     const confirm = async (e) => {
       e.preventDefault();
-      if (!name || !minTime || !maxTime) {
-        alert("Пожалуйста, заполните все поля!");
-        return;
+      if (!name) {
+        setExceptionModal(true)
       }
-      try {
-        const data = await createScheduleGroup({name: name, minTime: minTime, maxTime: maxTime});
-        console.log(data);
-        onClose();
-      } catch (error) {
-        console.error("Ошибка при создании расписания:", error);
+      else {
+        try {
+          const data = await createScheduleGroup({name: name});
+          onClose();
+        } catch (error) {
+          console.error("Ошибка при создании расписания:", error);
+        }
       }
     }
     return(
@@ -35,19 +34,16 @@ const CreateScheduleGroup = observer(({onClose}) => {
                         value={name}
                         onChange={e => setName(e.target.value)}
                         title={"Название"}  
-                    /> 
-                    <Input
-                        value={minTime}
-                        onChange={e => setMinTime(e.target.value)}
-                        title={"Раннее время"} 
-                    /> 
-                    <Input
-                        value={maxTime}
-                        onChange={e => setMaxTime(e.target.value)}
-                        title={"Позднее время"} 
+                        isValid={true}
                     /> 
                 </div>
                 <Button onClick={confirm}>Сохранить</Button>
+                <ExceptionModal
+                  style={{top: '-60px'}}
+                  text='Заполните все поля'
+                  isOpen={exceptionModal}
+                  onConfirm={() => setExceptionModal(false)}
+                />
             </form>
         </div>
     )

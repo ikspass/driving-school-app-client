@@ -5,12 +5,15 @@ import Input from '../UI/Input/Input';
 import Button from '../UI/Button/Button';
 import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons';
 import { Context } from '../..';
+import ExceptionModal from '../ExceptionModal';
 
 const CreateTransport = observer(({onClose}) => {
   const [name, setName] = useState('');
   const [sign, setSign] = useState('');
   const [color, setColor] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(null);
+  const [exceptionModal, setExceptionModal] = useState(false)
+
 
   const {schoolStore} = useContext(Context)
 
@@ -21,18 +24,21 @@ const CreateTransport = observer(({onClose}) => {
   const confirm = async (e) => {
     e.preventDefault();
 
-    if (!name || !sign || !color) {
-      alert("Пожалуйста, заполните все поля!");
-      return;
+    if (!name || !sign || !color || !category) {
+      setExceptionModal(true)
+
+    }
+    else{
+      try {
+        const data = await createTransport({name: name, sign: sign, color: color, categoryValue: category.value});
+        console.log(data);
+        onClose();
+      } catch (error) {
+          console.error("Ошибка при создании транспорта:", error);
+      }
+
     }
 
-    try {
-      const data = await createTransport({name: name, sign: sign, color: color, categoryValue: category.value});
-      console.log(data);
-      onClose();
-    } catch (error) {
-        console.error("Ошибка при создании транспорта:", error);
-    }
 }
 
   return (
@@ -64,6 +70,12 @@ const CreateTransport = observer(({onClose}) => {
                     />
                 </div>
                 <Button onClick={confirm}>Сохранить</Button>
+                <ExceptionModal
+                  style={{top: '-60px'}}
+                  text='Заполните все поля'
+                  isOpen={exceptionModal}
+                  onConfirm={() => setExceptionModal(false)}
+                />
             </form>
         </div>
     </>

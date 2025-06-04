@@ -1,16 +1,18 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Context } from '..';
-import { fetchInstructorById, fetchStudents, fetchStudentsByInstructor, fetchUserById } from '../http/adminAPI';
+import { deleteInstructor, fetchInstructorById, fetchStudents, fetchStudentsByInstructor, fetchUserById } from '../http/adminAPI';
 import Button from '../components/UI/Button/Button';
 import InformationTable from '../components/InformationTable';
 import DescriptionTable from '../components/DescriptionTable';
 import PinList from '../components/UI/PinList/PinList';
 import AssignTransport from '../components/admin/AssignTransport';
 import Modal from '../components/Modal';
-import { ERROR_PAGE, GROUP_ROUTE, STUDENT_ROUTE } from '../utils/consts';
+import { ADMIN_ROUTE, ERROR_PAGE, GROUP_ROUTE, STUDENT_ROUTE } from '../utils/consts';
 import AssignStudent from '../components/admin/AssignStudent';
+import WarningModal from '../components/WarningModal';
+import ButtonBack from '../components/UI/ButtonBack/ButtonBack';
 
 const InstructorPage = observer(() => {
 
@@ -26,6 +28,7 @@ const InstructorPage = observer(() => {
   const [loading, setLoading] = useState(true);
   const [assignTransportModal, setAssignTransportModal] = useState(false)
   const [assignStudentModal, setAssignStudentModal ] = useState(false)
+  const [warningModal, setWarningModal] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,18 +40,10 @@ const InstructorPage = observer(() => {
 
         const dataForAdmin = [
           { key: 'ФИО', value: instructor.user.fullName },
-          { key: 'Адрес', value: instructor.user.adress },
           { key: 'Номер телефона', value: instructor.user.phoneNumber },
           { key: 'Дата рождения', value: instructor.user.dateOfBirth },
           { key: 'Идентификационный номер', value: instructor.user.idNumber },
           { key: 'Номер паспорта', value: instructor.user.passportNumber },
-        ]
-
-        const dataForStaff = [
-          { key: 'ФИО', value: instructor.user.fullName },
-          { key: 'Адрес', value: instructor.user.adress },
-          { key: 'Номер телефона', value: instructor.user.phoneNumber },
-          { key: 'Дата рождения', value: instructor.user.dateOfBirth },
         ]
 
         const dataForStudent = [
@@ -58,8 +53,7 @@ const InstructorPage = observer(() => {
         ]
 
         if(role === 'admin') setData(dataForAdmin);
-        if(role === 'instructor' || role === 'teacher') setData(dataForStaff);
-        if(role === 'student') setData(dataForStudent);
+        if(role === 'instructor' || role === 'teacher' || role === 'student') setData(dataForStudent);
 
       } catch (error) {
         console.error(error);
@@ -103,8 +97,17 @@ const InstructorPage = observer(() => {
     return <div>Loading...</div>;
   }
 
+  const handleDeleteInstructor = async () => {
+    await deleteInstructor(id)
+  }
+
   return (
     <>
+    {role === 'admin' && 
+      <NavLink to={ADMIN_ROUTE}>
+        <ButtonBack />
+      </NavLink>
+      }
     <Modal 
       children={<AssignTransport instructor={instructor} onClose={() => {
         setAssignTransportModal(false);
@@ -142,7 +145,18 @@ const InstructorPage = observer(() => {
                   <Button className='outline' style={{ width: '100%' }}>Редактировать данные ()</Button>
                   <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignTransportModal(true)}>Назначить транспорт</Button>
                   <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignStudentModal(true)}>Добавить курсантов</Button>
-                  <Button className='danger' style={{ width: '100%' }}>Удалить</Button>
+                  <Button className='danger' style={{ width: '100%' }} onClick={() => setWarningModal(true)}>Удалить</Button>
+                  <WarningModal
+                    style={{top: '-46px'}}
+                    text='Вы уверены что хотите удалить инструктора?'
+                    isOpen={warningModal}
+                    onConfirm={() => {
+                      setWarningModal(false)
+                      handleDeleteInstructor()
+                      navigate(ADMIN_ROUTE)
+                    }}
+                    onCancel={() => setWarningModal(false)}
+                  />
                 </div>
               </div>
             }

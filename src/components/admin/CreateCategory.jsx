@@ -4,10 +4,13 @@ import Input from '../UI/Input/Input';
 import { observer } from 'mobx-react-lite';
 import Button from '../UI/Button/Button';
 import { Context } from '../..';
+import ExceptionModal from '../ExceptionModal';
 
 const CreateCategory = observer(({onClose}) => {
   const [value, setValue] = useState('');
   const [desc, setDesc] = useState('');
+  const [exceptionModal, setExceptionModal] = useState(false)
+
 
   const {modalStore} = useContext(Context)
 
@@ -15,18 +18,20 @@ const CreateCategory = observer(({onClose}) => {
     e.preventDefault();
 
     if (!value || !desc) {
-      alert("Пожалуйста, заполните все поля!");
-      return;
+      setExceptionModal(true)
+
+    }
+    else{
+      try {
+        const data = await createCategory({value: value, description: desc});
+        console.log(data);
+        onClose();
+        modalStore.setIsOpen(true)
+      } catch (error) {
+        console.error("Ошибка при создании категории:", error);
+      }
     }
 
-    try {
-      const data = await createCategory({value: value, description: desc});
-      console.log(data);
-      onClose();
-      modalStore.setIsOpen(true)
-    } catch (error) {
-      console.error("Ошибка при создании категории:", error);
-    }
 }
 
   return (
@@ -47,6 +52,12 @@ const CreateCategory = observer(({onClose}) => {
                     /> 
                 </div>
                 <Button onClick={confirm}>Сохранить</Button>
+                <ExceptionModal
+                  style={{top: '-60px'}}
+                  text='Заполните все поля'
+                  isOpen={exceptionModal}
+                  onConfirm={() => setExceptionModal(false)}
+                />
             </form>
         </div>
     </>

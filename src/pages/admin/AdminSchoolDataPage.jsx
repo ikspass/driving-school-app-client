@@ -1,22 +1,17 @@
 import { observer } from 'mobx-react-lite'
-import React, { useState, useContext, useEffect } from 'react'
-import Button from '../../components/UI/Button/Button'
+import React, { useState, useEffect } from 'react'
 import CreateCategory from '../../components/admin/CreateCategory'
 import CreateTransport from '../../components/admin/CreateTransport'
 import CreateDrivingPlace from '../../components/admin/CreateDrivingPlace'
 import CreateTest from '../../components/admin/CreateTest'
 import Modal from '../../components/Modal'
-import InformationTable from '../../components/InformationTable'
-import { Context } from '../..'
-import MultipleFilterButtons from '../../components/UI/MultipleFilterButtons/MultipleFilterButtons'
 import Separator from '../../components/UI/Separator/Separator'
-import { fetchCategories, fetchDrivingPlaces, fetchEventsCount, fetchTests, fetchTransports, deleteCategory, deleteTransport, deleteDrivingPlace, deleteTest, fetchScheduleGroups } from '../../http/adminAPI'
+import { fetchCategories, fetchDrivingPlaces, fetchTests, fetchTransports, deleteCategory, deleteTransport, deleteDrivingPlace, deleteTest, fetchScheduleGroups } from '../../http/adminAPI'
 import SelectableInformationTable from '../../components/SelectableInformationTable'
 import DeleteButton from '../../components/UI/FunctionButton/DeleteButton'
 import CreateButton from '../../components/UI/FunctionButton/CreateButton'
 import CreateScheduleGroup from '../../components/admin/CreateScheduleGroup'
 import { INSTRUCTOR_ROUTE } from '../../utils/consts'
-import { fetchTestEvents } from '../../http/eventAPI'
 
 const AdminSchoolDataPage = observer(() => {
   const [createCategoryModal, setCreateCategoryModal] = useState(false)
@@ -25,76 +20,59 @@ const AdminSchoolDataPage = observer(() => {
   const [createTestModal, setCreateTestModal] = useState(false)
   const [createScheduleGroupModal, setCreateScheduleGroupModal] = useState(false)
 
-  const [selectedTestCategory, setSelectedTestCategory] = useState([])
-
   const [selectedCategories, setSelectedCategories] = useState([])
   const [selectedTransports, setSelectedTransports] = useState([])
   const [selectedDrivingPlaces, setSelectedDrivingPlaces] = useState([])
   const [selectedTests, setSelectedTests] = useState([])
+  const [selectedScheduleGroup, setSelectedScheduleGroup] = useState([])
 
+  const [categories, setCategories] = useState([])
+  const [transports, setTransports] = useState([])
+  const [drivingPlaces, setDrivingPlaces] = useState([])
+  const [tests, setTests] = useState([])
+  const [scheduleGroup, setScheduleGroup] = useState([])
 
-  const {schoolStore} = useContext(Context)
   const [loading, setLoading] = useState(true);
-
-  console.log(schoolStore.scheduleGroups)
-
-  // const filteredTests = schoolStore.tests.filter(test => {
-  //   const matchesStatus = selectedStatus ? test.status == selectedStatus.value : true;
-  //   const matchesTeacher = selectedTeacher.length > 0 ? selectedTeacher.some(teacher => teacher.id === test.teacherId) : true;
-  //   return matchesStatus && matchesCategory && matchesTeacher;
-  // });  
   
+  const updateCategories = async () => {
+    const data = await fetchCategories();
+    setCategories(data);
+  };
+
+  const updateTransport = async () => {
+    const data = await fetchTransports();
+    setTransports(data);
+  };
+
+  const updatePlaces = async () => {
+    const data = await fetchDrivingPlaces();
+    setDrivingPlaces(data);
+  };
+
+  const updateTests = async () => {
+    const data = await fetchTests();
+    setTests(data);
+  };
+
+  const updateScheduleGroups = async () => {
+    const data = await fetchScheduleGroups();
+    setScheduleGroup(data);
+  };
+
   useEffect(() => {
-    fetchCategories()
-      .then(data => {
-        schoolStore.setCategories(data);
+      try {
+        updateCategories();
+        updateTransport();
+        updatePlaces();
+        updateTests();
+        updateScheduleGroups();
+      } catch (error) {
+        console.error(error)
+      } finally {
         setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
-      });
-
-    fetchTransports()
-      .then(data => {
-        schoolStore.setTransports(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
-      });
-      
-    fetchDrivingPlaces()
-      .then(data => {
-        schoolStore.setDrivingPlaces(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
-      });
-      
-    fetchTests()
-      .then(data => {
-        schoolStore.setTests(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
-      });
-
-      fetchScheduleGroups()
-      .then(data => {
-        schoolStore.setScheduleGroups(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
-      });
-  }, [schoolStore]);
+      }
+    
+  }, []);
   
   if (loading) {
     return <div>Loading...</div>;
@@ -113,7 +91,6 @@ const AdminSchoolDataPage = observer(() => {
     { key: "color", label: "Цвет", isLink: false},
     { key: "category.value", label: "Категория", isLink: false},
     { key: "instructor.user.fullName", label: 'Инструктор', isLink: true , navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructorId}`},
-    { key: "status", label: 'Статус', isLink: false }
   ]
 
   const drivingPlaceColumns = [
@@ -126,33 +103,12 @@ const AdminSchoolDataPage = observer(() => {
     {key: 'id', label: 'ID'},
     { key: "name", label: "Название", isLink: false},
     { key: "description", label: "Описание", isLink: false},
-    { key: "category.value", label: "Категория", isLink: false},
   ]
 
   const scheduleGroupColumns = [
     {key: 'id', label: 'ID'},
     { key: "name", label: "Название", isLink: false},
   ]
-
-  const updateCategories = async () => {
-    const data = await fetchCategories();
-    schoolStore.setCategories(data);
-  };
-
-  const updateTransport = async () => {
-    const data = await fetchTransports();
-    schoolStore.setTransports(data);
-  };
-
-  const updatePlaces = async () => {
-    const data = await fetchDrivingPlaces();
-    schoolStore.setDrivingPlaces(data);
-  };
-
-  const updateTests = async () => {
-    const data = await fetchTests();
-    schoolStore.setTests(data);
-  };
 
   const handleDeleteCategory = async () => {
     if (selectedCategories.length !== 0){
@@ -192,6 +148,16 @@ const AdminSchoolDataPage = observer(() => {
       updateTests();
     }
     else alert('Зачёт/экзамен не выбран')
+  }
+
+  const handleDeleteScheduleGroup = async () => {
+    if (selectedScheduleGroup.length !== 0){
+      await Promise.all(selectedScheduleGroup.map(async (id) => {
+        await deleteTest(id)
+      }))
+      updateTests();
+    }
+    else alert('Расписание не выбрано')
   }
 
   return (
@@ -235,7 +201,7 @@ const AdminSchoolDataPage = observer(() => {
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <SelectableInformationTable 
             columns={categoryColumns}
-            data={schoolStore.categories}
+            data={categories}
             setSelectedRow={setSelectedCategories}
           />
           <div className="button-container">
@@ -249,7 +215,7 @@ const AdminSchoolDataPage = observer(() => {
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <SelectableInformationTable 
             columns={transportColumns}
-            data={schoolStore.transports}
+            data={transports}
             setSelectedRow={setSelectedTransports}
           />
           <div className="button-container">
@@ -263,7 +229,7 @@ const AdminSchoolDataPage = observer(() => {
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <SelectableInformationTable 
             columns={drivingPlaceColumns}
-            data={schoolStore.drivingPlaces}
+            data={drivingPlaces}
             setSelectedRow={setSelectedDrivingPlaces}
           />
           <div className="button-container">
@@ -277,17 +243,9 @@ const AdminSchoolDataPage = observer(() => {
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <SelectableInformationTable 
             columns={testColumns}
-            data={schoolStore.tests}
+            data={tests}
             setSelectedRow={setSelectedTests}
           />
-          <div className="filter-container">
-            <MultipleFilterButtons 
-              title='Категория'
-              filters={schoolStore.categories.map(elem => ({id: elem.id, value: elem.value}))}
-              selected={selectedTestCategory}
-              setSelected={setSelectedTestCategory}
-            />     
-          </div>
           <div className="button-container">
             <CreateButton onClick={() => setCreateTestModal(true)}/>
             <DeleteButton onClick={handleDeleteTest}/>
@@ -299,12 +257,12 @@ const AdminSchoolDataPage = observer(() => {
         <div className="horizontal-container" style={{justifyContent: 'space-between', marginBottom: '20px'}}>
           <SelectableInformationTable 
             columns={scheduleGroupColumns}
-            data={schoolStore.scheduleGroups}
-            // setSelectedRow={}
+            data={scheduleGroup}
+            setSelectedRow={setSelectedScheduleGroup}
           />
           <div className="button-container">
             <CreateButton onClick={() => setCreateScheduleGroupModal(true)}/>
-            <DeleteButton onClick={'handleDeleteSchedu'}/>
+            <DeleteButton onClick={handleDeleteScheduleGroup}/>
           </div>
         </div>
       </div>

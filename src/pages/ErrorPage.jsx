@@ -10,6 +10,7 @@ const ErrorPage = () => {
   return (
     <div className="content-container">
       <p className="heading-text-2">ERROR</p>
+      <div></div>
       <Button onClick={() => {navigate(routeStore.initialRoute)}}>Вернуться в приложение</Button>
     </div>
   );

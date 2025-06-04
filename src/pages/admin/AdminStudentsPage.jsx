@@ -44,7 +44,6 @@ const AdminStudentsPage = observer(() => {
   const statuses = [
     {id: 1, value: 'Активен'},
     {id: 2, value: 'Не активен'},
-    {id: 3, value: 'Обучение окончено'},
   ]
 
   const [selectedGroup, setSelectedGroup] = useState([])
@@ -60,10 +59,8 @@ const AdminStudentsPage = observer(() => {
 
   const columns = [
     { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
-    { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
     { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.groupId}`},
     { key: "instructor.user.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
-    { key: "status", label: "Статус", isLink: false },
   ];
 
   const updateStudents = async () => {
@@ -108,7 +105,7 @@ const AdminStudentsPage = observer(() => {
             data={filteredStudents}
             numbered = {true}
           />
-          <div className="content-container" style={{width: '400px'}}>
+          <div className="content-container" style={{width: '200px'}}>
             <MultipleFilterButtons 
               title='Группа'
               filters={groupFilters}

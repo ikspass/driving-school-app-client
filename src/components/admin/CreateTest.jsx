@@ -1,36 +1,32 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { createTest, fetchCategories } from '../../http/adminAPI';
+import React, { useState } from 'react'
+import { createTest } from '../../http/adminAPI';
 import { observer } from 'mobx-react-lite';
-import { Context } from '../..';
 import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons'
 import Button from '../UI/Button/Button';
 import Input from '../UI/Input/Input';
+import ExceptionModal from '../ExceptionModal';
 
 const CreateTest = observer(({onClose}) => {
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
-  const [category, setCategory] = useState('');
+  const [exceptionModal, setExceptionModal] = useState(false)
 
-  const {schoolStore} = useContext(Context);
-
-  useEffect(() => {
-    fetchCategories().then(data => schoolStore.setCategories(data))
-  }, [])
-  console.log(category)
   const confirm = async (e) => {
     e.preventDefault();
 
-    if (!name || !desc || !category) {
-      alert("Пожалуйста, заполните все поля!");
-      return;
-    }
+    if (!name || !desc) {
+      setExceptionModal(true)
 
-    try {
-      const data = await createTest({name: name, description: desc, categoryValue: category.value});
-      console.log(data);
-      onClose();
-    } catch (error) {
-        console.error("Ошибка при создании категории:", error);
+    }
+    else{
+      try {
+        const data = await createTest({name: name, description: desc});
+        console.log(data);
+        onClose();
+      } catch (error) {
+        console.error("Ошибка при создании зачёта/экзамена:", error);
+      }
+
     }
   }
 
@@ -50,14 +46,14 @@ const CreateTest = observer(({onClose}) => {
               onChange={e => setDesc(e.target.value)}
               title={"Описание"}  
             />
-            <SingleFilterButtons 
-              title='Категория'
-              filters={schoolStore.categories.map(elem => ({id: elem.id, value: elem.value}))}
-              selected={category}
-              setSelected={setCategory}
-            />
           </div>
           <Button onClick={confirm}>Сохранить</Button>
+          <ExceptionModal
+            style={{top: '-60px'}}
+            text='Заполните все поля'
+            isOpen={exceptionModal}
+            onConfirm={() => setExceptionModal(false)}
+          />
         </form>
       </div>
     </>

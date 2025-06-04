@@ -1,30 +1,43 @@
 import Input from "../UI/Input/Input";
-import ButtonBack from "../UI/ButtonBack/ButtonBack";
 import Button from "../UI/Button/Button";
-import React, {useState, useContext, useEffect} from 'react';
-import { Link, useNavigate} from "react-router-dom";
-import MultipleFilterButtons from "../UI/MultipleFilterButtons/MultipleFilterButtons";
+import React, {useState, useEffect} from 'react';
 import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons'
-import { Context } from "../..";
 import FileInput from "../UI/FileInput/FileInput";
 import { createStudent, createUser, fetchCategories } from "../../http/adminAPI";
 import { observer } from "mobx-react-lite";
+import ExceptionModal from "../ExceptionModal";
 
 const CreateStudent = observer(({onClose}) => {
   const [idNumber, setIdNumber] = useState('');
   const [passportNumber, setPassportNumber] = useState('');
-  const [adress, setAdress] = useState('');
   const [fullName, setFullName] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [category, setCategory] = useState(null);
+  const [exceptionModal, setExceptionModal] = useState(false)
+
+  const [schoolCategories, setSchoolCategories] = useState([]);
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  const {schoolStore} = useContext(Context)
+  const [validations, setValidations] = useState({
+    idNumber: true,
+    passportNumber: true,
+    fullName: true,
+    dateOfBirth: true,
+    phoneNumber: true,
+  });
 
   useEffect(() => {
-    fetchCategories().then(data => schoolStore.setCategories(data))
+    const fetchData = async () => {
+      try {
+        const data = await fetchCategories()
+        setSchoolCategories(data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    fetchData()
   }, [])
 
   const selectFile = e => {
@@ -35,45 +48,65 @@ const CreateStudent = observer(({onClose}) => {
 
   const confirm = async (e) => {
     e.preventDefault()
-    
-    const formDataUser = new FormData()
 
-    formDataUser.append('idNumber', idNumber)
-    formDataUser.append('passportNumber', passportNumber)
-    formDataUser.append('adress', adress)
-    formDataUser.append('fullName', fullName)
-    formDataUser.append('dateOfBirth', dateOfBirth)
-    formDataUser.append('phoneNumber', phoneNumber)
-    formDataUser.append('roleValue', 'student')
-    formDataUser.append('img', file)
+    const newValidations = {
+      idNumber: /^[A-Za-z0-9]{14}$/.test(idNumber),
+      passportNumber: /^[A-Za-z0-9]{9}$/.test(passportNumber),
+      fullName: /^[А-Яа-яЁёA-Za-z\s-]+$/.test(fullName),
+      dateOfBirth: /^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth),
+      phoneNumber: /^\+\d{12}$/.test(phoneNumber),
+    };
 
+    setValidations(newValidations);
     if (!category) {
-      console.error('Категория не выбрана');
+      setExceptionModal(true)
       return;
     }
+    const allValid = Object.values(newValidations).every(Boolean);
+    if (allValid) {
+    
+      const formDataUser = new FormData()
 
-    createUser(formDataUser)
-    .then(data => {
-      console.log('Пользователь создан', data);
-      if (data && data.id) {
+      formDataUser.append('idNumber', idNumber)
+      formDataUser.append('passportNumber', passportNumber)
+      formDataUser.append('fullName', fullName)
+      formDataUser.append('dateOfBirth', dateOfBirth)
+      formDataUser.append('phoneNumber', phoneNumber)
+      formDataUser.append('roleValue', 'student')
+      formDataUser.append('img', file)
 
-        createStudent({userId: data.id, categoryValue: category.value})
-        .then(data => {
-          console.log('Студент создан', data);
-          onClose();
-        })
-        .catch(err => {
-            console.error('Ошибка при создании студента:', err);
-        });
-
-      } else {
-        console.error('Не удалось получить id пользователя');
+      if (!category) {
+        setExceptionModal(true)
+        return;
       }
-    })
-    .catch(err => console.error('Ошибка при создании пользователя:', err));
+      else{
+        createUser(formDataUser)
+        .then(data => {
+          if (data && data.id) {
+  
+            createStudent({userId: data.id, categoryValue: category.value})
+            .then(data => {
+              onClose();
+            })
+            .catch(err => {
+                console.error('Ошибка при создании студента:', err);
+            });
+  
+          } else {
+            console.error('Не удалось получить id пользователя');
+          }
+        })
+        .catch(err => console.error('Ошибка при создании пользователя:', err));
+
+      }
+
+    }
   }
 
-  const navigate = useNavigate();
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    setPhoneNumber(value.startsWith('+') ? value : '+' + value.replace(/\+/g, ''));
+  };
 
   return(
     <div className='content-container'>
@@ -85,35 +118,35 @@ const CreateStudent = observer(({onClose}) => {
               value={idNumber}
               onChange={e => setIdNumber(e.target.value)}
               title={"Идентификационный номер"}  
+              isValid={validations.idNumber}
             /> 
             <Input
               value={passportNumber}
               onChange={e => setPassportNumber(e.target.value)}
               title={"Номер паспорта"}  
-            /> 
-            <Input
-              value={adress}
-              onChange={e => setAdress(e.target.value)}
-              title={"Место прописки"}  
-            /> 
+              isValid={validations.passportNumber}
+            />
             <Input
               value={fullName}
               onChange={e => setFullName(e.target.value)}
               title={"ФИО"} 
+              isValid={validations.fullName}
             />
             <Input
               value={dateOfBirth}
               onChange={e => setDateOfBirth(e.target.value)}
               title={"Дата рождения"} 
+              isValid={validations.dateOfBirth}
             />
             <Input
               value={phoneNumber}
-              onChange={e => setPhoneNumber(e.target.value)}
+              onChange={handlePhoneChange}
               title={"Номер телефона"} 
+              isValid={validations.phoneNumber}
             />
             <SingleFilterButtons
               title='Категория'
-              filters={schoolStore.categories.map(elem => ({id: elem.id, value: elem.value}))}
+              filters={schoolCategories.map(elem => ({id: elem.id, value: elem.value}))}
               selected={category}
               setSelected={setCategory}
             />
@@ -129,6 +162,12 @@ const CreateStudent = observer(({onClose}) => {
         </div>
       </form>
       <Button onClick={confirm}>Сохранить</Button>
+      <ExceptionModal
+        style={{top: '-60px'}}
+        text='Категория не выбрана'
+        isOpen={exceptionModal}
+        onConfirm={() => setExceptionModal(false)}
+      />
     </div>
   )
 })

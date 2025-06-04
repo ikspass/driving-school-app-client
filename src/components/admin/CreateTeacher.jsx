@@ -1,69 +1,81 @@
 import { observer } from 'mobx-react-lite';
-import React, { useState, useContext, useEffect } from 'react'
-import { Context } from '../..';
-import { createGroup, createTeacher, createTeacherQual, createUser, fetchCategories, fetchQuals, fetchTeachers } from '../../http/adminAPI';
+import React, { useState } from 'react';
+import { createUser, createTeacher } from '../../http/adminAPI';
 import Input from '../UI/Input/Input';
-import MultipleFilterButtons from '../UI/MultipleFilterButtons/MultipleFilterButtons';
 import Button from '../UI/Button/Button';
-import { useNavigate } from 'react-router-dom';
 import FileInput from '../UI/FileInput/FileInput';
 
-const CreateTeacher = observer(({onClose}) => {
+const CreateTeacher = observer(({ onClose }) => {
   const [idNumber, setIdNumber] = useState('');
   const [passportNumber, setPassportNumber] = useState('');
-  const [adress, setAdress] = useState('');
   const [fullName, setFullName] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('+');
   const [dateOfEmployment, setDateOfEmployment] = useState('');
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [validations, setValidations] = useState({
+    idNumber: true,
+    passportNumber: true,
+    fullName: true,
+    dateOfBirth: true,
+    phoneNumber: true,
+    dateOfEmployment: true,
+  });
 
-  const {schoolStore} = useContext(Context)
-
-  useEffect(() => {
-    fetchQuals().then(data => schoolStore.setQuals(data))
-  }, [])
-
-  const selectFile = e => {
+  const selectFile = (e) => {
     const selectedFile = e.target.files[0];
-    setFile(selectedFile)
+    setFile(selectedFile);
     setImagePreview(URL.createObjectURL(selectedFile));
-  }
+  };
 
   const confirm = async (e) => {
     e.preventDefault();
-  
-    const formDataUser = new FormData();
-    formDataUser.append('idNumber', idNumber);
-    formDataUser.append('passportNumber', passportNumber);
-    formDataUser.append('adress', adress);
-    formDataUser.append('fullName', fullName);
-    formDataUser.append('dateOfBirth', dateOfBirth);
-    formDataUser.append('phoneNumber', phoneNumber);
-    formDataUser.append('roleValue', 'teacher');
-    formDataUser.append('img', file);
-    
-    try {
-      const userData = await createUser(formDataUser);
-      console.log('Пользователь создан', userData);
-  
-      if (userData && userData.id) {
-        const teacherData = await createTeacher({ userId: userData.id, dateOfEmployment });
-        console.log('Преподаватель создан', teacherData);
-    
-        onClose();
-      } else {
-        console.error('Не удалось получить id пользователя');
+
+    // Проверьте корректность ввода перед отправкой
+    const newValidations = {
+      idNumber: /^[A-Za-z0-9]{14}$/.test(idNumber),
+      passportNumber: /^[A-Za-z0-9]{9}$/.test(passportNumber),
+      fullName: /^[А-Яа-яЁёA-Za-z\s-]+$/.test(fullName),
+      dateOfBirth: /^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth),
+      phoneNumber: /^\+\d{12}$/.test(phoneNumber),
+      dateOfEmployment: /^\d{4}-\d{2}-\d{2}$/.test(dateOfEmployment),
+    };
+
+    setValidations(newValidations);
+
+    const allValid = Object.values(newValidations).every(Boolean);
+    if (allValid) {
+      const formDataUser = new FormData();
+      formDataUser.append('idNumber', idNumber);
+      formDataUser.append('passportNumber', passportNumber);
+      formDataUser.append('fullName', fullName);
+      formDataUser.append('dateOfBirth', dateOfBirth);
+      formDataUser.append('phoneNumber', phoneNumber);
+      formDataUser.append('roleValue', 'teacher');
+      formDataUser.append('img', file);
+
+      try {
+        const userData = await createUser(formDataUser);
+        if (userData && userData.id) {
+          const teacherData = await createTeacher({ userId: userData.id, dateOfEmployment });
+          onClose();
+        } else {
+          console.error('Не удалось получить id пользователя');
+        }
+      } catch (err) {
+        console.error('Ошибка при создании:', err);
       }
-    } catch (err) {
-      console.error('Ошибка при создании:', err);
+      console.log("Форма отправлена!");
     }
   };
 
-  const navigate = useNavigate();
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    setPhoneNumber(value.startsWith('+') ? value : '+' + value.replace(/\+/g, ''));
+  };
 
-  return(
+  return (
     <div className='content-container'>
       <p className="heading-text-2">Добавить учётную запись преподавателя</p>
       <form>
@@ -73,36 +85,39 @@ const CreateTeacher = observer(({onClose}) => {
               value={idNumber}
               onChange={e => setIdNumber(e.target.value)}
               title={"Идентификационный номер"}  
+              isValid={validations.idNumber}
             /> 
             <Input
               value={passportNumber}
               onChange={e => setPassportNumber(e.target.value)}
               title={"Номер паспорта"}  
-            /> 
-            <Input
-              value={adress}
-              onChange={e => setAdress(e.target.value)}
-              title={"Место прописки"}  
+              isValid={validations.passportNumber}
             /> 
             <Input
               value={fullName}
               onChange={e => setFullName(e.target.value)}
               title={"ФИО"} 
+              isValid={validations.fullName}
             />
             <Input
               value={dateOfBirth}
+              title={'Дата рождения'}
+              placeholder='YYYY-MM-DD'
               onChange={e => setDateOfBirth(e.target.value)}
-              title={"Дата рождения"} 
+              isValid={validations.dateOfBirth}
             />
             <Input
               value={phoneNumber}
-              onChange={e => setPhoneNumber(e.target.value)}
+              onChange={handlePhoneChange}
               title={"Номер телефона"} 
+              isValid={validations.phoneNumber}
             />
             <Input
               value={dateOfEmployment}
+              title={'Дата приёма на работу'}
+              placeholder='YYYY-MM-DD'
               onChange={e => setDateOfEmployment(e.target.value)}
-              title={"Дата приёма на работу"} 
+              isValid={validations.dateOfEmployment}
             />
           </div>
           <div className="content-container-right">

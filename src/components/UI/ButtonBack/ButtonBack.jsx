@@ -5,7 +5,7 @@ const ButtonBack = () => {
     return (
         <div className={classes.buttonBack}>
             <ArrowIcon/>
-            <p>Назад</p>
+            <p className="normal-text">Назад</p>
         </div>
     )
 }

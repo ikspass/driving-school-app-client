@@ -14,10 +14,17 @@ const StudentNavigation = observer(() => {
   const { userStore } = useContext(Context);
   const [user, setUser] = useState({})
   
-  console.log(user);
   useEffect(() => {
-    const userData = fetchUserById(userStore.user.id);
-    setUser(userData);
+    const fetchData = async () => {
+      try {
+        const userData = await fetchUserById(userStore.user.id);
+        setUser(userData);
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
   }, [])
 
   return (

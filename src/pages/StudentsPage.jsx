@@ -50,8 +50,6 @@ const StudentsPage = observer(() => {
   const statuses = [
     {id: 1, value: 'Активен'},
     {id: 2, value: 'Не активен'},
-    {id: 3, value: 'Отчислен'},
-    {id: 4, value: 'Окончил обучение'},
   ]
 
   const [selectedGroup, setSelectedGroup] = useState([])

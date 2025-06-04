@@ -1,14 +1,15 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Context } from '..';
 import Button from '../components/UI/Button/Button';
 import InformationTable from '../components/InformationTable';
 import DescriptionTable from '../components/DescriptionTable';
 import PinList from '../components/UI/PinList/PinList';
 import { deleteTeacher, fetchTeacherById, fetchUserById } from '../http/adminAPI';
-import { ERROR_PAGE, GROUP_ROUTE } from '../utils/consts';
+import { ADMIN_ROUTE, ERROR_PAGE, GROUP_ROUTE } from '../utils/consts';
 import WarningModal from '../components/WarningModal';
+import ButtonBack from '../components/UI/ButtonBack/ButtonBack';
 
 const TeacherPage = observer(() => {
 
@@ -29,14 +30,20 @@ const TeacherPage = observer(() => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const userData = await fetchUserById(userStore.user.id);
 
         const teacher = await fetchTeacherById(id);
         setTeacher(teacher);
         setGroups(teacher.groups)
 
+        if(role === 'student'){
+          if(id != userData.student.group.teacherId){
+            navigate(ERROR_PAGE)
+          }
+        }
+
         const dataForAdmin = [
           { key: 'ФИО', value: teacher.user.fullName },
-          { key: 'Адрес', value: teacher.user.adress },
           { key: 'Номер телефона', value: teacher.user.phoneNumber },
           { key: 'Дата рождения', value: teacher.user.dateOfBirth },
           { key: 'Идентификационный номер', value: teacher.user.idNumber },
@@ -48,27 +55,16 @@ const TeacherPage = observer(() => {
           { key: 'Номер телефона', value: teacher.user.phoneNumber },
           { key: 'Дата рождения', value: teacher.user.dateOfBirth },
         ]
-      
-        const dataForStaff=[
-          { key: 'ФИО', value: teacher.user.fullName },
-          { key: 'Адрес', value: teacher.user.adress },
-          { key: 'Номер телефона', value: teacher.user.phoneNumber },
-          { key: 'Дата рождения', value: teacher.user.dateOfBirth },
-        ]
 
         if(role === 'admin') setTeacherData(dataForAdmin);
-        if(role === 'instructor' || role === 'teacher') setTeacherData(dataForStaff);
-        if(role === 'student') setTeacherData(dataForStudent);
+        if(role === 'instructor' || role === 'teacher' || role === 'student') setTeacherData(dataForStudent);
         
       } catch (error) {
         console.error(error);
+        navigate(ERROR_PAGE)
       } finally {
         setLoading(false);
-        if(role === 'student'){
-          if(id != userStore.user.student.group.teacherId){
-            navigate(ERROR_PAGE)
-          }
-        }
+        
       }
     };
     fetchData();
@@ -84,6 +80,11 @@ const TeacherPage = observer(() => {
     
   return (
     <div className="content-container">
+      {role === 'admin' && 
+      <NavLink to={ADMIN_ROUTE}>
+        <ButtonBack />
+      </NavLink>
+      }
       <p className="heading-text-2">Персональные данные преподавателя</p>
       <div className="content-container">
         <div className="horizontal-container">
@@ -104,11 +105,13 @@ const TeacherPage = observer(() => {
                 <Button className='outline' style={{ width: '100%' }}>Редактировать данные</Button>
                 <Button className='danger' style={{ width: '100%' }} onClick={() => {setWarningModal(true)}}>Удалить</Button>
                 <WarningModal 
+                  style={{top: '-46px'}}
                   text='Вы уверены что хотите удалить преподавателя?'
                   isOpen={warningModal}
                   onConfirm={() => {
                     setWarningModal(false)
                     handleDeleteTeacher()
+                    navigate(ADMIN_ROUTE)
                   }}
                   onCancel={() => setWarningModal(false)}
                 />

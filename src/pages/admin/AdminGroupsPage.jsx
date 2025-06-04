@@ -40,46 +40,21 @@ const AdminGroupsPage = observer(() => {
     fetchData();
   }, []);
 
-  const statuses = [
-    {id: 1, value: 'Активна'},
-    {id: 2, value: 'Обучение окончено'},
-  ]
-
   const [selectedCategory, setSelectedCategory] = useState([])
   const [selectedTeacher, setSelectedTeacher] = useState([])
-  const [selectedStatus, setSelectedStatus] = useState(statuses[0])
 
   const filteredGroups = groups.filter(group => {
-    const matchesStatus = selectedStatus ? group.status == selectedStatus.value : true;
     const matchesCategory = selectedCategory.length > 0 ? selectedCategory.some(cat => cat.id === group.categoryId) : true;
     const matchesTeacher = selectedTeacher.length > 0 ? selectedTeacher.some(teacher => teacher.id === group.teacherId) : true;
-    return matchesStatus && matchesCategory && matchesTeacher;
+    return matchesCategory && matchesTeacher;
   });
 
   const columns = [
     { key: "name", label: "Номер", isLink: true , navigateTo: (row) => `${GROUP_ROUTE}/${row.id}`},
     { key: "category.value", label: "Категория", isLink: false },
-    { key: "scheduleGroup.name", label: "Время", isLink: false },
     { key: "teacher.user.fullName", label: "Преподаватель", isLink: true, navigateTo: (row) => `${TEACHER_ROUTE}/${row.teacher.id}`},
     { key: "dateOfStart", label: "Дата начала обучения", isLink: false},
-    { key: "status", label: "Статус", isLink: false },
   ];
-
-  const [selectedRow, setSelectedRow] = useState(null);
-
-  const handleEditClick = () => {
-    if (selectedRow) {
-      if (selectedRow.length > 1){
-        const groupData = filteredGroups.find(group => group.id === selectedRow);
-        // setEditGroupModal(true);
-      }
-      else{
-        console.log("Выберите одну строку для редактирования")
-      }
-    } else {
-      console.log("Строка не выбрана");
-    }
-  };
 
   const updateGroups = async () => {
     const data = await fetchGroups();
@@ -105,11 +80,6 @@ const AdminGroupsPage = observer(() => {
         children={<EditGroup onClose={() => setEditGroupModal(false)}/>}
         isOpen={editGroupModal}
         onClose={() => setEditGroupModal(false)}
-      />
-      <SingleFilterButtons 
-        filters={statuses}
-        selected={selectedStatus}
-        setSelected={setSelectedStatus}
       />
       <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
           <InformationTable 
@@ -138,11 +108,6 @@ const AdminGroupsPage = observer(() => {
           >
             Добавить группу
           </Button>
-          {/* <Button className='outline'
-            onClick={handleEditClick}
-          >
-            Редактировать данные
-          </Button> */}
         </div>
       </div>
     </div>

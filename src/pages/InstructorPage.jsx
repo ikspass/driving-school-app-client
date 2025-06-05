@@ -13,6 +13,7 @@ import { ADMIN_ROUTE, ERROR_PAGE, GROUP_ROUTE, STUDENT_ROUTE } from '../utils/co
 import AssignStudent from '../components/admin/AssignStudent';
 import WarningModal from '../components/WarningModal';
 import ButtonBack from '../components/UI/ButtonBack/ButtonBack';
+import UpdateUser from '../components/admin/UpdateUser';
 
 const InstructorPage = observer(() => {
 
@@ -28,33 +29,18 @@ const InstructorPage = observer(() => {
   const [loading, setLoading] = useState(true);
   const [assignTransportModal, setAssignTransportModal] = useState(false)
   const [assignStudentModal, setAssignStudentModal ] = useState(false)
+  const [updateUserModal, setUpdateUserModal ] = useState(false)
   const [warningModal, setWarningModal] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const instructor = await fetchInstructorById(id);
-        setInstructor(instructor);
-        const students = await fetchStudentsByInstructor(instructor.id);
+        await updateInstructor();
+
+        const students = await fetchStudentsByInstructor(id);
         setStudents(students);
 
-        const dataForAdmin = [
-          { key: 'ФИО', value: instructor.user.fullName },
-          { key: 'Номер телефона', value: instructor.user.phoneNumber },
-          { key: 'Дата рождения', value: instructor.user.dateOfBirth },
-          { key: 'Идентификационный номер', value: instructor.user.idNumber },
-          { key: 'Номер паспорта', value: instructor.user.passportNumber },
-        ]
-
-        const dataForStudent = [
-          { key: 'ФИО', value: instructor.user.fullName },
-          { key: 'Номер телефона', value: instructor.user.phoneNumber },
-          { key: 'Дата рождения', value: instructor.user.dateOfBirth },
-        ]
-
-        if(role === 'admin') setData(dataForAdmin);
-        if(role === 'instructor' || role === 'teacher' || role === 'student') setData(dataForStudent);
-
+        
       } catch (error) {
         console.error(error);
       } finally {
@@ -91,6 +77,23 @@ const InstructorPage = observer(() => {
   const updateInstructor = async () => {
     const instructor = await fetchInstructorById(id);
     setInstructor(instructor);
+
+    const dataForAdmin = [
+      { key: 'ФИО', value: instructor.user.fullName },
+      { key: 'Номер телефона', value: instructor.user.phoneNumber },
+      { key: 'Дата рождения', value: instructor.user.dateOfBirth },
+      { key: 'Идентификационный номер', value: instructor.user.idNumber },
+      { key: 'Номер паспорта', value: instructor.user.passportNumber },
+    ]
+
+    const dataForStudent = [
+      { key: 'ФИО', value: instructor.user.fullName },
+      { key: 'Номер телефона', value: instructor.user.phoneNumber },
+      { key: 'Дата рождения', value: instructor.user.dateOfBirth },
+    ]
+
+    if(role === 'admin') setData(dataForAdmin);
+    if(role === 'instructor' || role === 'teacher' || role === 'student') setData(dataForStudent);
   }
 
   if (loading) {
@@ -124,6 +127,14 @@ const InstructorPage = observer(() => {
       isOpen={assignStudentModal}
       onClose={() => setAssignStudentModal(false)}
     />
+    <Modal 
+      children={<UpdateUser user={instructor.user} onClose={() => {
+        setUpdateUserModal(false);
+        updateInstructor();
+      }}/>}
+      isOpen={updateUserModal}
+      onClose={() => setUpdateUserModal(false)}
+    />
       <div className="content-container">
         <p className="heading-text-2">Персональные данные инструктора</p>
         <div className="content-container">
@@ -142,7 +153,7 @@ const InstructorPage = observer(() => {
             { role === 'admin' &&
               <div style={{ display: 'flex', flex: 1, justifyContent: 'end' }}>
                 <div className="button-container">
-                  <Button className='outline' style={{ width: '100%' }}>Редактировать данные ()</Button>
+                  <Button className='outline' style={{ width: '100%' }} onClick={() => setUpdateUserModal(true)}>Редактировать данные</Button>
                   <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignTransportModal(true)}>Назначить транспорт</Button>
                   <Button className='outline' style={{ width: '100%' }} onClick={() => setAssignStudentModal(true)}>Добавить курсантов</Button>
                   <Button className='danger' style={{ width: '100%' }} onClick={() => setWarningModal(true)}>Удалить</Button>

@@ -107,6 +107,10 @@ export const fetchStudentLectureByLectureId = async (id) => {
   const {data} = await $authHost.get(`student-lectures/lecture/${id}`);
   return data;
 }
+export const fetchStudentLectureByStudentId = async (id) => {
+  const {data} = await $authHost.get(`student-lectures/student/${id}`);
+  return data;
+}
 export const deleteStudentLecture = async (id) => {
   const {data} = await $authHost.delete(`student-lectures/${id}`);
   return data;

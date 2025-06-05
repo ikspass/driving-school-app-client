@@ -12,7 +12,7 @@ const CreateInstructor = observer(({onClose}) => {
   const [passportNumber, setPassportNumber] = useState('');
   const [fullName, setFullName] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('+');
   const [dateOfEmployment, setDateOfEmployment] = useState('');
 
   const [categories, setCategories] = useState([]);

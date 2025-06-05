@@ -12,7 +12,7 @@ const CreateStudent = observer(({onClose}) => {
   const [passportNumber, setPassportNumber] = useState('');
   const [fullName, setFullName] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('+');
   const [category, setCategory] = useState(null);
   const [exceptionModal, setExceptionModal] = useState(false)
 

@@ -181,11 +181,6 @@ function GroupPage() {
             data={studentsInfo}
             numbered={true}
           />
-          <Separator />
-          <p className="heading-text-2">Расписание группы</p>
-          <Calendar
-            events={eventStore.events}
-          />
         </div>
       </div>
     </>

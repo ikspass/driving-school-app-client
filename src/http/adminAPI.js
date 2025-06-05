@@ -13,6 +13,10 @@ export const createUser = async (user) => {
   const {data} = await $authHost.post('users', user);
   return data;
 }
+export const updateUser = async (id, user) => {
+  const {data} = await $authHost.put('users/'+id, user);
+  return data;
+}
 export const fetchUsers = async () => {
   const {data} = await $authHost.get('users');
   return data;

@@ -14,6 +14,9 @@ import WarningModal from '../components/WarningModal'
 import SuccessModal from '../components/SuccessModal'
 import PinList from '../components/UI/PinList/PinList'
 import ButtonBack from '../components/UI/ButtonBack/ButtonBack'
+import { fetchStudentLectureByStudentId } from '../http/eventAPI'
+import Calendar from '../components/Calendar'
+import UpdateUser from '../components/admin/UpdateUser'
 
 const StudentPage = observer(({}) => {
 
@@ -21,6 +24,9 @@ const StudentPage = observer(({}) => {
 
   const navigate = useNavigate()
   const [student, setStudent] = useState({})
+  const [studentLectures, setStudentLectures] = useState({})
+  const [studentTests, setStudentTests] = useState({})
+  const [studentTestsStat, setStudentTestsStat] = useState({})
 
   const role = userStore.user.role;
 
@@ -29,8 +35,12 @@ const StudentPage = observer(({}) => {
   
   const [assignInstructorModal, setAssignInstructorModal] = useState(false)
   const [changeGroupModal, setChangeGroupModal] = useState(false)
+
   const [changeDataModal, setChangeDataModal] = useState(false)
   const [warningModal, setWarningModal] = useState(false)
+  const [updateUserModal, setUpdateUserModal ] = useState(false)
+
+  const [tableData, setTableData] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,28 +48,13 @@ const StudentPage = observer(({}) => {
         
         const userData = await fetchUserById(userStore.user.id);
 
-        const studentData = await fetchStudentById(id);
-        await setStudent(studentData);
-        
+        await updateData();
+
         if(role === 'student'){
           if(id != userData.student?.id){
             navigate(ERROR_PAGE)
           }
         }
-          const tableData = role === 'admin' ?
-          [
-            {key:'ФИО', value: studentData.user.fullName},
-            {key:'Номер телефона', value: studentData.user.phoneNumber},
-            {key:'Дата рождения', value: studentData.user.dateOfBirth},
-            {key:'Идентификационный номер', value: studentData.user.idNumber},
-            {key:'Номер паспорта', value: studentData.user.passportNumber},
-          ]
-          :
-          [
-            {key:'ФИО', value: studentData.user.fullName},
-            {key:'Номер телефона', value: studentData.user.phoneNumber},
-            {key:'Дата рождения', value: studentData.user.dateOfBirth},
-          ]
         
       } catch (error) {
         console.error(error);
@@ -72,8 +67,28 @@ const StudentPage = observer(({}) => {
   }, []);
 
   const updateData = async () => {
-    const data = await fetchStudentById(id);
-    setStudent(data);
+    const studentData = await fetchStudentById(id);
+    setStudent(studentData);
+
+    await setStudentLectures(studentData.studentLectures.filter(lecture => lecture.attended === false))
+        await setStudentTests(studentData.studentTests.filter(test => test.attended === false))
+        await setStudentTestsStat(studentData.studentTests)
+        console.log(studentData)
+    const dataForTable = role === 'admin' ?
+    [
+      {key:'ФИО', value: studentData.user.fullName},
+      {key:'Номер телефона', value: studentData.user.phoneNumber},
+      {key:'Дата рождения', value: studentData.user.dateOfBirth},
+      {key:'Идентификационный номер', value: studentData.user.idNumber},
+      {key:'Номер паспорта', value: studentData.user.passportNumber},
+    ]
+    :
+    [
+      {key:'ФИО', value: studentData.user.fullName},
+      {key:'Номер телефона', value: studentData.user.phoneNumber},
+      {key:'Дата рождения', value: studentData.user.dateOfBirth},
+    ]
+    setTableData(dataForTable);
   }
 
   const handleDeleteStudent = async () => {
@@ -117,6 +132,14 @@ const StudentPage = observer(({}) => {
         isOpen={changeGroupModal}
         onClose={() => setChangeGroupModal(false)}
       />
+      <Modal 
+        children={<UpdateUser user={student.user} onClose={() => {
+          setUpdateUserModal(false);
+          updateData();
+        }}/>}
+        isOpen={updateUserModal}
+        onClose={() => setUpdateUserModal(false)}
+      />
 
       <div className="content-container">
         <p className="heading-text-2">Персональные данные курсанта</p>
@@ -126,13 +149,7 @@ const StudentPage = observer(({}) => {
               <img src={`${process.env.REACT_APP_API_URL}/${student.user.img}`} alt={student.user.fullName} />
             </div>
             <DescriptionTable
-              value = {[
-                {key:'ФИО', value: student.user.fullName},
-                {key:'Номер телефона', value: student.user.phoneNumber},
-                {key:'Дата рождения', value: student.user.dateOfBirth},
-                {key:'Идентификационный номер', value: student.user.idNumber},
-                {key:'Номер паспорта', value: student.user.passportNumber},
-              ]}
+              value = {tableData}
             />
             <div className="filter-container">
               <PinList
@@ -142,12 +159,12 @@ const StudentPage = observer(({}) => {
             {role !== 'student' &&
             <div style={{display: 'flex', flex: 1, justifyContent: 'end'}}>
               <div className="button-container">
+                <Button className='outline' style={{width: '100%'}} onClick={() => setUpdateUserModal(true)}>Редактировать данные</Button>
                 <Button className='outline' style={{width: '100%'}} onClick={() => setAssignInstructorModal(true)}>Изменить инструктора</Button>
                 <Button className='outline' style={{width: '100%'}} onClick={() => setChangeGroupModal(true)}>Изменить группу</Button>
-                <Button className='outline' style={{width: '100%'}}>Редактировать данные</Button>
                 <Button className='danger' style={{width: '100%'}} onClick={() => setWarningModal(true)}>Удалить</Button>
                 <WarningModal 
-                  style={{top: '-51px'}}
+                  style={{top: '-46px'}}
                   text='Вы уверены что хотите удалить курсанта?'
                   isOpen={warningModal}
                   onConfirm={() => {
@@ -179,29 +196,47 @@ const StudentPage = observer(({}) => {
             />
           </div>
         </div>
-        <p className="heading-text-2">Зачёты</p>
-        <InformationTable 
-          columns={[
-            {label: 'Зачёт', key: 'name'},
-            {label: 'Тема', key: 'theme', isLink: true},
-            {label: 'Статус', key: 'status'},
-          ]}
-          data={[
-            {name: 'Зачёт 1', theme: ['Глава 1', 'Глава 2', 'Глава 3', 'Глава 4'], status: 'Сдано'}
-          ]}
-        />
-        <p className="heading-text-2">Посещаемость</p>
-        <InformationTable 
-          columns={[
-            {label: 'Дата', key: 'date'},
-            {label: 'Время', key: 'time'},
-            {label: 'Материалы', key: 'materials', isLink: true},
-            {label: 'Посещаемость', key: 'attendance'},
-          ]}
-          data={[
-            {date: '2025-05-06', time: '16:00', materials: ['Глава 1', 'Глава 2', 'Глава 3',], attendance: 'Присутствовал'}
-          ]}
-        />
+        <div className="horizontal-container">
+          <div className="filter-container">
+            <p className="heading-text-2">Зачёты</p>
+            <InformationTable 
+              columns={[
+                {label: 'Дата', key: 'test.date'},
+                {label: 'Сдано/ Не сдано', key: 'passed'},
+              ]}
+              data={studentTestsStat}
+            />
+          </div>
+          <div className="filter-container">
+            <p className="heading-text-2">Пропущенные лекции</p>
+            {studentLectures.length > 0 ?
+              <InformationTable 
+                columns={[
+                  {label: 'Дата', key: 'lecture.date'},
+                  {label: 'Время', key: 'lecture.time'},
+                  {label: 'Время', key: 'lecture.time'},
+                ]}
+                data={studentLectures}
+              />
+              :
+              <p className="normal-text">{role === 'student' ? 'Вы не пропускали лекции' : 'Курсант не пропускал лекции'}</p>
+            }
+          </div>
+          <div className="filter-container">
+            <p className="heading-text-2">Пропущенные зачёты</p>
+            {studentTests.length > 0 ?
+              <InformationTable 
+                columns={[
+                  {label: 'Дата', key: 'test.date'},
+                  {label: 'Время', key: 'test.time'},
+                ]}
+                data={studentTests}
+              />
+              :
+              <p className="normal-text">{role === 'student' ? 'Вы не пропускали зачёты' : 'Курсант не пропускал зачёты'}</p>
+            }
+          </div>
+        </div>
       </div>
     </>
   )

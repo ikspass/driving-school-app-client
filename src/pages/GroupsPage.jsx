@@ -39,18 +39,12 @@ const GroupsPage = observer(() => {
       fetchData();
   }, []);
 
-  const statuses = [
-    {id: 1, value: 'Активна'},
-    {id: 2, value: 'Обучение окончено'},
-  ]
-
+console.log('groups: ', groups)
   const [selectedCategory, setSelectedCategory] = useState([])
-  const [selectedStatus, setSelectedStatus] = useState(statuses[0])
 
   const filteredGroups = groups.filter(group => {
-    const matchesStatus = selectedStatus ? group.status == selectedStatus.value : true;
     const matchesCategory = selectedCategory.length > 0 ? selectedCategory.some(cat => cat.id === group.categoryId) : true;
-    return matchesStatus && matchesCategory;
+    return matchesCategory;
   });
 
   const columns = [
@@ -58,20 +52,15 @@ const GroupsPage = observer(() => {
     { key: "category.value", label: "Категория", isLink: false },
     { key: "scheduleGroup.name", label: "Время", isLink: false },
     { key: "dateOfStart", label: "Дата начала обучения", isLink: false},
-    { key: "status", label: "Статус", isLink: false },
   ];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   return (
     <div className="filter-container">
-      <SingleFilterButtons 
-        filters={statuses}
-        selected={selectedStatus}
-        setSelected={setSelectedStatus}
-      />
+      <p className="heading-text-2">Группы</p>
       <div className='horizontal-container' style={{ width: '100%', justifyContent: 'space-between'}}>
         <div className="horizontal-container">
           <InformationTable 

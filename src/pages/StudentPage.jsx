@@ -71,9 +71,9 @@ const StudentPage = observer(({}) => {
     setStudent(studentData);
 
     await setStudentLectures(studentData.studentLectures.filter(lecture => lecture.attended === false))
-        await setStudentTests(studentData.studentTests.filter(test => test.attended === false))
-        await setStudentTestsStat(studentData.studentTests)
-        console.log(studentData)
+    await setStudentTests(studentData.studentTests.filter(test => test.attended === false))
+    await setStudentTestsStat(studentData.studentTests)
+
     const dataForTable = role === 'admin' ?
     [
       {key:'ФИО', value: studentData.user.fullName},
@@ -96,7 +96,7 @@ const StudentPage = observer(({}) => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   return (
@@ -156,7 +156,7 @@ const StudentPage = observer(({}) => {
                 value={[student.status]}
               />
             </div>
-            {role !== 'student' &&
+            {role === 'admin' &&
             <div style={{display: 'flex', flex: 1, justifyContent: 'end'}}>
               <div className="button-container">
                 <Button className='outline' style={{width: '100%'}} onClick={() => setUpdateUserModal(true)}>Редактировать данные</Button>
@@ -196,47 +196,53 @@ const StudentPage = observer(({}) => {
             />
           </div>
         </div>
-        <div className="horizontal-container">
-          <div className="filter-container">
-            <p className="heading-text-2">Зачёты</p>
-            <InformationTable 
-              columns={[
-                {label: 'Дата', key: 'test.date'},
-                {label: 'Сдано/ Не сдано', key: 'passed'},
-              ]}
-              data={studentTestsStat}
-            />
-          </div>
-          <div className="filter-container">
-            <p className="heading-text-2">Пропущенные лекции</p>
-            {studentLectures.length > 0 ?
+        {role !== 'student' &&
+        <>
+            <div className="filter-container">
+              <p className="heading-text-2">Зачёты</p>
               <InformationTable 
                 columns={[
-                  {label: 'Дата', key: 'lecture.date'},
-                  {label: 'Время', key: 'lecture.time'},
-                  {label: 'Время', key: 'lecture.time'},
+                  {label: 'Зачёт', key: 'testEvent.test.name'},
+                  {label: 'Описание', key: 'testEvent.test.description'},
+                  {label: 'Дата', key: 'testEvent.date'},
+                  {label: 'Сдано/ Не сдано', key: 'passed'},
                 ]}
-                data={studentLectures}
+                data={studentTestsStat}
               />
-              :
-              <p className="normal-text">{role === 'student' ? 'Вы не пропускали лекции' : 'Курсант не пропускал лекции'}</p>
-            }
+            </div>
+            <div className="horizontal-container">
+            <div className="filter-container">
+              <p className="heading-text-2">Пропущенные лекции</p>
+              {studentLectures.length > 0 ?
+                <InformationTable 
+                  columns={[
+                    {label: 'Дата', key: 'lecture.date'},
+                    {label: 'Время', key: 'lecture.time'},
+                    {label: 'Время', key: 'lecture.time'},
+                  ]}
+                  data={studentLectures}
+                />
+                :
+                <p className="normal-text">{role === 'student' ? 'Вы не пропускали лекции' : 'Курсант не пропускал лекции'}</p>
+              }
+            </div>
+            <div className="filter-container">
+              <p className="heading-text-2">Пропущенные зачёты</p>
+              {studentTests.length > 0 ?
+                <InformationTable 
+                  columns={[
+                    {label: 'Дата', key: 'test.date'},
+                    {label: 'Время', key: 'test.time'},
+                  ]}
+                  data={studentTests}
+                />
+                :
+                <p className="normal-text">{role === 'student' ? 'Вы не пропускали зачёты' : 'Курсант не пропускал зачёты'}</p>
+              }
+            </div>
           </div>
-          <div className="filter-container">
-            <p className="heading-text-2">Пропущенные зачёты</p>
-            {studentTests.length > 0 ?
-              <InformationTable 
-                columns={[
-                  {label: 'Дата', key: 'test.date'},
-                  {label: 'Время', key: 'test.time'},
-                ]}
-                data={studentTests}
-              />
-              :
-              <p className="normal-text">{role === 'student' ? 'Вы не пропускали зачёты' : 'Курсант не пропускал зачёты'}</p>
-            }
-          </div>
-        </div>
+        </>
+        }
       </div>
     </>
   )

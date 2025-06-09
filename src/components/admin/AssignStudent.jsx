@@ -48,7 +48,7 @@ const AssignStudent = observer(({onClose, instructor}) => {
   ]
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
   return (
     <div className='content-container'>

@@ -5,6 +5,7 @@ import { ReactComponent as ArrowLeftIcon } from '../styles/svg/arrow-left.svg';
 import { getDateInfo, getMonthName, splitDaysIntoWeeks } from '../utils/calendar';
 import { Context } from '..';
 import { observer } from 'mobx-react-lite';
+import { adminLogin } from '../http/adminAPI';
 
 const Calendar = observer(({events}) => {
 
@@ -89,7 +90,7 @@ const Calendar = observer(({events}) => {
       <thead>
         <tr>
           <td colSpan="7">
-            <div>
+            <div style={{alignItems: 'center'}}>
               <ArrowLeftIcon onClick={prevMonth} className="nav-button" />
               <p>{selectedMonth.name}</p>
               <ArrowRightIcon onClick={nextMonth} className="nav-button" />

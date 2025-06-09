@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, {useState, useEffect, useContext} from 'react'
-import { fetchUserById } from '../http/adminAPI';
-import { createLectureEvent } from '../http/eventAPI';
+import { fetchDrivingPlaces, fetchUserById } from '../http/adminAPI';
+import { createDrivingEvent, createLectureEvent } from '../http/eventAPI';
 import { Context } from '..';
 import SingleFilterButtons from './UI/SingleFilterButtons/SingleFilterButtons';
 import Separator from './UI/Separator/Separator';
@@ -14,24 +14,33 @@ const CreateDrivingEvent = observer(({onClose}) => {
   const {userStore, eventStore} = useContext(Context)
 
   const [time, setTime] = useState('');
-  const [group, setGroup] = useState(null);
-  const [teacher, setTeacher] = useState(null);
+  const [student, setStudent] = useState(null);
+  const [transport, setTransport] = useState(null);
+  const [drivingPlace, setDrivingPlace] = useState(null);
+  const [instructor, setInstructor] = useState(null);
+  const [instructorTransports, setInstructorTransports] = useState([])
 
   const [loading, setLoading] = useState(true)
 
   const [exceptionModal, setExceptionModal] = useState(false)
 
-  const [groupFilters, setGroupFilters] = useState([])
+  const [studentFilters, setStudentFilters] = useState([])
+  const [placeFilters, setPlaceFilters] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userData = await fetchUserById(userStore.user.id);
+        console.log(userData)
+        setInstructor(userData.instructor)
 
-        setTeacher(userData.teacher)
+        setInstructorTransports(userData.instructor.transports.map(transport => ({id: transport.id, value: `${transport.name} (${transport.category.value})`})))
         
-        const groupsData = userData.teacher.groups.map(group => ({id: group.id, value: group.name, schedule: group.scheduleGroup.name}));
-        setGroupFilters(groupsData) 
+        const drivingPlacesData = await fetchDrivingPlaces();
+        setPlaceFilters(drivingPlacesData.map(place => ({id: place.id, value: place.value})))
+                
+        const studentsData = userData.instructor.students.map(student => ({id: student.id, value: student.user.fullName, category: student.category.value}));
+        setStudentFilters(studentsData) 
                
       } catch (error) {
         console.error(error);
@@ -44,12 +53,12 @@ const CreateDrivingEvent = observer(({onClose}) => {
 
   const confirm = async (e) => {
     e.preventDefault();
-    if (!time || !group) {
+    if (!time || !student || !transport || !drivingPlace) {
       setExceptionModal(true)
       return;
     }
     try {
-      const data = await createLectureEvent({date: eventStore.selectedDate, time: time, teacherId: teacher.id, groupId: group.id});
+      const data = await createDrivingEvent({date: eventStore.selectedDate, time: time, instructorId: instructor.id, studentId: student.id, transportId: transport.id, placeId: drivingPlace.id});
       console.log(data);
       onClose();
     } catch (error) {
@@ -58,7 +67,7 @@ const CreateDrivingEvent = observer(({onClose}) => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   return (
@@ -69,12 +78,24 @@ const CreateDrivingEvent = observer(({onClose}) => {
           <p className="normal-text">Дата: {eventStore.selectedDate}</p>
           <Separator />
           <div className="filter-container">
-            <p className="normal-text">{group ? `Расписание выбранной группы: ${group.schedule}` : 'Выберите группу'}</p>
+            <p className="normal-text">{student ? `Категория выбранного курсанта: ${student.category}` : 'Выберите курсанта'}</p>
             <SingleFilterButtons 
-              title='Группа'
-              filters={groupFilters}
-              selected={group}
-              setSelected={setGroup}
+              title='Курсанты'
+              filters={studentFilters}
+              selected={student}
+              setSelected={setStudent}
+            />
+            <SingleFilterButtons 
+              title='Транспорт'
+              filters={instructorTransports}
+              selected={transport}
+              setSelected={setTransport}
+            />
+            <SingleFilterButtons 
+              title='Локация'
+              filters={placeFilters}
+              selected={drivingPlace}
+              setSelected={setDrivingPlace}
             />
           </div>
           <Input 

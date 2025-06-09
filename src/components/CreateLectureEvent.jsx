@@ -22,6 +22,9 @@ const CreateLectureEvent = observer(({onClose}) => {
   const [exceptionModal, setExceptionModal] = useState(false)
 
   const [groupFilters, setGroupFilters] = useState([])
+  const [validations, setValidations] = useState({
+    time: true,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,21 +47,31 @@ const CreateLectureEvent = observer(({onClose}) => {
 
   const confirm = async (e) => {
     e.preventDefault();
+
+    const newValidations = {
+      time: /^(2[0-3]|[01]?[0-9]):([0-5][0-9]|\d{1})$/.test(time),
+    };
+
+    setValidations(newValidations);
+
     if (!time || !group) {
       setExceptionModal(true)
       return;
     }
-    try {
-      const data = await createLectureEvent({date: eventStore.selectedDate, time: time, teacherId: teacher.id, groupId: group.id});
-      console.log(data);
-      onClose();
-    } catch (error) {
-      console.error("Ошибка при создании события:", error);
+    const allValid = Object.values(newValidations).every(Boolean);
+    if(allValid){
+      try {
+        const data = await createLectureEvent({date: eventStore.selectedDate, time: time, teacherId: teacher.id, groupId: group.id});
+        console.log(data);
+        onClose();
+      } catch (error) {
+        console.error("Ошибка при создании события:", error);
+      }
     }
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   return (
@@ -81,6 +94,7 @@ const CreateLectureEvent = observer(({onClose}) => {
             title='Время'
             value={time}
             onChange={e => setTime(e.target.value)}
+            isValid={validations.time}
           />
         </div>
         <div className="content-container" style={{width: '200px', flexShrink: 0}}>

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect, useContext } from 'react'
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../utils/consts';
-import { fetchStudents, fetchGroups, fetchInstructors, fetchStudentsByTeacher, fetchUserById } from '../http/adminAPI';
+import { fetchStudents, fetchGroups, fetchInstructors, fetchStudentsByTeacher, fetchUserById, fetchInstructorById } from '../http/adminAPI';
 import InformationTable from '../components/InformationTable';
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons';
 import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons';
@@ -26,8 +26,8 @@ const StudentsPage = observer(() => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const userData = await fetchUserById(userStore.user.id);
         if(role === 'teacher'){
-          const userData = await fetchUserById(userStore.user.id);
           const teacher = userData.teacher;
 
           const instructorsData = await fetchInstructors();
@@ -37,6 +37,15 @@ const StudentsPage = observer(() => {
 
           const students = teacher.groups.flatMap(group => group.students);
           setStudents(students)
+        }
+        if(role === 'instructor'){
+          const instructor = userData.instructor;
+
+          const groupsData = await fetchGroups();
+          setGroups(groupsData);
+
+          setStudents(instructor.students)
+
         }
       } catch (error) {
         console.error(error);
@@ -63,13 +72,23 @@ const StudentsPage = observer(() => {
     return matchesGroup && matchesInstructor && matchesStatus;
   });
 
-  const columns = [
+
+
+  const columns = role === 'instructor' ?
+  [
+    { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
+    { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
+    { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.groupId}`},
+    { key: "status", label: "Статус", isLink: false },
+  ]
+  :
+  [
     { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
     { key: "user.phoneNumber", label: "Номер телефона", isLink: false },
     { key: "group.name", label: "Группа", isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.groupId}`},
     { key: "instructor.user.fullName", label: "Инструктор", isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructor.id}`},
     { key: "status", label: "Статус", isLink: false },
-  ];
+  ]
 
   const updateStudents = async () => {
     const userData = await fetchUserById(userStore.user.id);
@@ -86,11 +105,12 @@ const StudentsPage = observer(() => {
   ]
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   return (
     <div className="filter-container">
+      <p className="heading-text-2">Курсанты</p>
       <Modal
         children={<CreateStudent onClose={() => {
           setCreateStudentModal(false);
@@ -118,12 +138,14 @@ const StudentsPage = observer(() => {
               selected={selectedGroup}
               setSelected={setSelectedGroup}
             />
-            <MultipleFilterButtons 
-              title='Инструктор'
-              filters={instructorFilters}
-              selected={selectedInstructor}
-              setSelected={setSelectedInstructor}
-            />
+            {role !== 'instructor' &&
+              <MultipleFilterButtons 
+                title='Инструктор'
+                filters={instructorFilters}
+                selected={selectedInstructor}
+                setSelected={setSelectedInstructor}
+              />
+            }
           </div>
         </div>
       </div>

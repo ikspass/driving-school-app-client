@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, {useState, useEffect, useContext} from 'react'
-import { fetchUserById } from '../http/adminAPI';
+import { fetchTests, fetchUserById } from '../http/adminAPI';
 import { createLectureEvent, createTestEvent } from '../http/eventAPI';
 import { Context } from '..';
 import SingleFilterButtons from './UI/SingleFilterButtons/SingleFilterButtons';
@@ -16,18 +16,27 @@ const CreateTestEvent = observer(({onClose}) => {
   const [time, setTime] = useState('');
   const [group, setGroup] = useState(null);
   const [teacher, setTeacher] = useState(null);
+  const [test, setTest] = useState(null);
 
   const [loading, setLoading] = useState(true)
 
   const [exceptionModal, setExceptionModal] = useState(false)
 
   const [groupFilters, setGroupFilters] = useState([])
+  const [testsFilters, setTestsFilters] = useState([])
   const [groupEvents, setGroupEvents] = useState([])
+
+  const [validations, setValidations] = useState({
+    time: true,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userData = await fetchUserById(userStore.user.id);
+
+        const testsData = await fetchTests();
+        setTestsFilters(testsData.map(test => ({id: test.id, value: test.name})))
 
         setTeacher(userData.teacher)
               
@@ -63,21 +72,31 @@ const CreateTestEvent = observer(({onClose}) => {
 
   const confirm = async (e) => {
     e.preventDefault();
-    if (!time || !group) {
+
+    const newValidations = {
+      time: /^(2[0-3]|[01]?[0-9]):([0-5][0-9]|\d{1})$/.test(time),
+    };
+
+    setValidations(newValidations);
+    if (!time || !group || !test) {
       setExceptionModal(true)
       return;
     }
-    try {
-      const data = await createTestEvent({date: eventStore.selectedDate, time: time, groupId: group.id});
-      console.log(data);
-      onClose();
-    } catch (error) {
-      console.error("Ошибка при создании события:", error);
+    const allValid = Object.values(newValidations).every(Boolean);
+    if(allValid){
+      try {
+        const data = await createTestEvent({date: eventStore.selectedDate, time: time, groupId: group.id, testId: test.id});
+        console.log(data);
+        onClose();
+      } catch (error) {
+        console.error("Ошибка при создании события:", error);
+      }
+
     }
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   return (
@@ -100,6 +119,13 @@ const CreateTestEvent = observer(({onClose}) => {
             title='Время'
             value={time}
             onChange={e => setTime(e.target.value)}
+            isValid={validations.time}
+          />
+          <SingleFilterButtons 
+            title='Тест'
+            filters={testsFilters}
+            selected={test}
+            setSelected={setTest}
           />
         </div>
         <div className="content-container" style={{width: '200px', flexShrink: 0}}>

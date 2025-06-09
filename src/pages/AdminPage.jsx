@@ -10,6 +10,7 @@ import Button from '../components/UI/Button/Button'
 import { Context } from '..'
 import { useNavigate } from 'react-router-dom'
 import { LOGIN_ROUTE } from '../utils/consts'
+import AdminSchedulePage from './admin/AdminSchedulePage'
 
 export default function AdminPage() {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -20,6 +21,7 @@ export default function AdminPage() {
     {value: 'Преподаватели', component: AdminTeachersPage},
     {value: 'Инструкторы', component: AdminInstructorsPage},
     {value: 'Данные', component: AdminSchoolDataPage},
+    {value: 'Расписание', component: AdminSchedulePage}
   ]
 
   const {userStore} = useContext(Context)

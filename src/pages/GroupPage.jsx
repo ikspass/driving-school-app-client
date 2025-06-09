@@ -44,10 +44,15 @@ function GroupPage() {
     const fetchData = async () => {
       try {
         const userData = await fetchUserById(userStore.user.id);
-        setUser(userData);
 
         const group = await fetchGroupById(id);
         setGroup(group);
+
+        if(role === 'student'){
+          if(id != userData.student.groupId){
+            navigate(ERROR_PAGE)
+          }
+        }
 
         setGroupData(
           [
@@ -62,11 +67,7 @@ function GroupPage() {
         console.error(error);
       } finally {
         setLoading(false);
-        if(role === 'student'){
-          if(id != user.student.groupId){
-            navigate(ERROR_PAGE)
-          }
-        }
+        
       }
     };
     fetchData();
@@ -101,7 +102,7 @@ function GroupPage() {
   // }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='small-text'>Загрузка...</div>;
   }
 
   return (
@@ -169,13 +170,6 @@ function GroupPage() {
             }
           </div>
           <p className="heading-text-2">Список курсантов</p>
-          <InformationTable 
-            columns={studentsColumns} 
-            data={studentsInfo}
-            numbered={true}
-          />
-          <Separator />
-          <p className="heading-text-2">Статистика</p>
           <InformationTable 
             columns={studentsColumns} 
             data={studentsInfo}

@@ -19,8 +19,9 @@ const EventTable = ({ event }) => {
     { key: 'type', label: 'Событие', isLink: true, navigateTo: (row) => `${TEST_ROUTE}/${row.id}` },
     { key: 'date', label: 'Дата', isLink: false },
     { key: 'time', label: 'Время', isLink: false },
-    { key: 'group.name', label: 'Группа', isLink: false },
-    { key: 'test', label: 'Зачёт/экзамен', isLink: true },
+    { key: 'group.name', label: 'Группа', isLink: true, navigateTo: (row) => `${GROUP_ROUTE}/${row.group.id}` },
+    { key: 'test.name', label: 'Название', isLink: false },
+    { key: 'test.description', label: 'Описание', isLink: false },
     { key: 'status', label: 'Статус', isLink: false },
   ];
 
@@ -30,7 +31,7 @@ const EventTable = ({ event }) => {
     { key: 'time', label: 'Время', isLink: false },
     { key: 'place.value', label: 'Локация', isLink: false },
     { key: 'student.user.fullName', label: 'Курсант', isLink: true, navigateTo: (row) => `${STUDENT_ROUTE}/${row.studentId}`},
-    // { key: 'instructor.user.fullName', label: 'Инструктор', isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructorId}`},
+    { key: 'instructor.user.fullName', label: 'Инструктор', isLink: true, navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.instructorId}`},
     { key: 'transport.name', label: 'Транспорт', isLink: false },
     { key: 'status', label: 'Статус', isLink: false },
   ];

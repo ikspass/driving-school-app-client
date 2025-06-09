@@ -36,6 +36,14 @@ const InstructorPage = observer(() => {
     const fetchData = async () => {
       try {
         await updateInstructor();
+        
+        const userData = await fetchUserById(userStore.user.id);
+
+        if(role === 'student'){
+          if(id != userData.student.instructorId){
+            navigate(ERROR_PAGE)
+          }
+        }
 
         const students = await fetchStudentsByInstructor(id);
         setStudents(students);
@@ -45,11 +53,7 @@ const InstructorPage = observer(() => {
         console.error(error);
       } finally {
         setLoading(false);
-        if(role === 'student'){
-          if(id != userStore.user.student.instructorId){
-            navigate(ERROR_PAGE)
-          }
-        }
+        
       }
     };
     fetchData();
@@ -97,7 +101,7 @@ const InstructorPage = observer(() => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   const handleDeleteInstructor = async () => {

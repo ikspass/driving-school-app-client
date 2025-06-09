@@ -16,7 +16,7 @@ function SelectableInformationTable({ columns = [], data = [], numbered = false,
         ...prev,
         [rowId]: !prev[rowId],
       };
-      return newSelectedRows; // Return updated state without calling setSelectedRow here
+      return newSelectedRows;
     });
   };
 
@@ -30,13 +30,10 @@ function SelectableInformationTable({ columns = [], data = [], numbered = false,
   };
 
   useEffect(() => {
-    // Update the selected rows when selectedRows changes
     const selectedKeys = Object.keys(selectedRows).filter(key => selectedRows[key]);
-    setSelectedRow(selectedKeys); // Now this update happens after render
-
-    // Update the allSelected state based on selectedRows
+    setSelectedRow(selectedKeys);
     setAllSelected(Object.keys(selectedRows).length === data.length && Object.values(selectedRows).every(Boolean));
-  }, [selectedRows, data.length, setSelectedRow]); // Add setSelectedRow to dependencies
+  }, [selectedRows, data.length, setSelectedRow]);
 
   return (
     data || columns ?
@@ -75,32 +72,47 @@ function SelectableInformationTable({ columns = [], data = [], numbered = false,
                 />
               </td>
               {numbered && <td>{infoIndex + 1}</td>}
-              {columns.map((column, keyIndex) => (
-                <td key={keyIndex}>
-                  {Array.isArray(getValue(row, column.key)) ? (
-                    getValue(row, column.key).map((value, valueIndex) => (
-                      <div key={valueIndex}>
-                        {column.isLink ? (
-                          <p className='link-text'>{value}</p>
-                        ) : (
-                          <p className="normal-text">{value}</p>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    column.isLink ? (
-                      <p className='link-text' onClick={() => {
-                        const navigateTo = column.navigateTo ? column.navigateTo(row) : column.url;
-                        navigate(navigateTo);
-                      }}>
-                        {getValue(row, column.key)}
-                      </p>
+              {columns.map((column, keyIndex) => {
+                const value = getValue(row, column.key);
+                return (
+                  <td key={keyIndex}>
+                    {Array.isArray(value) ? (
+                      value.length > 0 ? (
+                        value.map((v, valueIndex) => (
+                          <div key={valueIndex}>
+                            {column.isLink ? (
+                              <p className='link-text'>{v}</p>
+                            ) : (
+                              <p className="normal-text">{v}</p>
+                            )}
+                          </div>
+                        ))
+                      ) : (
+                        <p className="normal-text">-</p>
+                      )
                     ) : (
-                      <p className='normal-text'>{getValue(row, column.key)}</p>
-                    )
-                  )}
-                </td>
-              ))}
+                      value === true ? (
+                        <p className='normal-text'>Да</p>
+                      ) : value === false ? (
+                        <p className='normal-text'>Нет</p>
+                      ) : value != null ? (
+                        column.isLink ? (
+                          <p className='link-text' onClick={() => {
+                            const navigateTo = column.navigateTo ? column.navigateTo(row) : column.url;
+                            navigate(navigateTo);
+                          }}>
+                            {value}
+                          </p>
+                        ) : (
+                          <p className='normal-text'>{value}</p>
+                        )
+                      ) : (
+                        <p className='normal-text'>-</p>
+                      )
+                    )}
+                  </td>
+                );
+              })}
             </tr>
           ))
           :

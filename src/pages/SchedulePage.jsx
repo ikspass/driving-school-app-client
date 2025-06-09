@@ -32,11 +32,16 @@ const SchedulePage = observer(() => {
     useEffect(() => {
       const fetchData = async () => {
         try {
+
+          eventStore.setLectureEvents([]);
+          eventStore.setTestEvents([]);
+          eventStore.setDrivingEvents([]);
+
           const userData = await fetchUserById(userStore.user.id);
           setUser(userData);
 
           if(role === 'student'){
-            const student = user.student;
+            const student = userData.student;
 
             const lectureEvents = await fetchLectureEventsByGroup(student.groupId);
             eventStore.setLectureEvents(lectureEvents);
@@ -56,7 +61,6 @@ const SchedulePage = observer(() => {
             
             const testEvents = await fetchTestEventsByTeacher(teacher.id);
             eventStore.setTestEvents(testEvents);
-            console.log('testEvents: ', testEvents)
           }
 
           if(role === 'instructor'){
@@ -72,7 +76,7 @@ const SchedulePage = observer(() => {
         }
       };
       fetchData();
-    }, []);
+    }, [userStore.id]);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -80,7 +84,7 @@ const SchedulePage = observer(() => {
     if(selectedDate > currentDate) setIsLater(true)
     else setIsLater(false)
   }, [eventStore.selectedDate])
-  
+
   const updateLectures = async () => {
     const lectureEvents = await fetchLectureEventsByTeacher(user.teacher.id);
     eventStore.setLectureEvents(lectureEvents);
@@ -106,9 +110,6 @@ const SchedulePage = observer(() => {
   }
   if(role === 'instructor'){
     eventFilters = [
-      {id: 1, value: 'Лекция'},
-      {id: 2, value: 'Вождение'},
-      {id: 3, value: 'Зачёт'},
     ]
   }
   if(role === 'student'){
@@ -127,7 +128,7 @@ const SchedulePage = observer(() => {
   })
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   return (
@@ -157,20 +158,22 @@ const SchedulePage = observer(() => {
         onClose={() => setCreateDrivingModal(false)}
       />
       <div className="filter-container">
-        <MultipleFilterButtons
-          filters={eventFilters}
-          selected={selectedEvent}
-          setSelected={setSelectedEvent}
-        />
+        {role !== 'instructor' && 
+          <MultipleFilterButtons
+            filters={eventFilters}
+            selected={selectedEvent}
+            setSelected={setSelectedEvent}
+          />
+        }
         <div className="horizontal-container">
-          <Calendar events={filteredEvents} />
+          <Calendar events={role !== 'instructor' ? filteredEvents : eventStore.events} />
           <div className="content-container">
             {eventStore.eventsByDate.length !== 0 ? (
               eventStore.eventsByDate.map((event) => (
                 <EventTable event={event} />
               ))
             ) : (
-              <p style={{ textAlign: "center" }}>
+              <p className='normal-text' style={{ textAlign: "center" }}>
                 В этот день не запланированы события
               </p>
             )}

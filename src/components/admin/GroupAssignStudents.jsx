@@ -48,7 +48,7 @@ const GroupAssignStudents = observer(({onClose, group}) => {
   ]
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   return (

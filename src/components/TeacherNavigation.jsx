@@ -13,7 +13,7 @@ import { fetchUserById } from '../http/adminAPI';
 
 const TeacherNavigation = observer(() => {
   const { userStore } = useContext(Context);
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +33,7 @@ const TeacherNavigation = observer(() => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   return (

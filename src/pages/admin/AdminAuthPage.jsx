@@ -30,8 +30,8 @@ const AdminAuthPage = () => {
   }
   
   return (
-    <div style={{display: 'flex', width: '400px', gap: '20px', flexDirection: 'column', marginTop: '200px', marginLeft: 'auto', marginRight: 'auto'}}>
-      <NavLink to={LOGIN_ROUTE}>
+    <div style={{display: 'flex', width: '400px', gap: '20px', flexDirection: 'column', marginTop: '100px', marginLeft: 'auto', marginRight: 'auto'}}>
+      <NavLink to={LOGIN_ROUTE} style={{width: 'fit-content'}}>
         <ButtonBack />
       </NavLink>
       <form>

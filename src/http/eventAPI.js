@@ -115,3 +115,34 @@ export const deleteStudentLecture = async (id) => {
   const {data} = await $authHost.delete(`student-lectures/${id}`);
   return data;
 }
+export const updateStudentLectureAbsent = async (studentId, lectureId) => {
+  const {data} = await $authHost.patch(`student-lectures/student/${studentId}/lecture/${lectureId}`);
+  return data;
+}
+
+// STUDENT TESTS
+
+export const createStudentTest = async (studentTest) => {
+  const {data} = await $authHost.post('student-tests', studentTest);
+  return data;
+}
+export const fetchStudentTests = async () => {
+  const {data} = await $authHost.get('student-tests');
+  return data;
+}
+export const fetchStudentTestsByTestEventId = async (id) => {
+  const {data} = await $authHost.get(`student-tests/test-event/${id}`);
+  return data;
+}
+export const deleteStudentTest = async (id) => {
+  const {data} = await $authHost.delete(`student-tests/${id}`);
+  return data;
+}
+export const updateStudentTestAbsent = async (studentId, testId) => {
+  const {data} = await $authHost.patch(`student-tests/attended/student/${studentId}/test/${testId}`);
+  return data;
+}
+export const updateStudentTestPassed = async (studentId, testId) => {
+  const {data} = await $authHost.patch(`student-tests/passed/student/${studentId}/test/${testId}`);
+  return data;
+}

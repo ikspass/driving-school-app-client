@@ -53,7 +53,7 @@ const UpdateUser = observer(({ onClose, user }) => {
 
   return (
     <div className='content-container'>
-      <p className="heading-text-2">Добавить учётную запись преподавателя</p>
+      <p className="heading-text-2">Редактировать данные пользователя</p>
       <form>
         <div className="form-container">
           <div className="input-container">

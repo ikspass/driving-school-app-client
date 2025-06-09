@@ -5,27 +5,23 @@ import StudentsPage from "./pages/StudentsPage"
 import AuthPage from "./pages/AuthPage"
 import GroupPage from "./pages/GroupPage"
 import InstructorPage from "./pages/InstructorPage"
-import MaterialsPage from "./pages/MaterialsPage"
 import SchedulePage from "./pages/SchedulePage"
 import StatisticPage from "./pages/StatisticPage"
 import StudentPage from "./pages/StudentPage"
 import TeacherPage from "./pages/TeacherPage"
-import { ADMIN_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, LOGIN_ROUTE, MATERIALS_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, CONTACTS_ROUTE, ADMINAUTH_ROUTE, GROUP_ROUTE, LECTURE_ROUTE, DRIVING_ROUTE, TEST_ROUTE, ADMIN_STUDENTS_ROUTE, ERROR_PAGE } from "./utils/consts"
+import { ADMIN_ROUTE, GROUPS_ROUTE, INSTRUCTOR_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SCHEDULE_ROUTE, STAFF_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, ADMINAUTH_ROUTE, GROUP_ROUTE, LECTURE_ROUTE, DRIVING_ROUTE, TEST_ROUTE, ERROR_PAGE, LANDING_ROUTE } from "./utils/consts"
 import AdminAuthPage from "./pages/admin/AdminAuthPage"
 import LecturePage from "./pages/LecturePage"
 import DrivingPage from "./pages/DrivingPage"
 import TestPage from "./pages/TestPage"
 import ErrorPage from "./pages/ErrorPage"
+import LandingPage from "./pages/LandingPage"
 
 // Общие маршруты для студентов и преподавателей
 const studentStaffRoutes = [
   {
     path: SCHEDULE_ROUTE,
     Component: SchedulePage
-  },
-  {
-    path: MATERIALS_ROUTE,
-    Component: MaterialsPage
   },
   {
     path: STATISTIC_ROUTE,
@@ -100,6 +96,10 @@ export const publicRoutes = [
     Component: AuthPage
   },
   {
+    path: LANDING_ROUTE,
+    Component: LandingPage
+  },
+  {
     path: REGISTRATION_ROUTE,
     Component: AuthPage
   },
@@ -144,7 +144,7 @@ export const initialRoutes = {
   admin: ADMIN_ROUTE, // Страница по умолчанию для администратора
   teacher: SCHEDULE_ROUTE, // Страница по умолчанию для преподавателя
   student: SCHEDULE_ROUTE, // Страница по умолчанию для студента
-  public: LOGIN_ROUTE, // Страница по умолчанию для неавторизованных пользователей
+  public: LANDING_ROUTE, // Страница по умолчанию для неавторизованных пользователей
 };
 
 // Функция для получения маршрутов в зависимости от роли

@@ -37,10 +37,6 @@ const StudentNavigation = observer(() => {
         <StatisticsIcon/>
         <p className="normal-text">Статистика</p>
       </Link>
-      <Link to={MATERIALS_ROUTE} className="navigation-item">
-        <MaterialsIcon/>
-        <p className="normal-text">Материалы</p>
-      </Link>  
       <Link to={`${STUDENT_ROUTE}/${user.student?.id}`} className="navigation-item">
         <DataIcon/>
         <p className="normal-text">Мои данные</p>

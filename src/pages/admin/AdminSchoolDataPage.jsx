@@ -75,7 +75,7 @@ const AdminSchoolDataPage = observer(() => {
   }, []);
   
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="small-text">Загрузка...</div>;
   }
 
   const categoryColumns = [
@@ -155,7 +155,7 @@ const AdminSchoolDataPage = observer(() => {
       await Promise.all(selectedScheduleGroup.map(async (id) => {
         await deleteTest(id)
       }))
-      updateTests();
+      updateScheduleGroups();
     }
     else alert('Расписание не выбрано')
   }

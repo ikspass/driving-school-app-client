@@ -137,6 +137,7 @@ const CreateInstructor = observer(({onClose}) => {
             <Input
               value={dateOfBirth}
               onChange={e => setDateOfBirth(e.target.value)}
+              placeholder='YYYY-MM-DD'
               title={"Дата рождения"} 
               isValid={validations.dateOfBirth}
             />
@@ -154,6 +155,7 @@ const CreateInstructor = observer(({onClose}) => {
             />
             <Input
               value={dateOfEmployment}
+              placeholder='YYYY-MM-DD'
               onChange={e => setDateOfEmployment(e.target.value)}
               title={"Дата приёма на работу"} 
               isValid={validations.dateOfEmployment}

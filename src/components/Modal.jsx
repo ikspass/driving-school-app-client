@@ -4,7 +4,6 @@ const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (e) => {
-    // Закрываем модальное окно только если кликнули по оверлею
     if (e.target === e.currentTarget) {
       onClose();
     }

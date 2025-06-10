@@ -1,6 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react'
 import Calendar from '../../components/Calendar'
-import Button from '../../components/UI/Button/Button'
 import EventTable from '../../components/EventTable'
 import { Context } from '../..'
 import { observer } from 'mobx-react-lite'
@@ -21,15 +20,10 @@ const AdminSchedulePage = observer(() => {
 
   const [loading, setLoading] = useState(true);
 
-  const [isLater, setIsLater] = useState(false);
-
-  const [user, setUser] = useState(null)
-
   const [createLectureModal, setCreateLectureModal] = useState(false)
   const [createTestModal, setCreateTestModal] = useState(false)
   const [createDrivingModal, setCreateDrivingModal] = useState(false)
     
-
   const updateLectures = async () => {
     const lectureEvents = await fetchLectureEvents();
     eventStore.setLectureEvents(lectureEvents);
@@ -59,14 +53,6 @@ const AdminSchedulePage = observer(() => {
       };
       fetchData();
     }, [userStore.id]);
-
-  useEffect(() => {
-    const currentDate = new Date();
-    const selectedDate = new Date(eventStore.selectedDate);
-    if(selectedDate > currentDate) setIsLater(true)
-    else setIsLater(false)
-  }, [eventStore.selectedDate])
-  
 
   const eventFilters = [
       {id: 1, value: 'Лекция'},

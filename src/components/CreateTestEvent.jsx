@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, {useState, useEffect, useContext} from 'react'
 import { fetchTests, fetchUserById } from '../http/adminAPI';
-import { createLectureEvent, createTestEvent } from '../http/eventAPI';
+import { createTestEvent } from '../http/eventAPI';
 import { Context } from '..';
 import SingleFilterButtons from './UI/SingleFilterButtons/SingleFilterButtons';
 import Separator from './UI/Separator/Separator';

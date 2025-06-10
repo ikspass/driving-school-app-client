@@ -1,9 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
-import { createUser, createTeacher, updateUser } from '../../http/adminAPI';
+import { updateUser } from '../../http/adminAPI';
 import Input from '../UI/Input/Input';
 import Button from '../UI/Button/Button';
-import FileInput from '../UI/FileInput/FileInput';
 
 const UpdateUser = observer(({ onClose, user }) => {
   const [idNumber, setIdNumber] = useState(user.idNumber);
@@ -42,7 +41,6 @@ const UpdateUser = observer(({ onClose, user }) => {
       } catch (err) {
         console.error('Ошибка при обновлении:', err);
       }
-      console.log("Форма отправлена!");
     }
   };
 

@@ -24,7 +24,6 @@ const CreateCategory = observer(({onClose}) => {
     else{
       try {
         const data = await createCategory({value: value, description: desc});
-        console.log(data);
         onClose();
         modalStore.setIsOpen(true)
       } catch (error) {

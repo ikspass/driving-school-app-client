@@ -11,8 +11,6 @@ import { getDateInfo } from '../utils/calendar';
 import AdminChangeStatus from '../components/admin/AdminChangeStatus';
 import Modal from '../components/Modal';
 import ButtonBack from '../components/UI/ButtonBack/ButtonBack';
-import TestMarkAbsentStudents from '../components/TestMarkAbsentStudents';
-import LectureMarkAbsentStudents from '../components/LectureMarkAbsentStudents';
 import SelectableInformationTable from '../components/SelectableInformationTable';
 
 const LecturePage = () => {
@@ -25,7 +23,6 @@ const LecturePage = () => {
   const [studentLectures, setStudentLectures] = useState([])
   const [warningModal, setWarningModal] = useState(false)
   const [updateStatusModal, setUpdateStatusModal] = useState(false)
-  const [markAbsentModal, setMarkAbsentModal] = useState(false)
   const [selectedStudents, setSelectedStudents] = useState([])
 
   const { userStore } = useContext(Context)
@@ -34,7 +31,13 @@ const LecturePage = () => {
 
   const navigate = useNavigate();
   
-  const attendanceColumns = [
+  const attendanceColumns = userStore.user.role === 'student' ?
+  [
+    { key: "fullName", label: "ФИО", isLink: false},
+    { key: "attended", label: "Присутствие", isLink: false },
+  ]
+  :
+  [
     { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
     { key: "attended", label: "Присутствие", isLink: false },
   ]

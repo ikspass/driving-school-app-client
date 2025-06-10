@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '..';
-import Button from '../components/UI/Button/Button'; // Убедитесь, что импортирован ваш Button
+import Button from '../components/UI/Button/Button';
 
 const ErrorPage = () => {
   const navigate = useNavigate();

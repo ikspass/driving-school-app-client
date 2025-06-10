@@ -1,12 +1,9 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import InformationTable from '../InformationTable';
-import { fetchInstructors, fetchTransports, updateStudentInstructor, updateTransportInstructor } from '../../http/adminAPI';
-import SelectableInformationTable from '../SelectableInformationTable';
+import { fetchTransports,  updateTransportInstructor } from '../../http/adminAPI';
 import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons';
 import Button from '../UI/Button/Button';
-import { Context } from '../..';
-import { useParams } from 'react-router-dom';
 import ExceptionModal from '../ExceptionModal';
 import Separator from '../UI/Separator/Separator';
 
@@ -25,7 +22,6 @@ const AssignTransport = observer(({onClose, instructor}) => {
         const transports = await fetchTransports();
         setTransports(transports.filter(transport => transport.instructor === null));
 
-        console.log(instructor)
       } catch (error) {
         console.error(error);
       } finally {
@@ -53,8 +49,6 @@ const AssignTransport = observer(({onClose, instructor}) => {
       setExceptionModal(true);
     }
   }
-
-  console.log(transports)
     
   if (loading) {
     return <div className="small-text">Загрузка...</div>;

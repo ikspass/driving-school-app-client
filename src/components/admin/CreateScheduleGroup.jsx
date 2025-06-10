@@ -1,9 +1,7 @@
 import Input from "../UI/Input/Input";
 import Button from "../UI/Button/Button";
-import React, {useState, useEffect, useContext} from 'react';
-import { Context } from "../..";
-import SingleFilterButtons from "../UI/SingleFilterButtons/SingleFilterButtons"
-import { createGroup, createScheduleGroup, fetchCategories, fetchScheduleGroups, fetchUsers } from "../../http/adminAPI";
+import React, {useState} from 'react';
+import { createScheduleGroup } from "../../http/adminAPI";
 import { observer } from "mobx-react-lite";
 import ExceptionModal from "../ExceptionModal";
 

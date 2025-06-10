@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { createCar, createCategory, createDrivingPlace } from '../../http/adminAPI';
+import { createDrivingPlace } from '../../http/adminAPI';
 import { observer } from 'mobx-react-lite';
 import Button from '../UI/Button/Button';
 import Input from '../UI/Input/Input';
@@ -19,7 +19,6 @@ const CreateCategory = observer(({onClose}) => {
     else{
       try {
         const data = await createDrivingPlace({value: value, description: desc});
-        console.log(data);
         onClose();
       } catch (error) {
           console.error("Ошибка при создании категории:", error);

@@ -1,16 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import InformationTable from '../components/InformationTable';
-import { Context } from '..';
 import { observer } from 'mobx-react-lite'
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons';
 import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons';
-import { GROUP_ROUTE, STUDENT_ROUTE, INSTRUCTOR_ROUTE, TEACHER_ROUTE } from '../utils/consts';
-import { fetchCategories, fetchGroups, fetchInstructors, fetchQuals, fetchStudents, fetchTeachers, fetchUsers } from '../http/adminAPI';
+import { INSTRUCTOR_ROUTE, TEACHER_ROUTE } from '../utils/consts';
+import { fetchCategories, fetchInstructors, fetchTeachers } from '../http/adminAPI';
 
 const StaffPage = observer(() => {
-
-  const {userStore} = useContext(Context);
-  const {schoolStore} = useContext(Context)
 
   const [loading, setLoading] = useState(true);
   

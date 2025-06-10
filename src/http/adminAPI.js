@@ -271,6 +271,10 @@ export const fetchMessages = async () => {
   const {data} = await $authHost.get('messages');
   return data;
 }
+export const fetchMessagesByGroup = async (groupId) => {
+  const {data} = await $authHost.get('messages/group/'+ groupId);
+  return data;
+}
 export const deleteMessage = async (id) => {
   const {data} = await $authHost.delete(`messages/${id}`);
   return data;

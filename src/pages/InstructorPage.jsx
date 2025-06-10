@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Context } from '..';
-import { deleteInstructor, fetchInstructorById, fetchStudents, fetchStudentsByInstructor, fetchUserById } from '../http/adminAPI';
+import { deleteInstructor, deleteUser, fetchInstructorById, fetchStudentsByInstructor, fetchUserById } from '../http/adminAPI';
 import Button from '../components/UI/Button/Button';
 import InformationTable from '../components/InformationTable';
 import DescriptionTable from '../components/DescriptionTable';
@@ -106,6 +106,7 @@ const InstructorPage = observer(() => {
 
   const handleDeleteInstructor = async () => {
     await deleteInstructor(id)
+    await deleteUser(instructor.userId)
   }
 
   return (

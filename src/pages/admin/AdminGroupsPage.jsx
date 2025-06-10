@@ -21,21 +21,22 @@ const AdminGroupsPage = observer(() => {
 
   const [createGroupModal, setCreateGroupModal] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      const teachers = await fetchTeachers();
+      setTeachers(teachers);
+      const groups = await fetchGroups();
+      setGroups(groups);
+      const categories = await fetchCategories();
+      setCategories(categories);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const teachers = await fetchTeachers();
-        setTeachers(teachers);
-        const groups = await fetchGroups();
-        setGroups(groups);
-        const categories = await fetchCategories();
-        setCategories(categories);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
@@ -71,11 +72,6 @@ const AdminGroupsPage = observer(() => {
     { key: "dateOfStart", label: "Дата начала обучения", isLink: false },
   ];
 
-  const updateGroups = async () => {
-    const data = await fetchGroups();
-    setGroups(data);
-  };
-
   if (loading) {
     return <div className="small-text">Загрузка...</div>;
   }
@@ -84,11 +80,13 @@ const AdminGroupsPage = observer(() => {
     <div className="filter-container">
       <p className="heading-text-2">Группы</p>
       <Modal
-        children={<CreateGroup onClose={() => setCreateGroupModal(false)} />}
+        children={<CreateGroup onClose={() => {
+          setCreateGroupModal(false)
+          fetchData();
+        }}/>}
         isOpen={createGroupModal}
         onClose={() => {
           setCreateGroupModal(false);
-          updateGroups();
         }}
       />
       <div

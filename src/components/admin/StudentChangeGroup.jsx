@@ -1,9 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from 'react'
-import { fetchGroups, fetchStudentsWithoutGroup, setStudentGroup } from '../../http/adminAPI';
-import InformationTable from '../InformationTable';
-import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../../utils/consts';
-import SelectableInformationTable from '../SelectableInformationTable';
+import { fetchGroups, setStudentGroup } from '../../http/adminAPI';
 import Button from '../UI/Button/Button';
 import Separator from '../UI/Separator/Separator';
 import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons';
@@ -66,7 +63,7 @@ const StudentChangeGroup = observer(({onClose, student}) => {
     <>
       <div className='content-container'>
         <p className="heading-text-2">Изменить группу курсанта</p>
-        <p className="normal-text">Текущая группа: {student.group.name}</p>
+        <p className="normal-text">Текущая группа: {student.group? student.group.name : '-'}</p>
         <Separator />
         <div className="filter-container">
           <p className="normal-text">Выберите новую группу</p> 

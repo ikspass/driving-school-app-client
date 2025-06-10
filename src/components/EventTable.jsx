@@ -1,6 +1,4 @@
-import EditButton from "./UI/FunctionButton/EditButton";
-import DeleteButton from "./UI/FunctionButton/DeleteButton";
-import { DRIVING_ROUTE, GROUP_ROUTE, INSTRUCTOR_ROUTE, LECTURE_ROUTE, STUDENT_ROUTE, STUDENTS_ROUTE, TEACHER_ROUTE, TEST_ROUTE } from "../utils/consts";
+import { DRIVING_ROUTE, GROUP_ROUTE, INSTRUCTOR_ROUTE, LECTURE_ROUTE, STUDENT_ROUTE, TEACHER_ROUTE, TEST_ROUTE } from "../utils/consts";
 import { useNavigate } from 'react-router-dom';
 
 const EventTable = ({ event }) => {

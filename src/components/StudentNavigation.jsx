@@ -1,11 +1,9 @@
 import React, {useContext, useState, useEffect} from 'react'
-import { ReactComponent as MainIcon } from '../styles/svg/main.svg';
 import { ReactComponent as StatisticsIcon } from '../styles/svg/statistics.svg';
 import { ReactComponent as ScheduleIcon } from '../styles/svg/schedule.svg';
-import { ReactComponent as MaterialsIcon } from '../styles/svg/materials.svg';
 import { ReactComponent as DataIcon } from '../styles/svg/data.svg';
 import { Link } from 'react-router-dom';
-import { CONTACTS_ROUTE, MATERIALS_ROUTE, SCHEDULE_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE } from '../utils/consts';
+import { SCHEDULE_ROUTE, STATISTIC_ROUTE, STUDENT_ROUTE } from '../utils/consts';
 import { Context } from '..';
 import { observer } from 'mobx-react-lite';
 import { fetchUserById } from '../http/adminAPI';

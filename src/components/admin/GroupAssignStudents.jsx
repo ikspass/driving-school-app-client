@@ -1,8 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from 'react'
 import { fetchStudents, setStudentGroup } from '../../http/adminAPI';
-import InformationTable from '../InformationTable';
-import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../../utils/consts';
 import SelectableInformationTable from '../SelectableInformationTable';
 import Button from '../UI/Button/Button';
 

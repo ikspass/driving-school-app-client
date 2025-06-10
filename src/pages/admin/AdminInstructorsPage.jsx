@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from 'react'
 import { INSTRUCTOR_ROUTE } from '../../utils/consts';
-import { fetchCategories, fetchGroups, fetchInstructors, fetchUsers } from '../../http/adminAPI';
+import { fetchCategories, fetchInstructors, fetchUsers } from '../../http/adminAPI';
 import InformationTable from '../../components/InformationTable';
 import MultipleFilterButtons from '../../components/UI/MultipleFilterButtons/MultipleFilterButtons';
 import SingleFilterButtons from '../../components/UI/SingleFilterButtons/SingleFilterButtons';
@@ -14,13 +14,9 @@ const AdminInstructorsPage = observer(() => {
   const [createInstructorModal, setCreateInstructorModal] = useState(false)
 
   const [instructors, setInstructors] = useState([])
-  const [groups, setGroups] = useState([])
   const [categories, setCategories] = useState([])
 
-  const [selectedRow, setSelectedRow] = useState(null);
-
   const [selectedCategory, setSelectedCategory] = useState([])
-  const [selectedInstructor, setSelectedInstructor] = useState([])
 
   const statuses = [
     {id: 1, value: 'Активен'},
@@ -36,8 +32,6 @@ const AdminInstructorsPage = observer(() => {
       try {
         const instructors = await fetchInstructors();
         setInstructors(instructors);
-        const groups = await fetchGroups();
-        setGroups(groups);
         const categories = await fetchCategories();
         setCategories(categories);
       } catch (error) {
@@ -48,9 +42,6 @@ const AdminInstructorsPage = observer(() => {
     };
     fetchData();
   }, []);
-
-  console.log('instructors: ', instructors)
-  console.log('selectedCategory: ', selectedCategory)
 
   const filteredInstructors = instructors.filter(instructor => {
     const matchesCategory = Array.isArray(selectedCategory) && selectedCategory.length > 0
@@ -66,8 +57,6 @@ const AdminInstructorsPage = observer(() => {
     return matchesCategory && matchesStatus;
   });
   
-  console.log(filteredInstructors)
-
   const columns = [
     { key: "user.fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${INSTRUCTOR_ROUTE}/${row.id}`},
     { key: "user.phoneNumber", label: "Номер телефона", isLink: false },

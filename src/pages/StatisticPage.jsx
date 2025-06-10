@@ -28,9 +28,6 @@ export default function StatisticPage() {
         await setStudentLectures(studentData.studentLectures.filter(lecture => lecture.attended === false))
         await setStudentTests(studentData.studentTests.filter(test => test.attended === false))
         await setStudentTestsStat(studentData.studentTests)
-
-        console.log(studentData.studentLectures.filter(lecture => lecture.attended === false))
-        console.log(studentData.studentTests.filter(test => test.attended === false))
         
       } catch (error) {
         console.error(error);

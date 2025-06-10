@@ -1,14 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useState, useEffect } from 'react'
 import { Context } from '..';
-import { fetchUsers, fetchCategories, fetchGroupsByTeacher, fetchTeacherById, fetchUserById} from '../http/adminAPI';
-import Button from '../components/UI/Button/Button';
-import { GROUP_ROUTE, TEACHER_ROUTE } from '../utils/consts';
-import Modal from '../components/Modal';
-import CreateGroup from '../components/admin/CreateGroup';
+import { fetchCategories, fetchUserById} from '../http/adminAPI';
+import { GROUP_ROUTE } from '../utils/consts';
 import InformationTable from '../components/InformationTable';
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons';
-import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons';
 
 const GroupsPage = observer(() => {
   const {userStore} = useContext(Context);
@@ -39,7 +35,6 @@ const GroupsPage = observer(() => {
       fetchData();
   }, []);
 
-console.log('groups: ', groups)
   const [selectedCategory, setSelectedCategory] = useState([])
 
   const filteredGroups = groups.filter(group => {

@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import { ReactComponent as MainIcon } from "../styles/svg/main.svg";
 import { ReactComponent as StaffIcon } from "../styles/svg/staff.svg";
 import { ReactComponent as StudentIcon } from "../styles/svg/students.svg";
 import { ReactComponent as ScheduleIcon } from "../styles/svg/schedule.svg";
@@ -7,11 +6,9 @@ import { ReactComponent as MaterialsIcon } from "../styles/svg/materials.svg";
 import { Link } from "react-router-dom";
 import {
   INSTRUCTOR_ROUTE,
-  MATERIALS_ROUTE,
   SCHEDULE_ROUTE,
   STAFF_ROUTE,
   STUDENTS_ROUTE,
-  TEACHER_ROUTE,
 } from "../utils/consts";
 import { Context } from "..";
 import { observer } from "mobx-react-lite";

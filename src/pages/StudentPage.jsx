@@ -6,16 +6,13 @@ import { observer } from 'mobx-react-lite'
 import { Context } from '..'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { ADMIN_ROUTE, ERROR_PAGE, GROUP_ROUTE, INSTRUCTOR_ROUTE } from '../utils/consts'
-import { deleteStudent, fetchStudentById, fetchUserById, fetchUsers, updateStudentStatus } from '../http/adminAPI'
+import { deleteStudent, deleteUser, fetchStudentById, fetchUserById, fetchUsers, updateStudentStatus } from '../http/adminAPI'
 import Modal from '../components/Modal'
 import AssignInstructor from '../components/admin/AssignInstructor'
 import StudentChangeGroup from '../components/admin/StudentChangeGroup'
 import WarningModal from '../components/WarningModal'
-import SuccessModal from '../components/SuccessModal'
 import PinList from '../components/UI/PinList/PinList'
 import ButtonBack from '../components/UI/ButtonBack/ButtonBack'
-import { fetchStudentLectureByStudentId } from '../http/eventAPI'
-import Calendar from '../components/Calendar'
 import UpdateUser from '../components/admin/UpdateUser'
 
 const StudentPage = observer(({}) => {
@@ -36,7 +33,6 @@ const StudentPage = observer(({}) => {
   const [assignInstructorModal, setAssignInstructorModal] = useState(false)
   const [changeGroupModal, setChangeGroupModal] = useState(false)
 
-  const [changeDataModal, setChangeDataModal] = useState(false)
   const [warningModal, setWarningModal] = useState(false)
   const [updateUserModal, setUpdateUserModal ] = useState(false)
 
@@ -93,6 +89,7 @@ const StudentPage = observer(({}) => {
 
   const handleDeleteStudent = async () => {
     await deleteStudent(id)
+    await deleteUser(student.userId)
   }
 
   if (loading) {

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, HOME_ROUTE, CONTACTS_ROUTE, ADMINAUTH_ROUTE, SCHEDULE_ROUTE, LANDING_ROUTE } from '../utils/consts';
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, ADMINAUTH_ROUTE, SCHEDULE_ROUTE, LANDING_ROUTE } from '../utils/consts';
 import Input from '../components/UI/Input/Input';
 import Button from '../components/UI/Button/Button';
 import { login, registration } from '../http/userAPI';
@@ -24,10 +24,8 @@ const AuthPage = observer(() => {
       let data;
       if (isLogin) {
         data = await login(idNumber, password);
-        console.log(data);
       } else {
         data = await registration(idNumber, password);
-        console.log(data);
       }
       const user = await fetchUserById(data.id);
       localStorage.setItem('user', JSON.stringify({id: user.id, role: user.role.value}));

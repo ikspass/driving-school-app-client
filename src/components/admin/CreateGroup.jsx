@@ -21,7 +21,6 @@ const CreateGroup = observer(({onClose}) => {
       fetchScheduleGroups().then(data => schoolStore.setScheduleGroups(data))
       fetchUsers().then(data => userStore.setUsers(data))
     }, [])
-    console.log(groupTeacher)
 
     const confirm = async (e) => {
       e.preventDefault();
@@ -31,13 +30,11 @@ const CreateGroup = observer(({onClose}) => {
       }
       try {
         const data = await createGroup({name: name, categoryValue: category.value, teacherId: groupTeacher.id, dateOfStart: dateOfStart, scheduleGroupName: scheduleGroup.value});
-        console.log(data);
         onClose();
       } catch (error) {
         console.error("Ошибка при создании группы:", error);
       }
     }
-    console.log(schoolStore.scheduleGroups)
     return(
         <div className='content-container'>
             <p className="heading-text-2">Добавить учебную группу</p>

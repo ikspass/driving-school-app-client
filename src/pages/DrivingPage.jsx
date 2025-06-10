@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { deleteDrivingEvent, fetchDrivingEventById, updateDrivingEventStatus } from '../http/eventAPI';
 import DescriptionTable from '../components/DescriptionTable';
-import { ADMIN_ROUTE, ERROR_PAGE, INSTRUCTOR_ROUTE, SCHEDULE_ROUTE, STUDENT_ROUTE } from '../utils/consts';
+import { ADMIN_ROUTE, INSTRUCTOR_ROUTE, SCHEDULE_ROUTE, STUDENT_ROUTE } from '../utils/consts';
 import Button from '../components/UI/Button/Button';
 import { Context } from '..';
 import { fetchUserById } from '../http/adminAPI';
@@ -133,6 +133,7 @@ const DrivingPage = () => {
           <Button disabled={!isToday} onClick={startEvent} style={{width: '100%'}}>Начать занятие</Button>
           <Button className="danger" onClick={() => setWarningModal(true)} style={{width: '100%'}}>Отменить занятие</Button>
           <WarningModal 
+            style={{top: '-46px'}}
             text='Вы уверены что хотите отменить занятие?'
             isOpen={warningModal}
             onConfirm={() => {

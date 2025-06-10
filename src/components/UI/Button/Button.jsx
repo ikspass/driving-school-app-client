@@ -5,7 +5,7 @@ const Button = ({ children, disabled, className, ...props }) => {
         <button 
             {...props} 
             className={`${className} normal-text ${classes.button} ${disabled ? classes.disabled : ''} ${className === 'outline' ? classes.outline : ''} ${className === 'danger' ? classes.danger : ''}`}
-            disabled={disabled} // Передаем значение disabled
+            disabled={disabled}
         >
             {children}
         </button>

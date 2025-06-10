@@ -18,7 +18,6 @@ const AssignStudent = observer(({onClose, instructor}) => {
       try {
         const students = await fetchStudents();
         const categories = instructor.categories.map(category => category.value);
-        console.log(instructor)
         setStudents(students.filter(student => student.instructorId === null && categories.some(category => category === student.category.value)));
       } catch (error) {
         console.error(error);

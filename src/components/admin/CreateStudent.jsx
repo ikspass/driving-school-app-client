@@ -136,6 +136,7 @@ const CreateStudent = observer(({onClose}) => {
               value={dateOfBirth}
               onChange={e => setDateOfBirth(e.target.value)}
               title={"Дата рождения"} 
+              placeholder='YYYY-MM-DD'
               isValid={validations.dateOfBirth}
             />
             <Input

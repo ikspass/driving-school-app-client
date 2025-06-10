@@ -1,17 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Context } from '..';
-import { createStudentTest, deleteLectureEvent, fetchLectureEventById, fetchStudentLectureByLectureId, fetchStudentTestsByTestEventId, fetchTestEventById, updateLectureEventStatus, updateStudentTestAbsent, updateStudentTestPassed, updateTestEventStatus } from '../http/eventAPI';
+import { createStudentTest, deleteLectureEvent, fetchStudentTestsByTestEventId, fetchTestEventById, updateStudentTestAbsent, updateStudentTestPassed, updateTestEventStatus } from '../http/eventAPI';
 import Button from '../components/UI/Button/Button';
 import InformationTable from '../components/InformationTable';
 import { ADMIN_ROUTE, SCHEDULE_ROUTE, STUDENT_ROUTE } from '../utils/consts';
 import WarningModal from '../components/WarningModal';
 import { fetchUserById } from '../http/adminAPI';
 import { getDateInfo } from '../utils/calendar';
-import LectureMarkAbsentStudents from '../components/LectureMarkAbsentStudents';
 import Modal from '../components/Modal';
-import TestMarkAbsentStudents from '../components/TestMarkAbsentStudents';
-import TestMarkPassedStudents from '../components/TestMarkPassedStudents';
 import ButtonBack from '../components/UI/ButtonBack/ButtonBack';
 import AdminChangeStatus from '../components/admin/AdminChangeStatus';
 import SelectableInformationTable from '../components/SelectableInformationTable';
@@ -32,12 +29,17 @@ const TestPage = () => {
   const { userStore } = useContext(Context)
 
   const [isToday, setIsToday] = useState(false)
-  const [markAbsentModal, setMarkAbsentModal] = useState(false)
-  const [markPassedModal, setMarkPassedModal] = useState(false)
 
   const navigate = useNavigate();
   
-  const attendanceColumns = [
+  const attendanceColumns = userStore.user.role === 'student' ?
+  [
+    { key: "fullName", label: "ФИО", isLink: false},
+    { key: "attended", label: "Присутствие", isLink: false },
+    { key: "passed", label: "Сдано/ Не сдано", isLink: false },
+  ]
+  :
+  [
     { key: "fullName", label: "ФИО", isLink: true , navigateTo: (row) => `${STUDENT_ROUTE}/${row.id}`},
     { key: "attended", label: "Присутствие", isLink: false },
     { key: "passed", label: "Сдано/ Не сдано", isLink: false },
@@ -154,11 +156,7 @@ const TestPage = () => {
       
       <p className="normal-text">Тема: {event.test.description}</p>
       
-        
       <div className="horizontal-container">
-
-        
-        
         {event.status === 'В будущем' &&
           <div className='filter-container'>
             <p className="heading-text-2">Курсанты</p>
@@ -169,9 +167,19 @@ const TestPage = () => {
             />
           </div>
         }
+
+        {event.status !== 'В будущем' && userStore.user.role === 'student' &&
+          <div className='filter-container'>
+            <p className="heading-text-2">Курсанты</p>
+            <InformationTable
+              columns={attendanceColumns}
+              numbered={true}
+              data={studentTests}
+            />
+          </div>
+        }
         
-        
-        {event.status === 'Идёт' &&
+        {event.status === 'Идёт' && event.group.teacherId === user.teacher?.id &&
           <div className="content-container">
             <p className="heading-text-2">Курсанты</p>
             <SelectableInformationTable
@@ -182,13 +190,14 @@ const TestPage = () => {
             />
           </div>
         }
-        {event.status === 'Проведено' &&
+        {event.status === 'Проведено' && event.group.teacherId === user.teacher?.id &&
           <div className="content-container">
             <p className="heading-text-2">Курсанты</p>
-            <InformationTable
+            <SelectableInformationTable
               columns={attendanceColumns}
               numbered={true}
               data={studentTests}
+              setSelectedRow={setSelectedStudents}
             />
           </div>
         }
@@ -219,6 +228,11 @@ const TestPage = () => {
             <Button style={{width: '100%'}} className='outline' onClick={markAbsent}>Отметить отсутствующих</Button>
             <Button style={{width: '100%'}} className='outline' onClick={markPassed}>Отметить сдавших</Button>
             <Button style={{width: '100%'}} onClick={finishEvent}>Завершить занятие</Button>
+          </div>
+        } 
+        {event.status === 'Проведено' && event.group.teacherId === user.teacher?.id &&
+          <div className='button-container' style={{alignSelf: 'end'}}>
+            <Button style={{width: '100%'}} className='outline' onClick={markPassed}>Отметить сдавших</Button>
           </div>
         } 
       </div>

@@ -16,9 +16,9 @@ const MultipleFilterButtons = ({ title, filters, selected, setSelected }) => {
                 className={`normal-text ${classes.pin} ${isSelected ? classes.selected : ''}`}
                 onClick={() => {
                   if (isSelected) {
-                    setSelected(selected.filter(sel => sel.id !== filter.id)); // Убираем элемент
+                    setSelected(selected.filter(sel => sel.id !== filter.id));
                   } else {
-                    setSelected([...selected, filter]); // Добавляем элемент
+                    setSelected([...selected, filter]);
                   }
                 }}>
                 {filter.value}

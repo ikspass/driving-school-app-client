@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { createTest } from '../../http/adminAPI';
 import { observer } from 'mobx-react-lite';
-import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons'
 import Button from '../UI/Button/Button';
 import Input from '../UI/Input/Input';
 import ExceptionModal from '../ExceptionModal';
@@ -21,7 +20,6 @@ const CreateTest = observer(({onClose}) => {
     else{
       try {
         const data = await createTest({name: name, description: desc});
-        console.log(data);
         onClose();
       } catch (error) {
         console.error("Ошибка при создании зачёта/экзамена:", error);

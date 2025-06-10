@@ -31,7 +31,6 @@ const CreateTransport = observer(({onClose}) => {
     else{
       try {
         const data = await createTransport({name: name, sign: sign, color: color, categoryValue: category.value});
-        console.log(data);
         onClose();
       } catch (error) {
           console.error("Ошибка при создании транспорта:", error);

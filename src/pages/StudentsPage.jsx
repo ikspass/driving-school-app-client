@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect, useContext } from 'react'
 import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../utils/consts';
-import { fetchStudents, fetchGroups, fetchInstructors, fetchStudentsByTeacher, fetchUserById, fetchInstructorById } from '../http/adminAPI';
+import { fetchGroups, fetchInstructors, fetchUserById } from '../http/adminAPI';
 import InformationTable from '../components/InformationTable';
 import MultipleFilterButtons from '../components/UI/MultipleFilterButtons/MultipleFilterButtons';
 import SingleFilterButtons from '../components/UI/SingleFilterButtons/SingleFilterButtons';
@@ -13,7 +13,6 @@ const StudentsPage = observer(() => {
 
   const { userStore } = useContext(Context);
   const role = userStore.user.role;
-  const [user, setUser] = useState({})
 
   const [instructors, setInstructors] = useState([]);
   const [students, setStudents] = useState([]);

@@ -6,7 +6,7 @@ import Button from '../components/UI/Button/Button';
 import InformationTable from '../components/InformationTable';
 import DescriptionTable from '../components/DescriptionTable';
 import PinList from '../components/UI/PinList/PinList';
-import { deleteTeacher, fetchTeacherById, fetchUserById } from '../http/adminAPI';
+import { deleteTeacher, deleteUser, fetchTeacherById, fetchUserById } from '../http/adminAPI';
 import { ADMIN_ROUTE, ERROR_PAGE, GROUP_ROUTE } from '../utils/consts';
 import WarningModal from '../components/WarningModal';
 import ButtonBack from '../components/UI/ButtonBack/ButtonBack';
@@ -57,11 +57,6 @@ const TeacherPage = observer(() => {
         const userData = await fetchUserById(userStore.user.id);
         await updateTeacher();
         
-        if(role === 'student'){
-          if(id != userData.student.group.teacherId){
-            navigate(ERROR_PAGE)
-          }
-        }
       } catch (error) {
         console.error(error);
         navigate(ERROR_PAGE)
@@ -75,6 +70,7 @@ const TeacherPage = observer(() => {
 
   const handleDeleteTeacher = async () => {
     await deleteTeacher(id);
+    await deleteUser(teacher.userId)
   }
   
   if (loading) {

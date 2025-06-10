@@ -5,8 +5,8 @@ export default function ListGroup({ items, onSelect, className }) {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   const handleItemClick = (index, component) => {
-    setSelectedIndex(index); // Устанавливаем индекс выбранного элемента
-    onSelect(component); // Передаем выбранный компонент родителю
+    setSelectedIndex(index);
+    onSelect(component);
   };
 
   return (

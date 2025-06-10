@@ -1,15 +1,12 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState, useContext } from 'react'
-import InformationTable from '../InformationTable';
+import React, { useEffect, useState } from 'react'
 import { fetchInstructors, updateStudentInstructor } from '../../http/adminAPI';
-import SelectableInformationTable from '../SelectableInformationTable';
 import SingleFilterButtons from '../UI/SingleFilterButtons/SingleFilterButtons';
 import Button from '../UI/Button/Button';
-import { Context } from '../..';
 import ExceptionModal from '../ExceptionModal';
 import Separator from '../UI/Separator/Separator';
 
-const AssignInstructor = observer(({onClose, setSuccessModal, successText, student}) => {
+const AssignInstructor = observer(({onClose, student}) => {
 
   const [instructors, setInstructors] = useState([])
 
@@ -58,7 +55,6 @@ const AssignInstructor = observer(({onClose, setSuccessModal, successText, stude
     return <div className="small-text">Загрузка...</div>;
   }
 
-  console.log(student)
   const filteredInstructors = studentInstructor ? instructors.filter(instructor => (instructor.id !== student.instructorId)) : instructors
 
   return (

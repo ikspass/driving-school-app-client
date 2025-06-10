@@ -99,12 +99,10 @@ code {
 }
 
 .main-container{
-  /* padding: 20px 0 40px 0; */
   width: 1300px;
   margin: 0 auto;
   padding-bottom: 100px;
   padding-top: 20px;
-  /* background-color: #5EBCFF; */
 }
 
 .center-content-container{
@@ -448,7 +446,6 @@ form{
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* flex-wrap: wrap; */
 }
 .input-container{
   display: flex;
@@ -461,13 +458,11 @@ form{
 .horizontal-container{
   display: flex;
   gap: 20px;
-  /* flex-wrap: wrap; */
 }
 
 .form-container{
   display: flex;
   gap: 30px;
-  /* flex-wrap: wrap; */
 }
 .vertical-container{
   display: flex;
@@ -599,5 +594,11 @@ form{
   border: 1px solid var(--light-accent);
   padding: 20px 30px;
   margin-bottom: 30px;
+}
+
+.message-frame{
+  border-radius: 10px;
+  border: 1px solid var(--gray);
+  padding: 10px 15px;
 }
 

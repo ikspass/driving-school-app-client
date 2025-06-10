@@ -14,8 +14,6 @@ const AdminAuthPage = () => {
   const {userStore} = useContext(Context)
   const navigate = useNavigate();
 
-  console.log(process.env)
-
   const confirm = async (e) => {
     e.preventDefault();
     

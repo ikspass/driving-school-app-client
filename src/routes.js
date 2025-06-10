@@ -17,7 +17,6 @@ import TestPage from "./pages/TestPage"
 import ErrorPage from "./pages/ErrorPage"
 import LandingPage from "./pages/LandingPage"
 
-// Общие маршруты для студентов и преподавателей
 const studentStaffRoutes = [
   {
     path: SCHEDULE_ROUTE,
@@ -30,10 +29,13 @@ const studentStaffRoutes = [
   {
     path: ERROR_PAGE,
     Component: ErrorPage
-  }
+  },
+  {
+    path: LANDING_ROUTE,
+    Component: LandingPage
+  },
 ];
 
-// Общие маршруты для преподавателей и администраторов
 const staffAdminRoutes = [
   {
     path: GROUPS_ROUTE,
@@ -81,15 +83,17 @@ const staffAdminRoutes = [
   }
 ];
 
-// Уникальные маршруты для администраторов
 const adminRoutes = [
   {
     path: ADMIN_ROUTE,
     Component: AdminPage
   },
+  {
+    path: LANDING_ROUTE,
+    Component: LandingPage
+  },
 ];
 
-// Публичные маршруты
 export const publicRoutes = [
   {
     path: LOGIN_ROUTE,
@@ -141,13 +145,12 @@ export const studentRoutes = [
 ]
 
 export const initialRoutes = {
-  admin: ADMIN_ROUTE, // Страница по умолчанию для администратора
-  teacher: SCHEDULE_ROUTE, // Страница по умолчанию для преподавателя
-  student: SCHEDULE_ROUTE, // Страница по умолчанию для студента
-  public: LANDING_ROUTE, // Страница по умолчанию для неавторизованных пользователей
+  admin: ADMIN_ROUTE,
+  teacher: SCHEDULE_ROUTE,
+  student: SCHEDULE_ROUTE,
+  public: LANDING_ROUTE,
 };
 
-// Функция для получения маршрутов в зависимости от роли
 export const getRoutesByRole = (role) => {
   switch (role) {
     case 'admin':
@@ -159,6 +162,6 @@ export const getRoutesByRole = (role) => {
     case 'student':
       return [...studentStaffRoutes, ...studentRoutes];
     default:
-      return publicRoutes; // Публичные маршруты
+      return publicRoutes;
   }
 };

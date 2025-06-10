@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, {useState, useEffect, useContext} from 'react'
 import { fetchDrivingPlaces, fetchUserById } from '../http/adminAPI';
-import { createDrivingEvent, createLectureEvent } from '../http/eventAPI';
+import { createDrivingEvent } from '../http/eventAPI';
 import { Context } from '..';
 import SingleFilterButtons from './UI/SingleFilterButtons/SingleFilterButtons';
 import Separator from './UI/Separator/Separator';
@@ -31,7 +31,6 @@ const CreateDrivingEvent = observer(({onClose}) => {
     const fetchData = async () => {
       try {
         const userData = await fetchUserById(userStore.user.id);
-        console.log(userData)
         setInstructor(userData.instructor)
 
         setInstructorTransports(userData.instructor.transports.map(transport => ({id: transport.id, value: `${transport.name} (${transport.category.value})`})))
@@ -59,7 +58,6 @@ const CreateDrivingEvent = observer(({onClose}) => {
     }
     try {
       const data = await createDrivingEvent({date: eventStore.selectedDate, time: time, instructorId: instructor.id, studentId: student.id, transportId: transport.id, placeId: drivingPlace.id});
-      console.log(data);
       onClose();
     } catch (error) {
       console.error("Ошибка при создании события:", error);
@@ -110,7 +108,7 @@ const CreateDrivingEvent = observer(({onClose}) => {
             {eventStore.eventsByDate.length > 0 ? 
               <InformationTable
                 columns={[
-                  { key: "group.name", label: "Группа", isLink: false },
+                  { key: "student.user.fullName", label: "Курсант", isLink: false },
                   { key: "time", label: "Время", isLink: false },
                 ]}
                 data={eventStore.eventsByDate}

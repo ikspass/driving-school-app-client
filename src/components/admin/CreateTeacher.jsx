@@ -66,7 +66,6 @@ const CreateTeacher = observer(({ onClose }) => {
       } catch (err) {
         console.error('Ошибка при создании:', err);
       }
-      console.log("Форма отправлена!");
     }
   };
 

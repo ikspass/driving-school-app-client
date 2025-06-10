@@ -1,9 +1,6 @@
 import { observer } from 'mobx-react-lite';
-import React, { useState, useEffect } from 'react'
-import { createMessage, fetchStudentsWithoutGroup, setStudentGroup } from '../../http/adminAPI';
-import InformationTable from '../InformationTable';
-import { GROUP_ROUTE, INSTRUCTOR_ROUTE, STUDENT_ROUTE } from '../../utils/consts';
-import SelectableInformationTable from '../SelectableInformationTable';
+import React, { useState } from 'react'
+import { createMessage } from '../../http/adminAPI';
 import Button from '../UI/Button/Button';
 import Input from '../UI/Input/Input';
 import { getDateInfo } from '../../utils/calendar';

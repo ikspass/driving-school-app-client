@@ -30,6 +30,4 @@ npm start
 Отслеживание прогресса: Учащиеся могут просматривать свой прогресс и оценки.
 
 ## Технологии
-HTML, CSS, JavaScript, TypeScript, React
-NestJS
-PostgreSQL
+HTML, CSS, JavaScript, TypeScript, React, NestJS, PostgreSQL

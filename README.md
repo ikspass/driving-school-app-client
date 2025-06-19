@@ -9,12 +9,7 @@
 git clone
 ```
 
-2. Перейдите в папку проекта
-```bash 
-cd client
-```
-
-3. Установите зависимости
+2. Установите зависимости
 ```bash
 npm install
 ```
@@ -30,4 +25,4 @@ npm start
 Отслеживание прогресса: Учащиеся могут просматривать свой прогресс и оценки.
 
 ## Технологии
-HTML, CSS, JavaScript, TypeScript, React, NestJS, PostgreSQL
+HTML, CSS, JavaScript, React
